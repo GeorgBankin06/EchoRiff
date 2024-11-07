@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.RadioItemBinding
 import com.echoriff.echoriff.radio.domain.model.RadioDto
 
@@ -19,6 +20,7 @@ class RadiosAdapter(
             binding.radioName.text = radio.title
             Glide.with(binding.radioName.context)
                 .load(radio.coverArtUrl)
+                .placeholder(R.drawable.border_with_radius)
                 .into(binding.radioIv)
 
         }
