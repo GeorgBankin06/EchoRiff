@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="start"
+    android:orientation="horizontal"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:id="@+id/radio_iv"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:contentDescription="@string/radio_name_ph"
+        tools:src="@drawable/border_with_radius" />
+
+    <TextView
+        android:id="@+id/radio_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:layout_marginStart="12dp"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        tools:text="@string/radio_name_ph" />
+</LinearLayout>
