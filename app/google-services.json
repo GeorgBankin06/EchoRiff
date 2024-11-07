@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "865508811165",
+    "firebase_url": "https://echoriff-f6007-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "echoriff-f6007",
+    "storage_bucket": "echoriff-f6007.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865508811165:android:f692e53c5903343d0f0f74",
+        "android_client_info": {
+          "package_name": "com.echoriff.echoriff"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI829CyBcIUr9L96wSVRWT-rFMHArhBDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
