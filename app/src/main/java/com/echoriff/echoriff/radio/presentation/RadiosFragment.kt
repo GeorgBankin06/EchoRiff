@@ -25,6 +25,7 @@ class RadiosFragment : Fragment() {
     lateinit var binding: FragmentRadiosBinding
     private var playScreenFragment = PlayerFragment.newInstance()
     private val radioModel: RadiosViewModel by viewModel()
+    private val playerViewModel: PlayerViewModel by viewModel()
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var radiosAdapter: RadiosAdapter
 
@@ -101,7 +102,7 @@ class RadiosFragment : Fragment() {
 
     private fun setupRadiosAdapter(radios: List<Radio>) {
         radiosAdapter = RadiosAdapter(radios) { selectedRadio ->
-            // Launch Player here
+            playerViewModel.playRadio(selectedRadio)
         }
         binding.radiosRv.adapter = radiosAdapter
     }

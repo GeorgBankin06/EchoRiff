@@ -7,7 +7,6 @@ import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.RadioItemBinding
 import com.echoriff.echoriff.radio.domain.Radio
-import com.echoriff.echoriff.radio.domain.model.RadioDto
 
 class RadiosAdapter(
     private val radios: List<Radio>,
@@ -17,13 +16,14 @@ class RadiosAdapter(
     class RadioViewHolder(private val binding: RadioItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(radio: Radio) {
+        fun bind(radio: Radio, onItemClick: (Radio) -> Unit) {
             binding.radioName.text = radio.title
             Glide.with(binding.radioName.context)
                 .load(radio.coverArtUrl)
                 .placeholder(R.drawable.border_with_radius)
                 .into(binding.radioIv)
 
+            itemView.setOnClickListener{onItemClick(radio)}
         }
     }
 
@@ -33,11 +33,7 @@ class RadiosAdapter(
     }
 
     override fun onBindViewHolder(holder: RadioViewHolder, position: Int) {
-        holder.bind(radios[position])
-
-        holder.itemView.setOnClickListener {
-            onItemClick(radios[position])
-        }
+        holder.bind(radios[position], onItemClick)
     }
 
     override fun getItemCount(): Int = radios.size
