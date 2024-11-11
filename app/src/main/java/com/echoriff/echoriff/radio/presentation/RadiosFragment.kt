@@ -14,8 +14,6 @@ import com.echoriff.echoriff.databinding.FragmentRadiosBinding
 import com.echoriff.echoriff.radio.domain.CategoriesState
 import com.echoriff.echoriff.radio.domain.Category
 import com.echoriff.echoriff.radio.domain.Radio
-import com.echoriff.echoriff.radio.domain.model.CategoryDto
-import com.echoriff.echoriff.radio.domain.model.RadioDto
 import com.echoriff.echoriff.radio.presentation.adapters.CategoriesAdapter
 import com.echoriff.echoriff.radio.presentation.adapters.EqualSpaceItemDecoration
 import com.echoriff.echoriff.radio.presentation.adapters.RadiosAdapter
@@ -25,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class RadiosFragment : Fragment() {
 
     lateinit var binding: FragmentRadiosBinding
-    private var playScreenFragment = RadioPlayerFragment.newInstance()
+    private var playScreenFragment = PlayerFragment.newInstance()
     private val radioModel: RadiosViewModel by viewModel()
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var radiosAdapter: RadiosAdapter
@@ -69,7 +67,7 @@ class RadiosFragment : Fragment() {
 
     private fun setupRadioPlayerFragment() {
         requireFragmentManager().beginTransaction()
-            .replace(R.id.play_screen_frame_layout, playScreenFragment, RadioPlayerFragment.TAG)
+            .replace(R.id.play_screen_frame_layout, playScreenFragment, PlayerFragment.TAG)
             .commitAllowingStateLoss()
     }
 

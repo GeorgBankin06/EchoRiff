@@ -38,6 +38,12 @@ android {
 }
 
 dependencies {
+    //Exo player 3
+    implementation libs.androidx.media3.common
+    implementation libs.androidx.media3.exoplayer
+    implementation libs.androidx.media3.session
+    implementation libs.androidx.media3.ui
+
     //Firebase
     implementation platform(libs.firebase.bom)
 
