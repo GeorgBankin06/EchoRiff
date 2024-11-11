@@ -2,10 +2,7 @@ package com.echoriff.echoriff.radio.presentation
 
 import android.app.Application
 import android.app.PendingIntent
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.net.Uri
-import android.util.Log
 import androidx.annotation.OptIn
 import androidx.lifecycle.AndroidViewModel
 import androidx.media3.common.MediaItem
@@ -17,19 +14,25 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.session.MediaSession
 import com.echoriff.echoriff.MainActivity
+import com.echoriff.echoriff.common.extractArtistAndTitle
+import com.echoriff.echoriff.radio.domain.Category
 import com.echoriff.echoriff.radio.domain.Radio
-import com.echoriff.echoriff.radio.domain.model.CategoryDto
-import com.echoriff.echoriff.radio.domain.model.RadioDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _nowPlayingCategory = MutableStateFlow<CategoryDto?>(null)
+    private val _nowPlayingCategory = MutableStateFlow<Category?>(null)
     val nowPlayingCategory = _nowPlayingCategory.asStateFlow()
 
-    private val _nowPlayingRadio = MutableStateFlow<RadioDto?>(null)
+    private val _nowPlayingRadio = MutableStateFlow<Radio?>(null)
     val nowPlayingRadio = _nowPlayingRadio.asStateFlow()
+
+    private val _currentIndex = MutableStateFlow(0)
+    val currentIndex = _currentIndex.asStateFlow()
+
+    private val _nowPlayingInfo = MutableStateFlow<Pair<String?, String?>>(null to null)
+    val nowPlayingInfo = _nowPlayingInfo.asStateFlow()
 
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(application).build()
     private val mediaSession: MediaSession = MediaSession.Builder(application, exoPlayer)
@@ -53,7 +56,15 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     @OptIn(UnstableApi::class)
-    fun playRadio(radio: Radio) {
+    fun playRadio(radio: Radio?, category: Category?) {
+        radio?.streamUrl ?: return
+
+        _nowPlayingInfo.value = radio.title to null
+        _nowPlayingCategory.value = category
+        _nowPlayingRadio.value = radio
+        _currentIndex.value =
+            category?.radios?.indexOfFirst {it.title == nowPlayingRadio.value?.title } ?: 0
+
         val dataSourceFactory = DefaultDataSource.Factory(getApplication())
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
             .createMediaSource(MediaItem.fromUri(radio.streamUrl))
@@ -62,10 +73,12 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         play()
     }
 
-    private fun handleTitle(title: String) {
-        // Logic to handle the title, e.g., update LiveData or StateFlow for UI
-        Log.d(TAG, "Now playing title: $title")
+    private fun handleTitle(metadata: String) {
+        val (artist, title) = metadata.extractArtistAndTitle()
+        _nowPlayingInfo.value = (title ?: nowPlayingRadio.value?.title) to artist
     }
+
+    fun isPlaying(): Boolean = exoPlayer.isPlaying
 
     fun play() {
         exoPlayer.play()
@@ -73,6 +86,14 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
 
     fun pause() {
         exoPlayer.pause()
+    }
+
+    fun playNext() {
+        playRadio(getNextRadio(), nowPlayingCategory.value)
+    }
+
+    fun playPrev() {
+        playRadio(getPrevRadio(), nowPlayingCategory.value)
     }
 
     private fun createMainActivityPendingIntent(): PendingIntent {
@@ -83,6 +104,20 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+    }
+
+    private fun getNextRadio(): Radio? {
+        val radios = nowPlayingCategory.value?.radios ?: return null
+
+        val nextIndex = (_currentIndex.value + 1) % radios.size
+        return radios[nextIndex]
+    }
+
+    private fun getPrevRadio(): Radio? {
+        val radios = nowPlayingCategory.value?.radios ?: return null
+
+        val previousIndex = (_currentIndex.value - 1 + radios.size) % radios.size
+        return radios[previousIndex]
     }
 
     companion object {

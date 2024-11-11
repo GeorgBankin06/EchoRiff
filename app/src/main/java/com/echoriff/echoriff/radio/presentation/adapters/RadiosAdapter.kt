@@ -23,7 +23,7 @@ class RadiosAdapter(
                 .placeholder(R.drawable.border_with_radius)
                 .into(binding.radioIv)
 
-            itemView.setOnClickListener{onItemClick(radio)}
+            itemView.setOnClickListener { onItemClick(radio) }
         }
     }
 

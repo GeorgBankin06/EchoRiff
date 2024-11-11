@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadiosBinding
@@ -22,10 +23,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RadiosFragment : Fragment() {
 
+    private val radioModel: RadiosViewModel by viewModel()
+    private val playerViewModel: PlayerViewModel by navGraphViewModels(R.id.main_nav_graph)
+
     lateinit var binding: FragmentRadiosBinding
     private var playScreenFragment = PlayerFragment.newInstance()
-    private val radioModel: RadiosViewModel by viewModel()
-    private val playerViewModel: PlayerViewModel by viewModel()
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var radiosAdapter: RadiosAdapter
 
@@ -102,7 +104,7 @@ class RadiosFragment : Fragment() {
 
     private fun setupRadiosAdapter(radios: List<Radio>) {
         radiosAdapter = RadiosAdapter(radios) { selectedRadio ->
-            playerViewModel.playRadio(selectedRadio)
+            playerViewModel.playRadio(selectedRadio, radioModel.selectedCategory.value)
         }
         binding.radiosRv.adapter = radiosAdapter
     }
