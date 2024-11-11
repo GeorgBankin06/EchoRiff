@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadiosBinding
 import com.echoriff.echoriff.radio.domain.CategoriesState
+import com.echoriff.echoriff.radio.domain.Category
+import com.echoriff.echoriff.radio.domain.Radio
 import com.echoriff.echoriff.radio.domain.model.CategoryDto
 import com.echoriff.echoriff.radio.domain.model.RadioDto
 import com.echoriff.echoriff.radio.presentation.adapters.CategoriesAdapter
@@ -92,14 +94,14 @@ class RadiosFragment : Fragment() {
         )
     }
 
-    private fun setupCategoriesAdapter(categories: List<CategoryDto>) {
+    private fun setupCategoriesAdapter(categories: List<Category>) {
         categoriesAdapter = CategoriesAdapter(categories) { selectedCategory ->
             radioModel.setSelectedCategory(categories.indexOf(selectedCategory))
         }
         binding.categoriesRv.adapter = categoriesAdapter
     }
 
-    private fun setupRadiosAdapter(radios: List<RadioDto>) {
+    private fun setupRadiosAdapter(radios: List<Radio>) {
         radiosAdapter = RadiosAdapter(radios) { selectedRadio ->
             // Launch Player here
         }

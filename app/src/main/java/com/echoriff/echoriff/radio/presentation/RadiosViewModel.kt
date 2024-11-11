@@ -3,6 +3,7 @@ package com.echoriff.echoriff.radio.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.echoriff.echoriff.radio.domain.CategoriesState
+import com.echoriff.echoriff.radio.domain.Category
 import com.echoriff.echoriff.radio.domain.model.CategoryDto
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,7 @@ class RadiosViewModel(
     private val _categories = MutableStateFlow<CategoriesState>(CategoriesState.Loading)
     val categories = _categories.asStateFlow()
 
-    private val _selectedCategory = MutableStateFlow<CategoryDto?>(null)
+    private val _selectedCategory = MutableStateFlow<Category?>(null)
     val selectedCategory = _selectedCategory.asStateFlow()
 
     init {

@@ -6,17 +6,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.RadioItemBinding
+import com.echoriff.echoriff.radio.domain.Radio
 import com.echoriff.echoriff.radio.domain.model.RadioDto
 
 class RadiosAdapter(
-    private val radios: List<RadioDto>,
-    private val onItemClick: (RadioDto) -> Unit
+    private val radios: List<Radio>,
+    private val onItemClick: (Radio) -> Unit
 ) : RecyclerView.Adapter<RadiosAdapter.RadioViewHolder>() {
 
     class RadioViewHolder(private val binding: RadioItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(radio: RadioDto) {
+        fun bind(radio: Radio) {
             binding.radioName.text = radio.title
             Glide.with(binding.radioName.context)
                 .load(radio.coverArtUrl)

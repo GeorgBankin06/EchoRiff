@@ -5,18 +5,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.CategoryItemBinding
-import com.echoriff.echoriff.radio.domain.model.CategoryDto
+import com.echoriff.echoriff.radio.domain.Category
 
 class CategoriesAdapter(
-    private val categories: List<CategoryDto>,
-    private val onItemClick: (CategoryDto) -> Unit
+    private val categories: List<Category>,
+    private val onItemClick: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
     private var selectedPosition = 0
 
     class CategoryViewHolder(private val binding: CategoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(category: CategoryDto, isSelected: Boolean) {
+        fun bind(category: Category, isSelected: Boolean) {
             with(binding) {
                 categoryName.text = category.title
                 if (isSelected) {
