@@ -21,7 +21,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RadiosFragment : Fragment() {
+
     lateinit var binding: FragmentRadiosBinding
+    private var playScreenFragment = RadioPlayerFragment.newInstance()
     private val radioModel: RadiosViewModel by viewModel()
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var radiosAdapter: RadiosAdapter
@@ -36,8 +38,11 @@ class RadiosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupRadioPlayerFragment()
         setupCategoriesRV(view)
         setupRadiosRV(view)
+
         viewLifecycleOwner.lifecycle.coroutineScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -58,6 +63,12 @@ class RadiosFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setupRadioPlayerFragment() {
+        requireFragmentManager().beginTransaction()
+            .replace(R.id.play_screen_frame_layout, playScreenFragment, RadioPlayerFragment.TAG)
+            .commitAllowingStateLoss()
     }
 
     private fun setupCategoriesRV(view: View) {
