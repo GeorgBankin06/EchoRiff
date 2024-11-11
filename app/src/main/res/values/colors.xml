@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="category_selected">#BC8034</color>
     <color name="category_unselected">#FFA9A9A9</color>
+    <color name="playerBackground">#1C1F26</color>
 </resources>
