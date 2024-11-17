@@ -9,13 +9,13 @@
     <TextView
         android:id="@+id/category_name"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/border_with_radius"
         android:gravity="center"
-        android:padding="8dp"
+        android:padding="12dp"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="24sp"
-        tools:layout_height="50dp"
+        android:textSize="16sp"
         tools:text="@string/category_name_ph" />
+
 </LinearLayout>

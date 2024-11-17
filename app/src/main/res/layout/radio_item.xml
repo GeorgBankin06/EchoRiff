@@ -1,41 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:elevation="8dp"
-    app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="8dp">
+    android:gravity="start"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    app:cardBackgroundColor="@android:color/transparent">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/radio_iv"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:contentDescription="@string/radio_name_ph"
+        app:shapeAppearanceOverlay="@style/RoundedImageView"
+        tools:src="@drawable/border_with_radius" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        tools:ignore="UseCompoundDrawables">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/radio_iv"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:contentDescription="@string/radio_name_ph"
-            app:shapeAppearanceOverlay="@style/RoundedImageView"
-            tools:src="@drawable/border_with_radius" />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="center|start"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/radio_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginStart="12dp"
-            android:textAlignment="center"
-            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="16sp"
             tools:text="@string/radio_name_ph" />
 
+        <TextView
+            android:id="@+id/radio_description"
+            android:layout_width="wrap_content"
+            android:textSize="14sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="#626161"
+            tools:text="adasdddadaa" />
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    <!-- 3-Dots Menu Icon -->
+    <ImageButton
+        android:id="@+id/menu_icon"
+        android:layout_width="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:contentDescription="@string/menu"
+        android:padding="8dp"
+        android:src="@drawable/ic_more" />
+
+</LinearLayout>

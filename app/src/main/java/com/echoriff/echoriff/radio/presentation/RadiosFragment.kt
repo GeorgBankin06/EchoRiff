@@ -1,13 +1,12 @@
 package com.echoriff.echoriff.radio.presentation
 
-import android.animation.ValueAnimator
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -129,31 +128,25 @@ class RadiosFragment : Fragment() {
         }
         binding.radiosRv.adapter = radiosAdapter
     }
+
     private fun scrollToCenter(position: Int) {
         val layoutManager = binding.categoriesRv.layoutManager as LinearLayoutManager
         val itemView = layoutManager.findViewByPosition(position) ?: return
         val recyclerViewWidth = binding.categoriesRv.width
         val recyclerViewCenterX = recyclerViewWidth / 2
         val itemCenterX = (itemView.left + itemView.right) / 2
+
         var scrollOffset = itemCenterX - recyclerViewCenterX
+
         if (position == 0 && itemView.left < 0) {
             binding.categoriesRv.smoothScrollBy(0, 0)
+            return
         }
+
         if (position == categoriesAdapter.itemCount - 1 && itemView.right > recyclerViewWidth) {
             scrollOffset = itemView.right - recyclerViewWidth
         }
-        val targetScrollX = binding.categoriesRv.computeHorizontalScrollOffset() + scrollOffset
-        val animator =
-            ValueAnimator.ofInt(binding.categoriesRv.computeHorizontalScrollOffset(), targetScrollX)
-        animator.addUpdateListener { animation ->
-            val animatedValue = animation.animatedValue as Int
-            binding.categoriesRv.scrollBy(
-                animatedValue - binding.categoriesRv.computeHorizontalScrollOffset(),
-                0
-            )
-        }
-        animator.duration = 500
-        animator.start()
-    }
 
+        binding.categoriesRv.smoothScrollBy(scrollOffset, 0)
+    }
 }

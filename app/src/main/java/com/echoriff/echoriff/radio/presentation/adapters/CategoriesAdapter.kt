@@ -1,5 +1,6 @@
 package com.echoriff.echoriff.radio.presentation.adapters
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +21,13 @@ class CategoriesAdapter(
             with(binding) {
                 categoryName.text = category.title
                 if (isSelected) {
-                    binding.categoryName.setBackgroundResource(R.drawable.category_background_selected) // Selected drawable
+                    categoryName.setBackgroundResource(R.drawable.category_background_selected)
+                    categoryName.textSize = 18f
+                    categoryName.setTypeface(null, Typeface.BOLD)
                 } else {
-                    binding.categoryName.setBackgroundResource(R.drawable.border_with_radius) // Unselected drawable
+                    categoryName.setBackgroundResource(R.drawable.border_with_radius)
+                    categoryName.textSize = 16f
+                    categoryName.setTypeface(null, Typeface.NORMAL)
                 }
             }
         }
