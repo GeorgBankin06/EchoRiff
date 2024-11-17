@@ -1,10 +1,18 @@
 package com.echoriff.echoriff.radio.presentation
 
+import android.animation.ObjectAnimator
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.CalendarContract.Colors
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,12 +27,18 @@ class PlayerFragment : Fragment() {
 
     lateinit var binding: FragmentRadioPlayerBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadioPlayerBinding.inflate(layoutInflater)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.collapseImage) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.topMargin = systemBarsInsets.top + 20
+            view.layoutParams = layoutParams
+            insets
+        }
         return binding.root
     }
 
@@ -40,8 +54,12 @@ class PlayerFragment : Fragment() {
         binding.btnPlay.setOnClickListener {
             if (playerModel.isPlaying()) {
                 playerModel.pause()
+                binding.btnPlay.setImageResource(R.drawable.ic_play)
+                updateTextColorBasedOnPlayerState(playerModel.isPlaying())
             } else {
                 playerModel.play()
+                binding.btnPlay.setImageResource(R.drawable.ic_pause)
+                updateTextColorBasedOnPlayerState(playerModel.isPlaying())
             }
         }
         binding.btnNext.setOnClickListener { playerModel.playNext() }
@@ -65,8 +83,54 @@ class PlayerFragment : Fragment() {
                         binding.tvArtist.text = artist
                     }
                 }
+                launch {
+                    playerModel.isPlayingState.collect { isPlaying ->
+                        updatePlayButtonIcon(isPlaying)
+                        updateTextColorBasedOnPlayerState(isPlaying)
+                    }
+                }
             }
         }
+    }
+
+    private fun updatePlayButtonIcon(isPlaying: Boolean) {
+        if (isPlaying) {
+            binding.btnPlay.setImageResource(R.drawable.ic_pause)
+        } else {
+            binding.btnPlay.setImageResource(R.drawable.ic_play)
+        }
+    }
+
+    private fun updateTextColorBasedOnPlayerState(isPlaying: Boolean) {
+        val textView: TextView = binding.tvLive
+        val fromColor: Int
+        val toColor: Int
+
+        if (isPlaying) {
+            fromColor =
+                ContextCompat.getColor(requireContext(), R.color.grey)
+            toColor =
+                ContextCompat.getColor(requireContext(), R.color.red)
+        } else {
+            fromColor =
+                ContextCompat.getColor(requireContext(), R.color.red)
+            toColor =
+                ContextCompat.getColor(requireContext(), R.color.grey)
+        }
+
+        animateTextColorChange(textView, fromColor, toColor, 300)
+    }
+
+
+    private fun animateTextColorChange(
+        view: TextView,
+        fromColor: Int,
+        toColor: Int,
+        duration: Long
+    ) {
+        val animator = ObjectAnimator.ofArgb(view, "textColor", fromColor, toColor)
+        animator.duration = duration
+        animator.start()
     }
 
     companion object {

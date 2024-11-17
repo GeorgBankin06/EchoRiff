@@ -34,6 +34,9 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     private val _nowPlayingInfo = MutableStateFlow<Pair<String?, String?>>(null to null)
     val nowPlayingInfo = _nowPlayingInfo.asStateFlow()
 
+    private val _isPlayingState = MutableStateFlow(false)
+    val isPlayingState = _isPlayingState.asStateFlow()
+
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(application).build()
     private val mediaSession: MediaSession = MediaSession.Builder(application, exoPlayer)
         .setSessionActivity(createMainActivityPendingIntent())
@@ -64,6 +67,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         _nowPlayingRadio.value = radio
         _currentIndex.value =
             category?.radios?.indexOfFirst {it.title == nowPlayingRadio.value?.title } ?: 0
+        _isPlayingState.value = true
 
         val dataSourceFactory = DefaultDataSource.Factory(getApplication())
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -86,6 +90,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
 
     fun pause() {
         exoPlayer.pause()
+        _isPlayingState.value = false
     }
 
     fun playNext() {
@@ -95,6 +100,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     fun playPrev() {
         playRadio(getPrevRadio(), nowPlayingCategory.value)
     }
+
 
     private fun createMainActivityPendingIntent(): PendingIntent {
         val intent = Intent(getApplication(), MainActivity::class.java)
