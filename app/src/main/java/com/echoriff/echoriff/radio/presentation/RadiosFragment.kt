@@ -1,10 +1,13 @@
 package com.echoriff.echoriff.radio.presentation
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -36,6 +39,22 @@ class RadiosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadiosBinding.inflate(layoutInflater)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.categoriesRv) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.topMargin = systemBarsInsets.top + 20
+            view.layoutParams = layoutParams
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.playScreenFrameLayout) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.bottomMargin = systemBarsInsets.bottom
+            view.layoutParams = layoutParams
+            insets
+        }
+
         return binding.root
     }
 
@@ -97,7 +116,9 @@ class RadiosFragment : Fragment() {
 
     private fun setupCategoriesAdapter(categories: List<Category>) {
         categoriesAdapter = CategoriesAdapter(categories) { selectedCategory ->
-            radioModel.setSelectedCategory(categories.indexOf(selectedCategory))
+            val selectedIndex = categories.indexOf(selectedCategory)
+            scrollToCenter(selectedIndex)
+            radioModel.setSelectedCategory(selectedIndex)
         }
         binding.categoriesRv.adapter = categoriesAdapter
     }
@@ -108,4 +129,31 @@ class RadiosFragment : Fragment() {
         }
         binding.radiosRv.adapter = radiosAdapter
     }
+    private fun scrollToCenter(position: Int) {
+        val layoutManager = binding.categoriesRv.layoutManager as LinearLayoutManager
+        val itemView = layoutManager.findViewByPosition(position) ?: return
+        val recyclerViewWidth = binding.categoriesRv.width
+        val recyclerViewCenterX = recyclerViewWidth / 2
+        val itemCenterX = (itemView.left + itemView.right) / 2
+        var scrollOffset = itemCenterX - recyclerViewCenterX
+        if (position == 0 && itemView.left < 0) {
+            binding.categoriesRv.smoothScrollBy(0, 0)
+        }
+        if (position == categoriesAdapter.itemCount - 1 && itemView.right > recyclerViewWidth) {
+            scrollOffset = itemView.right - recyclerViewWidth
+        }
+        val targetScrollX = binding.categoriesRv.computeHorizontalScrollOffset() + scrollOffset
+        val animator =
+            ValueAnimator.ofInt(binding.categoriesRv.computeHorizontalScrollOffset(), targetScrollX)
+        animator.addUpdateListener { animation ->
+            val animatedValue = animation.animatedValue as Int
+            binding.categoriesRv.scrollBy(
+                animatedValue - binding.categoriesRv.computeHorizontalScrollOffset(),
+                0
+            )
+        }
+        animator.duration = 500
+        animator.start()
+    }
+
 }

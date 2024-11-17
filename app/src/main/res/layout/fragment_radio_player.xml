@@ -54,7 +54,7 @@
         android:singleLine="true"
         android:text="Blinding Ldasdasdsdasdasdasdasdasdasdasdasdasdasdadasassdasdaights"
         android:textAlignment="textStart"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/player_background_view"
