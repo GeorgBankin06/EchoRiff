@@ -3,10 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/radiosFragment">
+    app:startDestination="@id/registerFragment">
     <fragment
         android:id="@+id/radiosFragment"
         android:name="com.echoriff.echoriff.radio.presentation.RadiosFragment"
         android:label="RadiosFragment"
         tools:layout="@layout/fragment_radios" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.echoriff.echoriff.RegisterFragment"
+        android:label="RegisterFragment"
+        tools:layout="@layout/fragment_register"/>
 </navigation>

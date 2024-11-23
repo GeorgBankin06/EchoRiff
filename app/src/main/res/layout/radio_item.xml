@@ -32,17 +32,17 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:textColor="@color/white"
-            android:textStyle="bold"
             android:textSize="16sp"
+            android:textStyle="bold"
             tools:text="@string/radio_name_ph" />
 
         <TextView
             android:id="@+id/radio_description"
             android:layout_width="wrap_content"
-            android:textSize="14sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:textColor="#626161"
+            android:textSize="14sp"
             tools:text="adasdddadaa" />
     </LinearLayout>
 
@@ -50,9 +50,9 @@
     <ImageButton
         android:id="@+id/menu_icon"
         android:layout_width="wrap_content"
-        android:background="@android:color/transparent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|end"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/menu"
         android:padding="8dp"
         android:src="@drawable/ic_more" />

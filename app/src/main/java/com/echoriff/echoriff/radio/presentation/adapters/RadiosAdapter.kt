@@ -18,6 +18,7 @@ class RadiosAdapter(
 
         fun bind(radio: Radio, onItemClick: (Radio) -> Unit) {
             binding.radioName.text = radio.title
+            binding.radioDescription.text = radio.intro
             Glide.with(binding.radioName.context)
                 .load(radio.coverArtUrl)
                 .placeholder(R.drawable.border_with_radius)
