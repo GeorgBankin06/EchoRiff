@@ -5,5 +5,5 @@
         android:bottomRightRadius="0dp"
         android:topLeftRadius="24dp"
         android:topRightRadius="24dp" />
-    <solid android:color="@color/playerBackground" />
+    <solid android:color="@color/nav_bar" />
 </shape>
