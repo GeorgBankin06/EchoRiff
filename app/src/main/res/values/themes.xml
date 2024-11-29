@@ -18,8 +18,16 @@
         <item name="elevation">100dp</item>
     </style>
 
-    <style name="CustomMaterialButton" parent="">
+    <style name="MaterialButtonWel" parent="">
+        <item name="shapeAppearance">@style/CustomShapeWel</item>
+    </style>
+
+    <style name="MaterialButtonLogReg" parent="">
         <item name="shapeAppearance">@style/CustomShape</item>
+    </style>
+
+    <style name="CustomShapeWel" parent="">
+        <item name="cornerSize">12dp</item> <!-- Adjust the corner radius -->
     </style>
 
     <style name="CustomShape" parent="">
