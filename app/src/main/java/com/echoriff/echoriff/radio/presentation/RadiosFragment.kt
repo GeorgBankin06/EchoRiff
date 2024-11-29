@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -38,6 +39,7 @@ class RadiosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadiosBinding.inflate(layoutInflater)
+        val window = requireActivity().window
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.categoriesRv) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -53,6 +55,9 @@ class RadiosFragment : Fragment() {
             view.layoutParams = layoutParams
             insets
         }
+
+        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.transparent)
+
 
         return binding.root
     }

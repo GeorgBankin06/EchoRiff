@@ -21,13 +21,23 @@ class MainActivity : AppCompatActivity() {
 //            insets
 //        }
 
-        window.navigationBarColor = resources.getColor(R.color.red, theme)
-        window.statusBarColor = resources.getColor(R.color.white, theme)
+//        window.navigationBarColor = resources.getColor(R.color.red, theme)
+//        window.statusBarColor = resources.getColor(R.color.white, theme)
 
         // Set up the navigation controller
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+
+        // Check if the user is authenticated
+        val isAuthenticated = false // Replace with actual authentication logic
+
+        if (isAuthenticated) {
+            navController.setGraph(R.navigation.main_nav_graph)  // Navigate to main content
+        } else {
+            navController.setGraph(R.navigation.auth_nav_graph)  // Navigate to authentication
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -8,7 +8,7 @@
     android:background="@color/black"
     android:fillViewport="false"
     android:fitsSystemWindows="true"
-    tools:context=".RegisterFragment">
+    tools:context=".register.presentation.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -171,7 +171,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
                 android:hint="First Name"
-                android:inputType="text"
+                android:inputType="textPersonName"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="16sp" />
@@ -200,8 +200,8 @@
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
-            app:hintEnabled="false"
             app:endIconTint="#2FFF00"
+            app:hintEnabled="false"
             app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/til_name"
@@ -213,7 +213,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
                 android:hint="Last Name"
-                android:inputType="textEmailAddress"
+                android:inputType="textPersonName"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="16sp" />
@@ -244,19 +244,22 @@
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
-            app:hintEnabled="false"
             app:endIconTint="#2FFF00"
+            app:hintEnabled="false"
             app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_email">
+            app:layout_constraintTop_toBottomOf="@id/tv_email"
+            app:startIconDrawable="@drawable/ic_person"
+            app:startIconTint="@color/white">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
-                android:hint="Enter your email address..."
+                android:hint="user@mail.com"
+                android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
@@ -288,11 +291,14 @@
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
             app:endIconMode="password_toggle"
+            app:endIconTint="@color/white"
             app:hintEnabled="false"
             app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_password">
+            app:layout_constraintTop_toBottomOf="@id/tv_password"
+            app:startIconDrawable="@drawable/ic_lock"
+            app:startIconTint="@color/white">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
@@ -300,6 +306,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
                 android:hint="Enter your password"
+                android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
@@ -331,11 +338,14 @@
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
             app:endIconMode="password_toggle"
+            app:endIconTint="@color/white"
             app:hintEnabled="false"
             app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_confirm_password">
+            app:layout_constraintTop_toBottomOf="@id/tv_confirm_password"
+            app:startIconDrawable="@drawable/ic_lock"
+            app:startIconTint="@color/white">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_confirm_pass"
@@ -343,6 +353,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
                 android:hint="Confirm your password"
+                android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
@@ -372,7 +383,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_register"
-            style="@style/CustomMaterialButton"
+            style="@style/MaterialButtonLogReg"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="16dp"

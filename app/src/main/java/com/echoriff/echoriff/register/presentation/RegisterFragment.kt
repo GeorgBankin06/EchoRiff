@@ -1,4 +1,4 @@
-package com.echoriff.echoriff
+package com.echoriff.echoriff.register.presentation
 
 import android.animation.Animator
 import android.animation.ValueAnimator
@@ -20,6 +20,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
+import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRegisterBinding
 import com.google.android.material.textfield.TextInputLayout
 
@@ -34,8 +39,8 @@ class RegisterFragment : Fragment() {
         binding = FragmentRegisterBinding.inflate(layoutInflater)
         val window = requireActivity().window
 
-        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
-        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.black)
+        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
+        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.navBar)
 
         adjustStatusBarIconsBasedOnBackgroundColor(
             ContextCompat.getColor(
@@ -49,13 +54,18 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupCornerAnim()
+        setupHintAndCornerAnimation(binding.etName, "First Name")
+        setupHintAndCornerAnimation(binding.etLastname, "Last Name")
+        setupHintAndCornerAnimation(binding.etEmail, "Enter your email address...")
+        setupHintAndCornerAnimation(binding.etPassword, "Enter your password")
+        setupHintAndCornerAnimation(binding.etConfirmPass, "Confirm your password")
         passwordsListener()
 
         binding.btnRegister.setOnClickListener {
             if (validateInputs()) {
                 Toast.makeText(requireContext(), "Registration Successful", Toast.LENGTH_SHORT)
                     .show()
+                loadNavGraph(R.navigation.main_nav_graph)
             }
         }
 
@@ -66,6 +76,30 @@ class RegisterFragment : Fragment() {
         binding.btnFacebook.setOnClickListener {
             Toast.makeText(context, "Facebook", Toast.LENGTH_SHORT).show()
         }
+
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+    }
+
+    fun loadNavGraph(graphId: Int) {
+        parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        val navHostFragment = NavHostFragment.create(graphId)
+
+        val fragmentTransaction = fragmentManager?.beginTransaction()
+
+        fragmentTransaction?.setCustomAnimations(
+            R.anim.slide_in_1,  // Enter animation
+            R.anim.slide_out_2,  // Exit animation
+            R.anim.slide_in_exit,   // Pop enter (when coming back)
+            R.anim.slide_out_exit  // Pop exit (when coming back)
+        )
+
+        fragmentTransaction
+            ?.replace(R.id.nav_host_fragment, navHostFragment)
+            ?.setPrimaryNavigationFragment(navHostFragment) // Set as the primary NavHostFragment
+            ?.commit()
     }
 
     private fun adjustStatusBarIconsBasedOnBackgroundColor(backgroundColor: Int) {
@@ -143,12 +177,12 @@ class RegisterFragment : Fragment() {
         editText.setOnFocusChangeListener { view, hasFocus ->
             val field = view as EditText
 
+//            field.animate().cancel()
+
             if (hasFocus) {
-                // Apply fade-out animation and clear hint
-                fadeOutHint(field, hintColor, transparentColor) {
-                    field.hint = "" // Clear hint when fade-out completes
-                }
-                // Animate corner radius to larger value if the EditText is empty
+                // Immediately hide hint and start fade-out animation
+                field.hint = ""
+                fadeOutHint(field, hintColor, transparentColor)
                 animateCornerRadius(field, startRadius = 8f.dpToPx(), endRadius = 24f.dpToPx())
             } else {
                 // Reset hint and animate corner radius back to small if text is empty

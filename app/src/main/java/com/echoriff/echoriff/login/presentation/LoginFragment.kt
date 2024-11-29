@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentLoginBinding
@@ -36,8 +37,8 @@ class LoginFragment : Fragment() {
         binding = FragmentLoginBinding.inflate(layoutInflater)
         val window = requireActivity().window
 
-        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.black)
-        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.black)
+        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
+        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.navBar)
 
         adjustStatusBarIconsBasedOnBackgroundColor(
             ContextCompat.getColor(
@@ -55,10 +56,10 @@ class LoginFragment : Fragment() {
         setupCornerAnim()
 
         binding.btnLogin.setOnClickListener {
-            if (validateInputs()) {
+            if (true) {
                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+                loadNavGraph(R.navigation.main_nav_graph)
             }
-            findNavController().navigate(R.id.action_loginFragment_to_radiosFragment)
         }
 
         binding.tvLogin.setOnClickListener {
@@ -73,6 +74,25 @@ class LoginFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+    }
+
+    fun loadNavGraph(graphId: Int) {
+        parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        val navHostFragment = NavHostFragment.create(graphId)
+
+        val fragmentTransaction = fragmentManager?.beginTransaction()
+
+            fragmentTransaction?.setCustomAnimations(
+                R.anim.slide_in_1,  // Enter animation
+                R.anim.slide_out_2,  // Exit animation
+                R.anim.slide_in_exit,   // Pop enter (when coming back)
+                R.anim.slide_out_exit  // Pop exit (when coming back)
+            )
+
+        fragmentTransaction
+            ?.replace(R.id.nav_host_fragment, navHostFragment)
+            ?.setPrimaryNavigationFragment(navHostFragment) // Set as the primary NavHostFragment
+            ?.commit()
     }
 
     private fun adjustStatusBarIconsBasedOnBackgroundColor(backgroundColor: Int) {
@@ -129,12 +149,12 @@ class LoginFragment : Fragment() {
         editText.setOnFocusChangeListener { view, hasFocus ->
             val field = view as EditText
 
+//            field.animate().cancel()
+
             if (hasFocus) {
-                // Apply fade-out animation and clear hint
-                fadeOutHint(field, hintColor, transparentColor) {
-                    field.hint = "" // Clear hint when fade-out completes
-                }
-                // Animate corner radius to larger value if the EditText is empty
+                // Immediately hide hint and start fade-out animation
+                field.hint = ""
+                fadeOutHint(field, hintColor, transparentColor)
                 animateCornerRadius(field, startRadius = 8f.dpToPx(), endRadius = 24f.dpToPx())
             } else {
                 // Reset hint and animate corner radius back to small if text is empty
