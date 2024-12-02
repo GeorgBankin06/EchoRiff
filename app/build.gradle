@@ -50,6 +50,7 @@ dependencies {
 
     //Glide
     implementation libs.glide
+    implementation libs.firebase.auth.ktx
 
     //noinspection KaptUsageInsteadOfKsp
     kapt libs.compiler

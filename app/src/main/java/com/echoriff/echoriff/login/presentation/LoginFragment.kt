@@ -56,7 +56,7 @@ class LoginFragment : Fragment() {
         setupCornerAnim()
 
         binding.btnLogin.setOnClickListener {
-            if (true) {
+            if (validateInputs()) {
                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
                 loadNavGraph(R.navigation.main_nav_graph)
             }
@@ -76,13 +76,13 @@ class LoginFragment : Fragment() {
 
     }
 
-    fun loadNavGraph(graphId: Int) {
+    private fun loadNavGraph(graphId: Int) {
         parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
         val navHostFragment = NavHostFragment.create(graphId)
 
-        val fragmentTransaction = fragmentManager?.beginTransaction()
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
 
-            fragmentTransaction?.setCustomAnimations(
+            fragmentTransaction.setCustomAnimations(
                 R.anim.slide_in_1,  // Enter animation
                 R.anim.slide_out_2,  // Exit animation
                 R.anim.slide_in_exit,   // Pop enter (when coming back)
@@ -90,9 +90,9 @@ class LoginFragment : Fragment() {
             )
 
         fragmentTransaction
-            ?.replace(R.id.nav_host_fragment, navHostFragment)
-            ?.setPrimaryNavigationFragment(navHostFragment) // Set as the primary NavHostFragment
-            ?.commit()
+            .replace(R.id.nav_host_fragment, navHostFragment)
+            .setPrimaryNavigationFragment(navHostFragment) // Set as the primary NavHostFragment
+            .commit()
     }
 
     private fun adjustStatusBarIconsBasedOnBackgroundColor(backgroundColor: Int) {
@@ -309,5 +309,4 @@ class LoginFragment : Fragment() {
         shake.repeatMode = Animation.REVERSE
         return shake
     }
-
 }

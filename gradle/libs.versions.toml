@@ -25,6 +25,7 @@ firebaseDatabaseKtx = "21.0.0"
 media3Session = "1.4.1"
 media3Datasource = "1.4.1"
 picasso = "2.71828"
+firebaseAuthKtx = "23.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ firebase-database-ktx = { group = "com.google.firebase", name = "firebase-databa
 androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3Session" }
 androidx-media3-datasource = { group = "androidx.media3", name = "media3-datasource", version.ref = "media3Datasource" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
