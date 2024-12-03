@@ -134,8 +134,8 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupCornerAnim() {
-        setupHintAndCornerAnimation(binding.etEmail, "Enter your email address...")
-        setupHintAndCornerAnimation(binding.etPassword, "Enter your password")
+        setupHintAndCornerAnimation(binding.etEmail, "user@mail.com")
+        setupHintAndCornerAnimation(binding.etPassword, "Password")
     }
 
     private fun setupHintAndCornerAnimation(editText: EditText, hint: String) {

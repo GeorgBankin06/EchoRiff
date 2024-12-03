@@ -1,17 +1,22 @@
 package com.echoriff.echoriff.login.presentation
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
+import com.echoriff.echoriff.admin.AdminFragment
 import com.echoriff.echoriff.databinding.FragmentWelcomeBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class WelcomeFragment : Fragment() {
+
     lateinit var binding: FragmentWelcomeBinding
 
     override fun onCreateView(
@@ -30,6 +35,8 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         binding.btnLogin.setOnClickListener {
             val navOptions = NavOptions.Builder()
                 .setEnterAnim(R.anim.slide_in_1)
@@ -37,7 +44,11 @@ class WelcomeFragment : Fragment() {
                 .setPopEnterAnim(R.anim.slide_in_exit)
                 .setPopExitAnim(R.anim.slide_out_exit)
                 .build()
-            findNavController().navigate(R.id.action_welcomeFragment_to_loginFragment, null, navOptions)
+            findNavController().navigate(
+                R.id.action_welcomeFragment_to_loginFragment,
+                null,
+                navOptions
+            )
         }
 
         binding.btnCreateAccount.setOnClickListener {
@@ -47,8 +58,13 @@ class WelcomeFragment : Fragment() {
                 .setPopEnterAnim(R.anim.slide_in_exit)
                 .setPopExitAnim(R.anim.slide_out_exit)
                 .build()
-            findNavController().navigate(R.id.action_welcomeFragment_to_registerFragment, null, navOptions)
+            findNavController().navigate(
+                R.id.action_welcomeFragment_to_registerFragment,
+                null,
+                navOptions
+            )
         }
     }
+
 
 }
