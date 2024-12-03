@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/admin_nav_graph"
+    app:startDestination="@layout/fragment_admin">
+
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.echoriff.echoriff.admin.AdminFragment"
+        android:label="AdminFragment"
+        tools:layout="@layout/fragment_admin">
+    </fragment>
+
+</navigation>

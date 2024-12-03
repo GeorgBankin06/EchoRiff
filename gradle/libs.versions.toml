@@ -2,7 +2,9 @@
 agp = "8.6.0"
 coil = "2.1.0"
 compiler = "4.13.0"
+firebaseAuth = "23.1.0"
 firebaseBom = "33.3.0"
+firebaseFirestore = "25.1.1"
 fresco = "2.6.0"
 glide = "4.13.2"
 koinAndroid = "4.0.0"
@@ -38,8 +40,10 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
 fresco = { module = "com.facebook.fresco:fresco", version.ref = "fresco" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+google-firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

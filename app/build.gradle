@@ -46,7 +46,10 @@ dependencies {
     implementation libs.androidx.media3.exoplayer.hls
 
     //Firebase
+    implementation libs.firebase.firestore
+    implementation libs.google.firebase.auth
     implementation platform(libs.firebase.bom)
+
 
     //Glide
     implementation libs.glide
