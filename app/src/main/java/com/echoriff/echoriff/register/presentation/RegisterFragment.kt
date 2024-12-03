@@ -20,16 +20,22 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavOptions
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import com.echoriff.echoriff.R
+import com.echoriff.echoriff.admin.AdminFragment
 import com.echoriff.echoriff.databinding.FragmentRegisterBinding
+import com.echoriff.echoriff.register.domain.RegisterState
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : Fragment() {
 
+    private val registerViewModel: RegisterViewModel by viewModel()
     private lateinit var binding: FragmentRegisterBinding
 
     override fun onCreateView(
@@ -54,20 +60,29 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupHintAndCornerAnimation(binding.etName, "First Name")
-        setupHintAndCornerAnimation(binding.etLastname, "Last Name")
-        setupHintAndCornerAnimation(binding.etEmail, "Enter your email address...")
-        setupHintAndCornerAnimation(binding.etPassword, "Enter your password")
-        setupHintAndCornerAnimation(binding.etConfirmPass, "Confirm your password")
+        setupCornerAnim()
         passwordsListener()
 
+        setupButtons()
+
+        observeRegisterModel()
+    }
+
+    private fun setupButtons(){
         binding.btnRegister.setOnClickListener {
-            if (validateInputs()) {
-                Toast.makeText(requireContext(), "Registration Successful", Toast.LENGTH_SHORT)
-                    .show()
-                loadNavGraph(R.navigation.main_nav_graph)
+            with(binding) {
+                val firstName = etName.text.toString().trim()
+                val lastName = etLastname.text.toString().trim()
+                val email = etEmail.text.toString().trim()
+                val password = etPassword.text.toString()
+                val confirmPassword = etConfirmPass.text.toString()
+
+                if (validateInputs(firstName, lastName, email, password, confirmPassword)) {
+                    registerViewModel.registerUser(firstName, lastName, email, password)
+                }
             }
         }
+
 
         binding.btnGoogle.setOnClickListener {
             Toast.makeText(context, "Google", Toast.LENGTH_SHORT).show()
@@ -80,11 +95,52 @@ class RegisterFragment : Fragment() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
 
+    private fun observeRegisterModel() {
+        viewLifecycleOwner.lifecycle.coroutineScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    registerViewModel.registerState.collect { state ->
+                        when (state) {
+                            is RegisterState.Loading -> {
+                                // Show loading state (e.g., show a progress bar)
+//                              progressBar.visibility = View.VISIBLE
+                            }
+
+                            is RegisterState.Success -> {
+                                // Hide loading and navigate based on user role
+//                              progressBar.visibility = View.GONE
+                                if (state.user.role == "admin") {
+                                    val manager = parentFragmentManager.beginTransaction()
+                                    manager.replace(R.id.nav_host_fragment, AdminFragment())
+                                    manager.commit()
+                                } else {
+                                    loadNavGraph(R.navigation.main_nav_graph)
+                                }
+                            }
+
+                            is RegisterState.Failure -> {
+                                // Hide loading and show error message
+//                              progressBar.visibility = View.GONE
+                                Toast.makeText(
+                                    requireContext(),
+                                    state.errorMessage,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun loadNavGraph(graphId: Int) {
-        parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        parentFragmentManager.popBackStack(
+            null,
+            androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
         val navHostFragment = NavHostFragment.create(graphId)
 
         val fragmentTransaction = fragmentManager?.beginTransaction()
@@ -143,9 +199,9 @@ class RegisterFragment : Fragment() {
     private fun setupCornerAnim() {
         setupHintAndCornerAnimation(binding.etName, "First Name")
         setupHintAndCornerAnimation(binding.etLastname, "Last Name")
-        setupHintAndCornerAnimation(binding.etEmail, "Enter your email address...")
-        setupHintAndCornerAnimation(binding.etPassword, "Enter your password")
-        setupHintAndCornerAnimation(binding.etConfirmPass, "Confirm your password")
+        setupHintAndCornerAnimation(binding.etEmail, "user@mail.com")
+        setupHintAndCornerAnimation(binding.etPassword, "Password")
+        setupHintAndCornerAnimation(binding.etConfirmPass, "Confirm Password")
     }
 
     private fun passwordsListener() {
@@ -254,14 +310,14 @@ class RegisterFragment : Fragment() {
         return this * Resources.getSystem().displayMetrics.density
     }
 
-    private fun validateInputs(): Boolean {
+    private fun validateInputs(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
         with(binding) {
-            val firstName = etName.text.toString().trim()
-            val lastName = etLastname.text.toString().trim()
-            val email = etEmail.text.toString().trim()
-            val password = etPassword.text.toString()
-            val confirmPassword = etConfirmPass.text.toString()
-
             var isValid = true
 
             if (firstName.isEmpty()) {
@@ -281,7 +337,6 @@ class RegisterFragment : Fragment() {
                 showEndIcon(tilLastname, true)
             }
 
-            // TODO: Add Email validation for already existing email (Firebase setup)
             // Validate Email
             if (email.isEmpty()) {
                 showErrorWithAnimation(tilEmail, "Email is required")
