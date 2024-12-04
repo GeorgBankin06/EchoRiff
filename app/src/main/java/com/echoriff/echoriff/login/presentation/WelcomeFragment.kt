@@ -7,13 +7,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.admin.AdminFragment
 import com.echoriff.echoriff.databinding.FragmentWelcomeBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class WelcomeFragment : Fragment() {
 
@@ -34,8 +30,6 @@ class WelcomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         binding.btnLogin.setOnClickListener {
             val navOptions = NavOptions.Builder()
@@ -65,6 +59,4 @@ class WelcomeFragment : Fragment() {
             )
         }
     }
-
-
 }

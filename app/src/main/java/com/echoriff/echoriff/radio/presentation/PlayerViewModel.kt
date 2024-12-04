@@ -101,7 +101,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         playRadio(getPrevRadio(), nowPlayingCategory.value)
     }
 
-
     private fun createMainActivityPendingIntent(): PendingIntent {
         val intent = Intent(getApplication(), MainActivity::class.java)
         return PendingIntent.getActivity(

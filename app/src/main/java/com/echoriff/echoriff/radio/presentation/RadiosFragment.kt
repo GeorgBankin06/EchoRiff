@@ -10,10 +10,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
+import com.echoriff.echoriff.common.UserPreferences
 import com.echoriff.echoriff.databinding.FragmentRadiosBinding
 import com.echoriff.echoriff.radio.domain.CategoriesState
 import com.echoriff.echoriff.radio.domain.Category
@@ -21,6 +23,7 @@ import com.echoriff.echoriff.radio.domain.Radio
 import com.echoriff.echoriff.radio.presentation.adapters.CategoriesAdapter
 import com.echoriff.echoriff.radio.presentation.adapters.EqualSpaceItemDecoration
 import com.echoriff.echoriff.radio.presentation.adapters.RadiosAdapter
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,6 +36,7 @@ class RadiosFragment : Fragment() {
     private var playScreenFragment = PlayerFragment.newInstance()
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var radiosAdapter: RadiosAdapter
+    private lateinit var userPreferences: UserPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,12 +62,12 @@ class RadiosFragment : Fragment() {
 
         window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.transparent)
 
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        userPreferences = UserPreferences(requireContext())
 
         setupRadioPlayerFragment()
         setupCategoriesRV(view)
@@ -88,6 +92,15 @@ class RadiosFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun logout() {
+        lifecycleScope.launch {
+            userPreferences.clearUserRole()
+            FirebaseAuth.getInstance().signOut()
+            // TODO Logout function
+//            findNavController().navigate(R.id.action_currentFragment_to_loginFragment)
         }
     }
 

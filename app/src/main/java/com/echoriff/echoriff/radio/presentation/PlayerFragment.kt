@@ -1,10 +1,7 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.animation.ObjectAnimator
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.provider.CalendarContract.Colors
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +20,7 @@ import com.echoriff.echoriff.databinding.FragmentRadioPlayerBinding
 import kotlinx.coroutines.launch
 
 class PlayerFragment : Fragment() {
+
     private val playerModel: PlayerViewModel by navGraphViewModels(R.id.main_nav_graph)
 
     lateinit var binding: FragmentRadioPlayerBinding
@@ -120,7 +118,6 @@ class PlayerFragment : Fragment() {
 
         animateTextColorChange(textView, fromColor, toColor, 300)
     }
-
 
     private fun animateTextColorChange(
         view: TextView,

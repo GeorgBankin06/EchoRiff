@@ -1,6 +1,7 @@
 package com.echoriff.echoriff.register.data
 
 import com.echoriff.echoriff.common.Constants
+import com.echoriff.echoriff.common.UserPreferences
 import com.echoriff.echoriff.register.domain.RegisterState
 import com.echoriff.echoriff.register.domain.User
 import com.google.firebase.auth.FirebaseAuth
@@ -9,7 +10,8 @@ import kotlinx.coroutines.tasks.await
 
 class RegisterRepositoryImpl(
     private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val userPreferences: UserPreferences
 ) : RegisterRepository {
 
     private val adminEmail = Constants.ADMIN_EMAIL
@@ -48,6 +50,8 @@ class RegisterRepositoryImpl(
                 .document(userId)
                 .set(user)
                 .await()
+
+            userPreferences.saveUserRole(role)
 
             RegisterState.Success(user)
         } catch (e: Exception) {
