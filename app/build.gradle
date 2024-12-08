@@ -49,17 +49,19 @@ dependencies {
     implementation libs.firebase.firestore
     implementation libs.google.firebase.auth
     implementation platform(libs.firebase.bom)
-
+    implementation libs.firebase.firestore.ktx
 
     //Glide
     implementation libs.glide
     implementation libs.firebase.auth.ktx
 
-    implementation("androidx.datastore:datastore-preferences-core:1.1.1")
+    // DataStore
+    implementation(libs.androidx.datastore.preferences.core)
     implementation libs.androidx.datastore.preferences
 
-    implementation 'com.google.android.gms:play-services-auth:21.2.0'
-    implementation 'com.google.android.gms:play-services-base:18.5.0'
+    // Google Services
+    implementation libs.play.services.auth
+    implementation libs.play.services.base
 
     //noinspection KaptUsageInsteadOfKsp
     kapt libs.compiler

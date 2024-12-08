@@ -11,6 +11,4 @@
         android:label="RadiosFragment"
         tools:layout="@layout/fragment_radios" />
 
-    <include app:graph="@navigation/auth_nav_graph" />
-
 </navigation>

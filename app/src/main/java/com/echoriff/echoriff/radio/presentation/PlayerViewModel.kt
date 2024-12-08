@@ -38,9 +38,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     val isPlayingState = _isPlayingState.asStateFlow()
 
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(application).build()
-    private val mediaSession: MediaSession = MediaSession.Builder(application, exoPlayer)
-        .setSessionActivity(createMainActivityPendingIntent())
-        .build()
 
     init {
         exoPlayer.addListener(object : Player.Listener {
@@ -54,7 +51,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
 
     override fun onCleared() {
         super.onCleared()
-        mediaSession.release()
         exoPlayer.release()
     }
 

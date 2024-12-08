@@ -1,6 +1,6 @@
 package com.echoriff.echoriff.register.di
 
-import com.echoriff.echoriff.common.UserPreferences
+import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.register.data.RegisterRepository
 import com.echoriff.echoriff.register.data.RegisterRepositoryImpl
 import com.echoriff.echoriff.register.domain.usecase.RegisterUseCaseImpl

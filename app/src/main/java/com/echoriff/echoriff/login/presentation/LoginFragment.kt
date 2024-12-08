@@ -8,16 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.common.adjustStatusBarIconsBasedOnBackgroundColor
-import com.echoriff.echoriff.common.loadNavGraph
-import com.echoriff.echoriff.common.setupHintAndCornerAnimation
-import com.echoriff.echoriff.common.showEndIcon
-import com.echoriff.echoriff.common.showErrorWithAnimation
+import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentLoginBinding
 
-class LoginFragment : Fragment() {
+class LoginFragment : BaseFragment() {
     lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
@@ -48,12 +45,22 @@ class LoginFragment : Fragment() {
         binding.btnLogin.setOnClickListener {
             if (validateInputs()) {
                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-                loadNavGraph(this@LoginFragment, R.navigation.main_nav_graph)
+                findNavController().navigate(R.id.main_nav_graph)
             }
         }
 
         binding.tvLogin.setOnClickListener {
-            Toast.makeText(context, "Sign Up", Toast.LENGTH_SHORT).show()
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_1)
+                .setExitAnim(R.anim.slide_out_2)
+                .setPopEnterAnim(R.anim.slide_in_exit)
+                .setPopExitAnim(R.anim.slide_out_exit)
+                .build()
+            findNavController().navigate(
+                R.id.action_loginFragment_to_registerFragment,
+                null,
+                navOptions
+            )
         }
 
         binding.tvForgotPassword.setOnClickListener {

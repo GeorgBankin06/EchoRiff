@@ -1,9 +1,9 @@
 package com.echoriff.echoriff.register.data
 
 import com.echoriff.echoriff.common.Constants
-import com.echoriff.echoriff.common.UserPreferences
+import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.register.domain.RegisterState
-import com.echoriff.echoriff.register.domain.User
+import com.echoriff.echoriff.common.domain.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await

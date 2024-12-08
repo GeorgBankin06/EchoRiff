@@ -1,4 +1,4 @@
-package com.echoriff.echoriff.common
+package com.echoriff.echoriff.common.domain
 
 import android.content.Context
 import android.net.ConnectivityManager

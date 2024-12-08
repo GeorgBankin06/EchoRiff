@@ -1,22 +1,23 @@
 package com.echoriff.echoriff.admin
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.common.UserPreferences
+import com.echoriff.echoriff.common.domain.UserPreferences
+import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentAdminBinding
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
-class AdminFragment : Fragment() {
+class AdminFragment : BaseFragment() {
 
     lateinit var binding: FragmentAdminBinding
-    private lateinit var userPreferences: UserPreferences
+    private val userPreferences: UserPreferences by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,16 +30,18 @@ class AdminFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userPreferences = UserPreferences(requireContext())
 
+        binding.btnLogout.setOnClickListener {
+            logout()
+        }
     }
 
     private fun logout() {
+        FirebaseAuth.getInstance().signOut()
+
         lifecycleScope.launch {
             userPreferences.clearUserRole()
-            FirebaseAuth.getInstance().signOut()
-            // TODO Logout function
-//            findNavController().navigate(R.id.action_currentFragment_to_loginFragment)
         }
+        findNavController().navigate(R.id.auth_nav_graph)
     }
 }

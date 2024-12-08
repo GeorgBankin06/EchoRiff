@@ -8,24 +8,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.admin.AdminFragment
-import com.echoriff.echoriff.common.adjustStatusBarIconsBasedOnBackgroundColor
-import com.echoriff.echoriff.common.loadNavGraph
-import com.echoriff.echoriff.common.setupHintAndCornerAnimation
-import com.echoriff.echoriff.common.showEndIcon
-import com.echoriff.echoriff.common.showErrorWithAnimation
+import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentRegisterBinding
 import com.echoriff.echoriff.register.domain.RegisterState
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RegisterFragment : Fragment() {
+class RegisterFragment : BaseFragment() {
 
     private val registerViewModel: RegisterViewModel by viewModel()
     private lateinit var binding: FragmentRegisterBinding
@@ -105,11 +99,11 @@ class RegisterFragment : Fragment() {
                                 // Hide loading and navigate based on user role
 //                              progressBar.visibility = View.GONE
                                 if (state.user.role == "admin") {
-                                    val manager = parentFragmentManager.beginTransaction()
-                                    manager.replace(R.id.nav_host_fragment, AdminFragment())
-                                    manager.commit()
+//                                    loadNavGraph(this@RegisterFragment ,R.navigation.admin_nav_graph)
+                                    findNavController().navigate(R.id.action_registerFragment_to_admin_nav_graph)
                                 } else {
-                                    loadNavGraph(this@RegisterFragment, R.navigation.main_nav_graph)
+//                                    loadNavGraph(this@RegisterFragment, R.navigation.main_nav_graph)
+                                    findNavController().navigate(R.id.action_registerFragment_to_main_nav_graph)
                                 }
                             }
 
@@ -128,7 +122,6 @@ class RegisterFragment : Fragment() {
             }
         }
     }
-
 
     private fun setupCornerAnim() {
         setupHintAndCornerAnimation(this@RegisterFragment, binding.etName, "First Name")

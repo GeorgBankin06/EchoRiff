@@ -4,23 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.common.NetworkUtils
-import com.echoriff.echoriff.common.UserPreferences
-import com.echoriff.echoriff.common.loadNavGraph
+import com.echoriff.echoriff.common.Constants
+import com.echoriff.echoriff.common.domain.NetworkUtils
+import com.echoriff.echoriff.common.domain.UserPreferences
+import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentSplashBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
-class SplashFragment : Fragment() {
+class SplashFragment : BaseFragment() {
 
     lateinit var binding: FragmentSplashBinding
-    private lateinit var userPreferences: UserPreferences
+    private val userPreferences: UserPreferences by inject()
     private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
@@ -35,7 +36,6 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
-        userPreferences = UserPreferences(requireContext())
 
         val currentUser = auth.currentUser
 
@@ -50,30 +50,11 @@ class SplashFragment : Fragment() {
         }
     }
 
-    private fun navigateBasedOnCachedRole() {
-        lifecycleScope.launch {
-            val cachedRole = userPreferences.userRole.first()
-            if (cachedRole != null) {
-                navigateToRoleBasedScreen(cachedRole)
-            } else {
-                navigateToLogin()
-            }
-        }
-    }
-
-    private fun navigateToRoleBasedScreen(role: String) {
-        if (role == "admin") {
-            loadNavGraph(this, R.navigation.admin_nav_graph)
-        } else {
-            loadNavGraph(this, R.navigation.main_nav_graph)
-        }
-    }
-
     private fun checkUserRoleAndNavigate(userId: String) {
         val firestore = FirebaseFirestore.getInstance()
 
         firestore
-            .collection("Users")
+            .collection(Constants.USERS)
             .document(userId)
             .get()
             .addOnSuccessListener { document ->
@@ -89,6 +70,25 @@ class SplashFragment : Fragment() {
             }.addOnFailureListener {
                 navigateToLogin()
             }
+    }
+
+    private fun navigateBasedOnCachedRole() {
+        lifecycleScope.launch {
+            val cachedRole = userPreferences.userRole.first()
+            if (cachedRole != null) {
+                navigateToRoleBasedScreen(cachedRole)
+            } else {
+                navigateToLogin()
+            }
+        }
+    }
+
+    private fun navigateToRoleBasedScreen(role: String) {
+        if (role == "admin") {
+            findNavController().navigate(R.id.action_splashFragment_to_admin_nav_graph)
+        } else {
+            findNavController().navigate(R.id.action_splashFragment_to_main_nav_graph)
+        }
     }
 
     private fun navigateToLogin() {

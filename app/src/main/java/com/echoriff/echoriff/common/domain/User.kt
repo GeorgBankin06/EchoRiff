@@ -1,4 +1,4 @@
-package com.echoriff.echoriff.register.domain
+package com.echoriff.echoriff.common.domain
 
 import com.echoriff.echoriff.radio.domain.Radio
 import com.echoriff.echoriff.radio.domain.Song

@@ -12,10 +12,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.common.UserPreferences
+import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.databinding.FragmentRadiosBinding
 import com.echoriff.echoriff.radio.domain.CategoriesState
 import com.echoriff.echoriff.radio.domain.Category
@@ -25,6 +26,7 @@ import com.echoriff.echoriff.radio.presentation.adapters.EqualSpaceItemDecoratio
 import com.echoriff.echoriff.radio.presentation.adapters.RadiosAdapter
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RadiosFragment : Fragment() {
@@ -36,7 +38,7 @@ class RadiosFragment : Fragment() {
     private var playScreenFragment = PlayerFragment.newInstance()
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var radiosAdapter: RadiosAdapter
-    private lateinit var userPreferences: UserPreferences
+    private val userPreferences: UserPreferences by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +69,6 @@ class RadiosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userPreferences = UserPreferences(requireContext())
 
         setupRadioPlayerFragment()
         setupCategoriesRV(view)
@@ -93,14 +94,34 @@ class RadiosFragment : Fragment() {
                 }
             }
         }
+
+        binding.btnLogout.setOnClickListener {
+            logout()
+        }
     }
 
     private fun logout() {
+        FirebaseAuth.getInstance().signOut()
+
         lifecycleScope.launch {
             userPreferences.clearUserRole()
-            FirebaseAuth.getInstance().signOut()
-            // TODO Logout function
-//            findNavController().navigate(R.id.action_currentFragment_to_loginFragment)
+        }
+        loadNavGraph(R.navigation.auth_nav_graph)
+    }
+
+    private fun loadNavGraph(graphId: Int) {
+        val navHostFragment = NavHostFragment.create(graphId)
+
+        parentFragmentManager.beginTransaction().apply {
+            setCustomAnimations(
+                R.anim.slide_in_1,  // Enter animation
+                R.anim.slide_out_2, // Exit animation
+                R.anim.slide_in_exit, // Pop enter
+                R.anim.slide_out_exit // Pop exit
+            )
+            replace(R.id.nav_host_fragment, navHostFragment)
+            setPrimaryNavigationFragment(navHostFragment)
+            commit()
         }
     }
 
