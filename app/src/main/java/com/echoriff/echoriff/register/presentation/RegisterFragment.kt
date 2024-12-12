@@ -5,6 +5,7 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -66,6 +67,13 @@ class RegisterFragment : BaseFragment() {
                 val confirmPassword = etConfirmPass.text.toString()
 
                 if (validateInputs(firstName, lastName, email, password, confirmPassword)) {
+                    scroll.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey
+                        )
+                    )
+                    showProgressBar()
                     registerViewModel.registerUser(firstName, lastName, email, password)
                 }
             }
@@ -91,25 +99,40 @@ class RegisterFragment : BaseFragment() {
                     registerViewModel.registerState.collect { state ->
                         when (state) {
                             is RegisterState.Loading -> {
-                                // Show loading state (e.g., show a progress bar)
-//                              progressBar.visibility = View.VISIBLE
+//                              binding.progressIndicator.visibility = View.VISIBLE
                             }
 
                             is RegisterState.Success -> {
-                                // Hide loading and navigate based on user role
-//                              progressBar.visibility = View.GONE
+                                binding.scroll.setBackgroundColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.black
+                                    )
+                                )
+                                hideProgressBar()
+                                val window = requireActivity().window
+
+                                window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
+                                window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.navBar)
                                 if (state.user.role == "admin") {
-//                                    loadNavGraph(this@RegisterFragment ,R.navigation.admin_nav_graph)
                                     findNavController().navigate(R.id.action_registerFragment_to_admin_nav_graph)
                                 } else {
-//                                    loadNavGraph(this@RegisterFragment, R.navigation.main_nav_graph)
                                     findNavController().navigate(R.id.action_registerFragment_to_main_nav_graph)
                                 }
                             }
 
                             is RegisterState.Failure -> {
-                                // Hide loading and show error message
-//                              progressBar.visibility = View.GONE
+                                val window = requireActivity().window
+
+                                window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
+                                window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.navBar)
+                                binding.progressIndicator.visibility = View.GONE
+                                binding.scroll.setBackgroundColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.black
+                                    )
+                                )
                                 Toast.makeText(
                                     requireContext(),
                                     state.errorMessage,
@@ -121,6 +144,49 @@ class RegisterFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    fun showProgressBar() {
+//        binding.scroll.visibility = View.VISIBLE
+        binding.progressIndicator.visibility = View.VISIBLE
+//
+//        // Create fade-in animation for the background overlay
+//        val fadeInBackground = AlphaAnimation(0.0f, 1.0f).apply {
+//            duration = 500 // Duration of the fade-in animation
+//            fillAfter = true // Keep the final state after the animation finishes
+//        }
+
+        // Create fade-in animation for the progress bar
+        val fadeInProgressBar = AlphaAnimation(0.0f, 1.0f).apply {
+            duration = 200 // Duration of the fade-in animation
+            fillAfter = true // Keep the final state after the animation finishes
+        }
+
+        // Start the animations
+//        binding.scroll.startAnimation(fadeInBackground)
+        binding.progressIndicator.startAnimation(fadeInProgressBar)
+    }
+
+    fun hideProgressBar() {
+//        // Create fade-out animation for the background overlay
+//        val fadeOutBackground = AlphaAnimation(1.0f, 0.0f).apply {
+//            duration = 500 // Duration of the fade-out animation
+//            fillAfter = true // Keep the final state after the animation finishes
+//        }
+
+        // Create fade-out animation for the progress bar
+        val fadeOutProgressBar = AlphaAnimation(1.0f, 0.0f).apply {
+            duration = 200 // Duration of the fade-out animation
+            fillAfter = true // Keep the final state after the animation finishes
+        }
+
+        // Start the animations
+//        binding.scroll.startAnimation(fadeOutBackground)
+        binding.progressIndicator.startAnimation(fadeOutProgressBar)
+
+        // Hide the views after the animation ends
+//        binding.scroll.visibility = View.GONE
+        binding.progressIndicator.visibility = View.GONE
     }
 
     private fun setupCornerAnim() {
@@ -136,6 +202,25 @@ class RegisterFragment : BaseFragment() {
     }
 
     private fun passwordsListener() {
+
+        /*binding.etName.addTextChangedListener {
+            if (binding.etName.text.toString().isNotEmpty()) {
+                binding.tilName.error = null
+            }
+        }
+
+        binding.etLastname.addTextChangedListener {
+            if (binding.etLastname.text.toString().isNotEmpty()) {
+                binding.tilLastname.error = null
+            }
+        }
+
+        binding.etEmail.addTextChangedListener {
+            if (binding.etEmail.text.toString().isNotEmpty()) {
+                binding.tilEmail.error = null
+            }
+        }*/
+
         binding.etPassword.addTextChangedListener {
             showEndIcon(this@RegisterFragment, binding.tilPassword, false)
 //            showEndIcon(binding.tilConfirmPass, false)
@@ -152,7 +237,6 @@ class RegisterFragment : BaseFragment() {
             }
         }
     }
-
 
     private fun validateInputs(
         firstName: String,

@@ -44,22 +44,16 @@ class LoginFragment : BaseFragment() {
 
         binding.btnLogin.setOnClickListener {
             if (validateInputs()) {
+                binding.progressIndicator.visibility = View.VISIBLE
+                binding.dimmerOverlay.visibility = View.VISIBLE
                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.main_nav_graph)
             }
         }
 
         binding.tvLogin.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_1)
-                .setExitAnim(R.anim.slide_out_2)
-                .setPopEnterAnim(R.anim.slide_in_exit)
-                .setPopExitAnim(R.anim.slide_out_exit)
-                .build()
             findNavController().navigate(
-                R.id.action_loginFragment_to_registerFragment,
-                null,
-                navOptions
+                R.id.action_loginFragment_to_registerFragment
             )
         }
 
@@ -70,7 +64,6 @@ class LoginFragment : BaseFragment() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
-
     }
 
     private fun setupCornerAnim() {

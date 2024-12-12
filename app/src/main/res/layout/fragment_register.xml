@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:fillViewport="false"
+    android:fillViewport="true"
     android:fitsSystemWindows="true"
     tools:context=".register.presentation.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:trackColor="@color/white" />
 
         <ImageButton
             android:id="@+id/btn_back"
@@ -119,22 +132,6 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <!--        <com.google.android.material.button.MaterialButton-->
-        <!--            android:id="@+id/btn_facebook"-->
-        <!--            style="@style/CustomMaterialButton"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="60dp"-->
-        <!--            android:layout_marginStart="12dp"-->
-        <!--            android:layout_marginTop="12dp"-->
-        <!--            android:layout_marginEnd="12dp"-->
-        <!--            android:layout_marginBottom="18dp"-->
-        <!--            android:text="Facebook"-->
-        <!--            android:textSize="18sp"-->
-        <!--            app:layout_constraintBottom_toTopOf="@id/tv_lastname"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toEndOf="@id/btn_google"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/tv_optional" />-->
-
         <!-- Name TextView -->
         <TextView
             android:id="@+id/tv_name"
@@ -165,7 +162,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_name">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -188,7 +185,7 @@
             app:layout_constraintBottom_toTopOf="@id/til_lastname"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_name"
-            app:layout_constraintTop_toBottomOf="@id/btn_google" />
+            app:layout_constraintTop_toBottomOf="@id/btn_facebook" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_lastname"
@@ -366,7 +363,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/tv_error_background"
             android:drawableStart="@drawable/ic_warning"
@@ -387,17 +384,18 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="16dp"
+            android:layout_marginTop="24dp"
             android:text="Register"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_password_error" />
+            app:layout_constraintTop_toBottomOf="@id/til_confirm_pass" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_register">
@@ -430,4 +428,4 @@
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

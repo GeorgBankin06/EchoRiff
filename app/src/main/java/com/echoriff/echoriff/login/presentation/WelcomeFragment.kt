@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
@@ -31,32 +33,14 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {}
+
         binding.btnLogin.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_1)
-                .setExitAnim(R.anim.slide_out_2)
-                .setPopEnterAnim(R.anim.slide_in_exit)
-                .setPopExitAnim(R.anim.slide_out_exit)
-                .build()
-            findNavController().navigate(
-                R.id.action_welcomeFragment_to_loginFragment,
-                null,
-                navOptions
-            )
+            findNavController().navigate(R.id.action_welcomeFragment_to_loginFragment)
         }
 
         binding.btnCreateAccount.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_1)
-                .setExitAnim(R.anim.slide_out_2)
-                .setPopEnterAnim(R.anim.slide_in_exit)
-                .setPopExitAnim(R.anim.slide_out_exit)
-                .build()
-            findNavController().navigate(
-                R.id.action_welcomeFragment_to_registerFragment,
-                null,
-                navOptions
-            )
+            findNavController().navigate(R.id.action_welcomeFragment_to_registerFragment)
         }
     }
 }
