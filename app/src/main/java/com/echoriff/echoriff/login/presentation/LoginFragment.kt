@@ -7,26 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.common.Constants
+import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentLoginBinding
 import com.echoriff.echoriff.login.domain.LoginState
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment() {
 
     private val loginViewModel: LoginViewModel by viewModel()
+    private val userPreferences: UserPreferences by inject()
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
@@ -72,9 +69,6 @@ class LoginFragment : BaseFragment() {
         binding.tvForgotPassword.setOnClickListener {
             Toast.makeText(context, "Forgot", Toast.LENGTH_SHORT).show()
         }
-        binding.cbRemember.setOnClickListener {
-            Constants.REMEMBER = binding.cbRemember.isChecked
-        }
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
@@ -97,7 +91,8 @@ class LoginFragment : BaseFragment() {
                                 binding.dimmerOverlay.visibility = View.GONE
                                 Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT)
                                     .show()
-                                navigateBaseOnRole(state.role)
+                                navigateBasedOnRole(state.role)
+                                userPreferences.saveUserRole(state.role)
                             }
 
                             is LoginState.Failure -> {
@@ -118,7 +113,7 @@ class LoginFragment : BaseFragment() {
         }
     }
 
-    private fun navigateBaseOnRole(role: String) {
+    private fun navigateBasedOnRole(role: String) {
         when (role) {
             "admin" -> findNavController().navigate(R.id.admin_nav_graph)
             "user" -> findNavController().navigate(R.id.main_nav_graph)
