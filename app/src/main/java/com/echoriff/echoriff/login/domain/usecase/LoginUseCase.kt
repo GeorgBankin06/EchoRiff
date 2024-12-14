@@ -1,7 +1,7 @@
-package com.echoriff.echoriff.login.data
+package com.echoriff.echoriff.login.domain.usecase
 
 import com.echoriff.echoriff.login.domain.LoginState
 
-interface LoginRepository {
+interface LoginUseCase {
     suspend fun login(email: String, password: String): LoginState
 }

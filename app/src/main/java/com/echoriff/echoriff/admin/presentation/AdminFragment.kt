@@ -1,4 +1,4 @@
-package com.echoriff.echoriff.admin
+package com.echoriff.echoriff.admin.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater

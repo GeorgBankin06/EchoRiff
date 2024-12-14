@@ -1,6 +1,7 @@
 package com.echoriff.echoriff
 
 import android.app.Application
+import com.echoriff.echoriff.login.di.loginModule
 import com.echoriff.echoriff.radio.di.radioModule
 import com.echoriff.echoriff.register.di.registerModule
 import org.koin.android.ext.koin.androidContext
@@ -17,6 +18,7 @@ class EchoRiffApplication : Application() {
             // List Koin modules here
             modules(radioModule)
             modules(registerModule)
+            modules(loginModule)
         }
     }
 }

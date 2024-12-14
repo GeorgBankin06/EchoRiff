@@ -1,15 +1,16 @@
 package com.echoriff.echoriff.login.data
 
+import com.echoriff.echoriff.login.domain.LoginState
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 
 class LoginRepositoryImpl(private val auth: FirebaseAuth) : LoginRepository {
-    override suspend fun loginUser(email: String, password: String): Result<Boolean> {
+    override suspend fun login(email: String, password: String): LoginState {
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
-            Result.success(true)
-        } catch (e: Exception) {
-            Result.failure(e)
+            LoginState.Success
+        }catch (e: Exception){
+            LoginState.Failure(e.localizedMessage ?: "Error occurred")
         }
     }
 }
