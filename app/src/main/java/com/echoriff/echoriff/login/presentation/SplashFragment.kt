@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.Constants
@@ -46,7 +47,13 @@ class SplashFragment : BaseFragment() {
                 navigateBasedOnCachedRole()
             }
         } else {
-            findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment)
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(
+                    R.id.splashFragment,
+                    inclusive = true
+                ).setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
+                .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
+            findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment, null, navOptions)
         }
     }
 
@@ -85,13 +92,37 @@ class SplashFragment : BaseFragment() {
 
     private fun navigateToRoleBasedScreen(role: String) {
         if (role == "admin") {
-            findNavController().navigate(R.id.action_splashFragment_to_admin_nav_graph)
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.auth_nav_graph, inclusive = true)
+                .setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
+                .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
+            findNavController().navigate(
+                R.id.action_splashFragment_to_admin_nav_graph,
+                null,
+                navOptions
+            )
         } else {
-            findNavController().navigate(R.id.action_splashFragment_to_main_nav_graph)
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(
+                    R.id.auth_nav_graph,
+                    inclusive = true
+                ).setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
+                .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
+            findNavController().navigate(
+                R.id.action_splashFragment_to_main_nav_graph,
+                null,
+                navOptions
+            )
         }
     }
 
     private fun navigateToLogin() {
-        findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment)
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(
+                R.id.splashFragment,
+                inclusive = true
+            )
+            .build()
+        findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment, null, navOptions)
     }
 }

@@ -25,6 +25,8 @@ class AdminFragment : BaseFragment() {
     ): View {
         binding = FragmentAdminBinding.inflate(layoutInflater)
 
+        windowColors(R.color.statusBar, R.color.navBar)
+
         return binding.root
     }
 

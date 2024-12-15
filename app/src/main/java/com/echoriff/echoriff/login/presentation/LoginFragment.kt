@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.UserPreferences
@@ -31,10 +32,8 @@ class LoginFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLoginBinding.inflate(layoutInflater)
-        val window = requireActivity().window
 
-        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
-        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.navBar)
+        windowColors(R.color.statusBar, R.color.navBar)
 
         adjustStatusBarIconsBasedOnBackgroundColor(
             this@LoginFragment, ContextCompat.getColor(
@@ -89,8 +88,7 @@ class LoginFragment : BaseFragment() {
                             is LoginState.Success -> {
                                 binding.progressIndicator.visibility = View.GONE
                                 binding.dimmerOverlay.visibility = View.GONE
-                                Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT)
-                                    .show()
+
                                 navigateBasedOnRole(state.role)
                                 userPreferences.saveUserRole(state.role)
                             }
@@ -100,7 +98,7 @@ class LoginFragment : BaseFragment() {
                                 binding.dimmerOverlay.visibility = View.GONE
                                 Toast.makeText(
                                     context,
-                                    "Login failed: ${state.message}",
+                                    state.message,
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -114,11 +112,14 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun navigateBasedOnRole(role: String) {
+        val navOptions =
+            NavOptions.Builder().setPopUpTo(R.id.auth_nav_graph, inclusive = true)
+                .setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
+                .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
         when (role) {
-            "admin" -> findNavController().navigate(R.id.admin_nav_graph)
-            "user" -> findNavController().navigate(R.id.main_nav_graph)
-            else -> Toast.makeText(requireContext(), "Unknown role: $role", Toast.LENGTH_SHORT)
-                .show()
+            "admin" -> findNavController().navigate(R.id.admin_nav_graph, null, navOptions)
+            "user" -> findNavController().navigate(R.id.main_nav_graph, null, navOptions)
+            else -> null
         }
     }
 

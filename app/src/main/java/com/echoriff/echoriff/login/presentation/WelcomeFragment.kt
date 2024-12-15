@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
+import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentWelcomeBinding
 
-class WelcomeFragment : Fragment() {
+class WelcomeFragment : BaseFragment() {
 
     lateinit var binding: FragmentWelcomeBinding
 
@@ -22,18 +23,14 @@ class WelcomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentWelcomeBinding.inflate(layoutInflater)
-        val window = requireActivity().window
 
-        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
-        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.transparent)
+        windowColors(R.color.statusBar, R.color.navBar)
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {}
 
         binding.btnLogin.setOnClickListener {
             findNavController().navigate(R.id.action_welcomeFragment_to_loginFragment)

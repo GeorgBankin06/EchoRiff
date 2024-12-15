@@ -19,6 +19,13 @@ import com.google.android.material.textfield.TextInputLayout
 
 open class BaseFragment: Fragment() {
 
+    fun windowColors(statusBarColor: Int, navBarColor: Int){
+        val window = requireActivity().window
+
+        window.statusBarColor = ContextCompat.getColor(requireContext(), statusBarColor)
+        window.navigationBarColor = ContextCompat.getColor(requireContext(), navBarColor)
+    }
+
     fun setupHintAndCornerAnimation(fragment: Fragment, editText: EditText, hint: String) {
         val transparentColor =
             ContextCompat.getColor(fragment.requireContext(), android.R.color.transparent)

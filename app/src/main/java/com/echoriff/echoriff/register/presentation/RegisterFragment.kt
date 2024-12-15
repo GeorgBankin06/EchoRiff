@@ -12,6 +12,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.presentation.BaseFragment
@@ -30,10 +31,8 @@ class RegisterFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRegisterBinding.inflate(layoutInflater)
-        val window = requireActivity().window
 
-        window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
-        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.navBar)
+        windowColors(R.color.statusBar, R.color.navBar)
 
         adjustStatusBarIconsBasedOnBackgroundColor(
             this@RegisterFragment,
@@ -73,7 +72,10 @@ class RegisterFragment : BaseFragment() {
                             R.color.grey
                         )
                     )
+                    windowColors(R.color.grey, R.color.grey)
+
                     showProgressBar()
+
                     registerViewModel.registerUser(firstName, lastName, email, password)
                 }
             }
@@ -99,7 +101,6 @@ class RegisterFragment : BaseFragment() {
                     registerViewModel.registerState.collect { state ->
                         when (state) {
                             is RegisterState.Loading -> {
-//                              binding.progressIndicator.visibility = View.VISIBLE
                             }
 
                             is RegisterState.Success -> {
@@ -109,23 +110,37 @@ class RegisterFragment : BaseFragment() {
                                         R.color.black
                                     )
                                 )
-                                hideProgressBar()
-                                val window = requireActivity().window
 
-                                window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
-                                window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.navBar)
+                                hideProgressBar()
+
+                                windowColors(R.color.statusBar, R.color.navBar)
+
+                                val navOptions = NavOptions.Builder()
+                                    .setPopUpTo(
+                                        R.id.auth_nav_graph,
+                                        inclusive = true
+                                    ).setExitAnim(R.anim.slide_out_2)
+                                    .setEnterAnim(R.anim.slide_in_1)
+                                    .setPopEnterAnim(R.anim.slide_in_exit)
+                                    .setPopExitAnim(R.anim.slide_out_exit).build()
                                 if (state.user.role == "admin") {
-                                    findNavController().navigate(R.id.action_registerFragment_to_admin_nav_graph)
+                                    findNavController().navigate(
+                                        R.id.action_registerFragment_to_admin_nav_graph,
+                                        null,
+                                        navOptions
+                                    )
                                 } else {
-                                    findNavController().navigate(R.id.action_registerFragment_to_main_nav_graph)
+                                    findNavController().navigate(
+                                        R.id.action_registerFragment_to_main_nav_graph,
+                                        null,
+                                        navOptions
+                                    )
                                 }
                             }
 
                             is RegisterState.Failure -> {
-                                val window = requireActivity().window
+                                windowColors(R.color.statusBar, R.color.navBar)
 
-                                window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.statusBar)
-                                window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.navBar)
                                 binding.progressIndicator.visibility = View.GONE
                                 binding.scroll.setBackgroundColor(
                                     ContextCompat.getColor(
@@ -146,7 +161,7 @@ class RegisterFragment : BaseFragment() {
         }
     }
 
-    fun showProgressBar() {
+    private fun showProgressBar() {
 //        binding.scroll.visibility = View.VISIBLE
         binding.progressIndicator.visibility = View.VISIBLE
 //
@@ -167,7 +182,7 @@ class RegisterFragment : BaseFragment() {
         binding.progressIndicator.startAnimation(fadeInProgressBar)
     }
 
-    fun hideProgressBar() {
+    private fun hideProgressBar() {
 //        // Create fade-out animation for the background overlay
 //        val fadeOutBackground = AlphaAnimation(1.0f, 0.0f).apply {
 //            duration = 500 // Duration of the fade-out animation
