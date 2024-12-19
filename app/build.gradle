@@ -55,6 +55,9 @@ dependencies {
     implementation libs.glide
     implementation libs.firebase.auth.ktx
 
+    implementation "androidx.palette:palette-ktx:1.0.0"
+    implementation 'com.squareup.picasso:picasso:2.8'
+
     // DataStore
     implementation(libs.androidx.datastore.preferences.core)
     implementation libs.androidx.datastore.preferences

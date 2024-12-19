@@ -2,6 +2,7 @@
 <com.echoriff.echoriff.radio.presentation.layout.PlayerScreenMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
@@ -59,7 +60,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:paddingStart="16dp"
         android:singleLine="true"
-        android:text="Blinding Ldasdasdsdasdasdasdasdasdasdasdasdasdasdadasassdasdaights"
+        android:text="Song"
         android:textAlignment="textStart"
         android:textColor="@color/white"
         android:textSize="24sp"
@@ -76,14 +77,13 @@
         android:maxLines="1"
         android:outlineProvider="none"
         android:paddingStart="16dp"
-        android:text="The Weeknd"
+        android:text="Artist"
         android:textAlignment="textStart"
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@id/player_background_view"
         app:layout_constraintStart_toStartOf="@id/player_background_view"
         app:layout_constraintTop_toBottomOf="@+id/tv_songName" />
-
 
     <TextView
         android:id="@+id/tv_live"
@@ -129,7 +129,6 @@
         app:layout_constraintStart_toEndOf="@+id/btn_prev"
         app:layout_constraintTop_toBottomOf="@+id/tv_live" />
 
-
     <ImageButton
         android:id="@+id/btn_next"
         android:layout_width="0dp"
@@ -144,7 +143,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_play"
         app:layout_constraintTop_toBottomOf="@+id/tv_live" />
-
 
     <ImageButton
         android:id="@+id/btn_webPage"

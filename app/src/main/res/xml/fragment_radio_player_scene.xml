@@ -13,8 +13,7 @@
             app:maxAcceleration="200"
             app:touchAnchorId="@+id/player_background_view"
             app:touchAnchorSide="top" />
-        <KeyFrameSet>
-        </KeyFrameSet>
+        <KeyFrameSet></KeyFrameSet>
     </Transition>
 
     <ConstraintSet android:id="@+id/max">
@@ -245,8 +244,8 @@
             android:elevation="10dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/player_background_view"
-            app:layout_constraintStart_toStartOf="@id/player_background_view"
             app:layout_constraintEnd_toEndOf="@+id/player_background_view"
+            app:layout_constraintStart_toStartOf="@id/player_background_view"
             app:layout_constraintTop_toTopOf="@+id/player_background_view" />
         <Constraint
             android:id="@+id/player_background_view"

@@ -1,22 +1,34 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.animation.ObjectAnimator
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.setPadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.navGraphViewModels
+import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadioPlayerBinding
+import com.echoriff.echoriff.radio.di.radioModule
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
 class PlayerFragment : Fragment() {
@@ -87,7 +99,67 @@ class PlayerFragment : Fragment() {
                         updateTextColorBasedOnPlayerState(isPlaying)
                     }
                 }
+                launch {
+                    playerModel.nowPlayingRadio.collect { radio ->
+                        val radioImageUrl = radio?.coverArtUrl ?: ""
+                        if (radioImageUrl.isEmpty()) {
+                            Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show()
+                        } else {
+                            updateRadioImageAndBackground(radioImageUrl)
+                        }
+                    }
+                }
             }
+        }
+    }
+
+    private fun updateRadioImageAndBackground(imageUrl: String) {
+        Picasso.get()
+            .load(imageUrl)
+            .resize(200, 200) // Resize for efficient processing
+            .centerCrop()
+            .into(object : com.squareup.picasso.Target {
+                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                    if (bitmap != null) {
+                        setGradientBackground(bitmap)
+                    }
+                }
+
+                override fun onBitmapFailed(
+                    e: Exception?,
+                    errorDrawable: android.graphics.drawable.Drawable?
+                ) {
+                    // Handle failure (optional placeholder)
+                }
+
+                override fun onPrepareLoad(placeHolderDrawable: android.graphics.drawable.Drawable?) {
+                    // Handle loading state (optional placeholder)
+                }
+            })
+    }
+
+    private fun setGradientBackground(bitmap: Bitmap) {
+        Palette.from(bitmap).generate { palette ->
+            val vibrantColor = palette?.getVibrantColor(0xFF000000.toInt()) ?: 0xFF000000.toInt()
+            val mutedColor = palette?.getMutedColor(0xFF000000.toInt()) ?: 0xFF000000.toInt()
+
+            // Create a gradient drawable with the two most common colors
+            val gradientDrawable = GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                intArrayOf(vibrantColor, mutedColor)
+            )
+
+            gradientDrawable.cornerRadii = floatArrayOf(
+                50f, 50f, // top-left corner radius
+                50f, 50f, // top-right corner radius
+                0f, 0f,   // bottom-left corner (no radius)
+                0f, 0f    // bottom-right corner (no radius)
+            )
+
+            val window = requireActivity().window
+
+            // Set the gradient as the background of the player
+            binding.playerBackgroundView.background = gradientDrawable
         }
     }
 
