@@ -1,6 +1,9 @@
 package com.echoriff.echoriff.radio.presentation
 
+import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.GradientDrawable
@@ -56,49 +59,6 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tvSongName.isSelected = true
-
-        // Set the TransitionListener to capture state changes
-        binding.motion.setTransitionListener(object : MotionLayout.TransitionListener {
-            override fun onTransitionStarted(layout: MotionLayout?, startId: Int, endId: Int) {
-                // This is called when the transition starts
-            }
-
-            override fun onTransitionChange(
-                layout: MotionLayout?,
-                startId: Int,
-                endId: Int,
-                progress: Float
-            ) {
-                // This is called when the transition is in progress
-                // You can capture if it's in max or min state based on progress
-                if (progress == 0f) {
-                    Toast.makeText(requireContext(), "max", Toast.LENGTH_SHORT).show()
-                } else if (progress == 1f) {
-                    Toast.makeText(requireContext(), "min", Toast.LENGTH_SHORT).show()
-                    // The layout is in the 'min' state (end constraint set)
-                }
-            }
-
-            override fun onTransitionCompleted(layout: MotionLayout?, currentId: Int) {
-                // This is called when the transition is completed
-                if (currentId == R.id.min) {
-                    // The layout has reached the 'min' state
-                    println("Transition completed: In min state")
-                } else if (currentId == R.id.max) {
-                    // The layout has reached the 'max' state
-                    println("Transition completed: In max state")
-                }
-            }
-
-            override fun onTransitionTrigger(
-                motionLayout: MotionLayout?,
-                triggerId: Int,
-                positive: Boolean,
-                progress: Float
-            ) {
-                TODO("Not yet implemented")
-            }
-        })
 
         setupButtons()
         observePlayerModel()
@@ -200,9 +160,43 @@ class PlayerFragment : Fragment() {
                 100f, 100f    // bottom-right corner (no radius)
             )
 
-            val window = requireActivity().window
+            val currentBackground = binding.playerBackgroundView.background
+            if (currentBackground is GradientDrawable) {
+                // Animate the gradient transition by interpolating the colors
+                val oldColors = (currentBackground as GradientDrawable).colors
+                if (oldColors != null && oldColors.size == 2) {
+                    val fromColor1 = oldColors[0]
+                    val fromColor2 = oldColors[1]
+                    val toColor1 = vibrantColor
+                    val toColor2 = mutedColor
 
-            // Set the gradient as the background of the player
+                    // Create a ValueAnimator for the entire gradient colors
+                    val gradientAnimator = ValueAnimator.ofObject(ArgbEvaluator(), fromColor1, toColor1)
+                    gradientAnimator.duration = 1000
+                    gradientAnimator.addUpdateListener { animator ->
+                        val animatedColor1 = animator.animatedValue as Int
+                        // Apply the animated colors to the gradient
+                        gradientDrawable.colors = intArrayOf(animatedColor1, fromColor2)
+                        binding.playerBackgroundView.background = gradientDrawable
+                    }
+
+                    // Create a second ValueAnimator for the second color
+                    val gradientAnimator2 = ValueAnimator.ofObject(ArgbEvaluator(), fromColor2, toColor2)
+                    gradientAnimator2.duration = 1000
+                    gradientAnimator2.addUpdateListener { animator ->
+                        val animatedColor2 = animator.animatedValue as Int
+                        // Apply the animated colors to the gradient
+                        gradientDrawable.colors = intArrayOf(toColor1, animatedColor2)
+                        binding.playerBackgroundView.background = gradientDrawable
+                    }
+
+                    // Start both animators to transition the gradient as a whole
+                    gradientAnimator.start()
+                    gradientAnimator2.start()
+                }
+            }
+
+            // Set the new gradient as the background immediately (after animation starts)
             binding.playerBackgroundView.background = gradientDrawable
         }
     }
@@ -248,10 +242,55 @@ class PlayerFragment : Fragment() {
 
     companion object {
         const val TAG = "PlayerFragment"
-
         fun newInstance(): PlayerFragment {
             val playScreenFragment = PlayerFragment()
             return playScreenFragment
         }
+
+    }
+
+    private fun captureMotion(){
+        // Set the TransitionListener to capture state changes
+//        binding.motion.setTransitionListener(object : MotionLayout.TransitionListener {
+//            override fun onTransitionStarted(layout: MotionLayout?, startId: Int, endId: Int) {
+//                // This is called when the transition starts
+//            }
+//
+//            override fun onTransitionChange(
+//                layout: MotionLayout?,
+//                startId: Int,
+//                endId: Int,
+//                progress: Float
+//            ) {
+//                // This is called when the transition is in progress
+//                // You can capture if it's in max or min state based on progress
+//                if (progress == 0f) {
+//                    Toast.makeText(requireContext(), "max", Toast.LENGTH_SHORT).show()
+//                } else if (progress == 1f) {
+//                    Toast.makeText(requireContext(), "min", Toast.LENGTH_SHORT).show()
+//                    // The layout is in the 'min' state (end constraint set)
+//                }
+//            }
+//
+//            override fun onTransitionCompleted(layout: MotionLayout?, currentId: Int) {
+//                // This is called when the transition is completed
+//                if (currentId == R.id.min) {
+//                    // The layout has reached the 'min' state
+//                    println("Transition completed: In min state")
+//                } else if (currentId == R.id.max) {
+//                    // The layout has reached the 'max' state
+//                    println("Transition completed: In max state")
+//                }
+//            }
+//
+//            override fun onTransitionTrigger(
+//                motionLayout: MotionLayout?,
+//                triggerId: Int,
+//                positive: Boolean,
+//                progress: Float
+//            ) {
+//                TODO("Not yet implemented")
+//            }
+//        })
     }
 }

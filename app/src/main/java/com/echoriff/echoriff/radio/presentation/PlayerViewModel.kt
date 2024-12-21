@@ -12,8 +12,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.media3.session.MediaSession
 import com.echoriff.echoriff.MainActivity
+import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.extractArtistAndTitle
 import com.echoriff.echoriff.radio.domain.Category
 import com.echoriff.echoriff.radio.domain.Radio
@@ -62,7 +62,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         _nowPlayingCategory.value = category
         _nowPlayingRadio.value = radio
         _currentIndex.value =
-            category?.radios?.indexOfFirst {it.title == nowPlayingRadio.value?.title } ?: 0
+            category?.radios?.indexOfFirst { it.title == nowPlayingRadio.value?.title } ?: 0
         _isPlayingState.value = true
 
         val dataSourceFactory = DefaultDataSource.Factory(getApplication())
@@ -70,6 +70,10 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             .createMediaSource(MediaItem.fromUri(radio.streamUrl))
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.prepare()
+
+        val userPrefs = UserPreferences(getApplication())
+        userPrefs.saveLastPlayedRadioWithCategory(getApplication(), radio, category ?: return)
+
         play()
     }
 

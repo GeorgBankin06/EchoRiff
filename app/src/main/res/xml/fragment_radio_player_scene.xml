@@ -13,10 +13,6 @@
             app:maxAcceleration="200"
             app:touchAnchorId="@+id/player_background_view"
             app:touchAnchorSide="top" />
-
-        <OnClick
-            app:clickAction="toggle"
-            app:targetId="@+id/player_background_view" />
     </Transition>
 
     <Transition

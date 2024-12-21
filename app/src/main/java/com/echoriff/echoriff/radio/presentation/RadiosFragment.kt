@@ -73,8 +73,13 @@ class RadiosFragment : BaseFragment() {
 
         window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.transparent)
 
+        val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(requireContext())
+        playerViewModel.playRadio(lastPlayedRadio, lastPlayedCategory)
+        playerViewModel.pause()
+
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -98,7 +103,6 @@ class RadiosFragment : BaseFragment() {
                 }
                 launch {
                     radioModel.selectedCategory.collect {
-                        // TODO Add shared Preferences logic for radio init
                         setupRadiosAdapter(it?.radios ?: emptyList())
                     }
                 }
