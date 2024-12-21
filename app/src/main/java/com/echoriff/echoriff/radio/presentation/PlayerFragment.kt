@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadioPlayerBinding
 import com.echoriff.echoriff.radio.di.radioModule
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
@@ -55,6 +56,49 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tvSongName.isSelected = true
+
+        // Set the TransitionListener to capture state changes
+        binding.motion.setTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionStarted(layout: MotionLayout?, startId: Int, endId: Int) {
+                // This is called when the transition starts
+            }
+
+            override fun onTransitionChange(
+                layout: MotionLayout?,
+                startId: Int,
+                endId: Int,
+                progress: Float
+            ) {
+                // This is called when the transition is in progress
+                // You can capture if it's in max or min state based on progress
+                if (progress == 0f) {
+                    Toast.makeText(requireContext(), "max", Toast.LENGTH_SHORT).show()
+                } else if (progress == 1f) {
+                    Toast.makeText(requireContext(), "min", Toast.LENGTH_SHORT).show()
+                    // The layout is in the 'min' state (end constraint set)
+                }
+            }
+
+            override fun onTransitionCompleted(layout: MotionLayout?, currentId: Int) {
+                // This is called when the transition is completed
+                if (currentId == R.id.min) {
+                    // The layout has reached the 'min' state
+                    println("Transition completed: In min state")
+                } else if (currentId == R.id.max) {
+                    // The layout has reached the 'max' state
+                    println("Transition completed: In max state")
+                }
+            }
+
+            override fun onTransitionTrigger(
+                motionLayout: MotionLayout?,
+                triggerId: Int,
+                positive: Boolean,
+                progress: Float
+            ) {
+                TODO("Not yet implemented")
+            }
+        })
 
         setupButtons()
         observePlayerModel()
@@ -103,7 +147,7 @@ class PlayerFragment : Fragment() {
                     playerModel.nowPlayingRadio.collect { radio ->
                         val radioImageUrl = radio?.coverArtUrl ?: ""
                         if (radioImageUrl.isEmpty()) {
-                            Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show()
+//                            Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show()
                         } else {
                             updateRadioImageAndBackground(radioImageUrl)
                         }
@@ -150,10 +194,10 @@ class PlayerFragment : Fragment() {
             )
 
             gradientDrawable.cornerRadii = floatArrayOf(
-                50f, 50f, // top-left corner radius
-                50f, 50f, // top-right corner radius
-                0f, 0f,   // bottom-left corner (no radius)
-                0f, 0f    // bottom-right corner (no radius)
+                100f, 100f, // top-left corner radius
+                100f, 100f, // top-right corner radius
+                100f, 100f,   // bottom-left corner (no radius)
+                100f, 100f    // bottom-right corner (no radius)
             )
 
             val window = requireActivity().window

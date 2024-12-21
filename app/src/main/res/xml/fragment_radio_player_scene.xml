@@ -13,7 +13,20 @@
             app:maxAcceleration="200"
             app:touchAnchorId="@+id/player_background_view"
             app:touchAnchorSide="top" />
-        <KeyFrameSet></KeyFrameSet>
+
+        <OnClick
+            app:clickAction="toggle"
+            app:targetId="@+id/player_background_view" />
+    </Transition>
+
+    <Transition
+        app:constraintSetEnd="@+id/min"
+        app:constraintSetStart="@+id/max"
+        app:motionInterpolator="easeInOut"
+        motion:duration="300">
+        <OnClick
+            app:clickAction="toggle"
+            app:targetId="@id/collapse_image" />
     </Transition>
 
     <ConstraintSet android:id="@+id/max">
@@ -251,6 +264,7 @@
             android:id="@+id/player_background_view"
             android:layout_width="match_parent"
             android:layout_height="75dp"
+            android:layout_marginBottom="26dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -262,7 +276,6 @@
             app:layout_constraintEnd_toEndOf="@id/player_background_view"
             app:layout_constraintStart_toStartOf="@id/player_background_view"
             app:layout_constraintTop_toBottomOf="@id/tv_artist" />
-
 
     </ConstraintSet>
 </MotionScene>

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +16,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.UserPreferences
+import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentRadiosBinding
 import com.echoriff.echoriff.radio.domain.CategoriesState
 import com.echoriff.echoriff.radio.domain.Category
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RadiosFragment : Fragment() {
+class RadiosFragment : BaseFragment() {
 
     private val radioModel: RadiosViewModel by viewModel()
     private val playerViewModel: PlayerViewModel by navGraphViewModels(R.id.main_nav_graph)
@@ -46,6 +46,15 @@ class RadiosFragment : Fragment() {
     ): View {
         binding = FragmentRadiosBinding.inflate(layoutInflater)
         val window = requireActivity().window
+
+        adjustStatusBarIconsBasedOnBackgroundColor(
+            this@RadiosFragment, ContextCompat.getColor(
+                requireContext(),
+                R.color.black
+            )
+        )
+
+        windowColors(R.color.transparent, R.color.navBar)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.categoriesRv) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -89,6 +98,7 @@ class RadiosFragment : Fragment() {
                 }
                 launch {
                     radioModel.selectedCategory.collect {
+                        // TODO Add shared Preferences logic for radio init
                         setupRadiosAdapter(it?.radios ?: emptyList())
                     }
                 }
