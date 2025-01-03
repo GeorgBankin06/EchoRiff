@@ -3,25 +3,20 @@ package com.echoriff.echoriff.radio.presentation
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.RenderEffect
+import android.graphics.Shader
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.setPadding
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -30,8 +25,6 @@ import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadioPlayerBinding
-import com.echoriff.echoriff.radio.di.radioModule
-import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
@@ -46,19 +39,14 @@ class PlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadioPlayerBinding.inflate(layoutInflater)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.collapseImage) { view, insets ->
-            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-            layoutParams.topMargin = systemBarsInsets.top + 20
-            view.layoutParams = layoutParams
-            insets
-        }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tvSongName.isSelected = true
+        binding.tvArtist.isSelected = true
 
         setupButtons()
         observePlayerModel()
@@ -171,7 +159,8 @@ class PlayerFragment : Fragment() {
                     val toColor2 = mutedColor
 
                     // Create a ValueAnimator for the entire gradient colors
-                    val gradientAnimator = ValueAnimator.ofObject(ArgbEvaluator(), fromColor1, toColor1)
+                    val gradientAnimator =
+                        ValueAnimator.ofObject(ArgbEvaluator(), fromColor1, toColor1)
                     gradientAnimator.duration = 1000
                     gradientAnimator.addUpdateListener { animator ->
                         val animatedColor1 = animator.animatedValue as Int
@@ -181,7 +170,8 @@ class PlayerFragment : Fragment() {
                     }
 
                     // Create a second ValueAnimator for the second color
-                    val gradientAnimator2 = ValueAnimator.ofObject(ArgbEvaluator(), fromColor2, toColor2)
+                    val gradientAnimator2 =
+                        ValueAnimator.ofObject(ArgbEvaluator(), fromColor2, toColor2)
                     gradientAnimator2.duration = 1000
                     gradientAnimator2.addUpdateListener { animator ->
                         val animatedColor2 = animator.animatedValue as Int
@@ -249,7 +239,7 @@ class PlayerFragment : Fragment() {
 
     }
 
-    private fun captureMotion(){
+    private fun captureMotion() {
         // Set the TransitionListener to capture state changes
 //        binding.motion.setTransitionListener(object : MotionLayout.TransitionListener {
 //            override fun onTransitionStarted(layout: MotionLayout?, startId: Int, endId: Int) {
@@ -292,5 +282,16 @@ class PlayerFragment : Fragment() {
 //                TODO("Not yet implemented")
 //            }
 //        })
+    }
+
+    private fun applyBlurEffect(view: View, radius: Float) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val blurEffect = RenderEffect.createBlurEffect(
+                radius, // Horizontal blur radius
+                radius, // Vertical blur radius
+                Shader.TileMode.CLAMP // Prevents tiling at the edges
+            )
+            view.setRenderEffect(blurEffect)
+        }
     }
 }

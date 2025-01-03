@@ -20,6 +20,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--    <View-->
+    <!--        android:id="@+id/player_background_view_tr"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:background="@color/transparent"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
     <ImageView
         android:id="@+id/collapse_image"
         android:layout_width="match_parent"
@@ -49,7 +60,7 @@
 
     <TextView
         android:id="@+id/tv_songName"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:elevation="10dp"
@@ -65,15 +76,19 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/btn_favorite_song"
         app:layout_constraintStart_toStartOf="@id/player_background_view"
         app:layout_constraintTop_toBottomOf="@id/cover_art_image" />
 
     <TextView
         android:id="@+id/tv_artist"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:elevation="10dp"
-        android:ellipsize="end"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:outlineProvider="none"
         android:paddingStart="16dp"
@@ -81,7 +96,7 @@
         android:textAlignment="textStart"
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@id/player_background_view"
+        app:layout_constraintEnd_toStartOf="@id/btn_favorite_song"
         app:layout_constraintStart_toStartOf="@id/player_background_view"
         app:layout_constraintTop_toBottomOf="@+id/tv_songName" />
 
@@ -155,25 +170,37 @@
         android:padding="12dp"
         android:src="@drawable/ic_web"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_favorite"
+        app:layout_constraintEnd_toStartOf="@id/btn_favorite_radio"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/btn_favorite"
-        android:layout_width="0dp"
+        android:id="@+id/btn_favorite_song"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
         android:padding="12dp"
-        android:src="@drawable/ic_favorite"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_cast"
-        app:layout_constraintStart_toEndOf="@id/btn_webPage" />
+        android:src="@drawable/ic_note"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_artist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_songName"
+        app:layout_constraintTop_toTopOf="@+id/tv_songName" />
 
     <ImageButton
-        android:id="@+id/btn_cast"
+        android:id="@+id/btn_favorite_radio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="20dp"
+        android:padding="12dp"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_radio"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_song_recognition"
+        app:layout_constraintStart_toEndOf="@+id/btn_webPage" />
+
+    <ImageButton
+        android:id="@+id/btn_song_recognition"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -181,9 +208,10 @@
         android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
         android:padding="12dp"
-        android:src="@drawable/ic_cast"
+        app:layout_constraintDimensionRatio="1:1"
+        android:src="@drawable/ic_search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_favorite" />
+        app:layout_constraintStart_toEndOf="@id/btn_favorite_radio" />
 
 </com.echoriff.echoriff.radio.presentation.layout.PlayerScreenMotionLayout>

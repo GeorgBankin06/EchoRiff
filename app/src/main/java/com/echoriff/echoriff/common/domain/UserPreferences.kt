@@ -37,7 +37,8 @@ class UserPreferences(private val context: Context) {
     }
 
     fun saveLastPlayedRadioWithCategory(context: Context, radio: Radio, category: Category) {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences =
+            context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         val gson = Gson()
 
@@ -52,7 +53,8 @@ class UserPreferences(private val context: Context) {
     }
 
     fun getLastPlayedRadioWithCategory(context: Context): Pair<Radio?, Category?> {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences =
+            context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
 
         val radioJson = sharedPreferences.getString("last_played_radio", null)
         val categoryJson = sharedPreferences.getString("last_played_category", null)
@@ -61,8 +63,19 @@ class UserPreferences(private val context: Context) {
 
         // Deserialize the JSON strings back into Radio and Category objects
         val radio = if (radioJson != null) gson.fromJson(radioJson, Radio::class.java) else null
-        val category = if (categoryJson != null) gson.fromJson(categoryJson, Category::class.java) else null
+        val category =
+            if (categoryJson != null) gson.fromJson(categoryJson, Category::class.java) else null
 
         return Pair(radio, category)
+    }
+
+    fun clearLastPlayedRadio() {
+        val sharedPreferences: SharedPreferences =
+            context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().apply {
+            remove("last_played_radio")
+            remove("last_played_category")
+            apply()
+        }
     }
 }

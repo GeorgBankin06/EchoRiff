@@ -13,16 +13,58 @@
             app:maxAcceleration="200"
             app:touchAnchorId="@+id/player_background_view"
             app:touchAnchorSide="top" />
+        <KeyFrameSet>
+            <KeyAttribute
+                android:scaleX="1.2"
+                app:framePosition="100"
+                app:motionTarget="@+id/btn_favorite_song" />
+            <KeyAttribute
+                android:scaleY="1.2"
+                app:framePosition="100"
+                app:motionTarget="@+id/btn_favorite_song" />
+            <!--            <KeyAttribute-->
+            <!--                android:alpha="1"-->
+            <!--                app:framePosition="100"-->
+            <!--                app:motionTarget="@+id/player_background_view" />-->
+            <!--            <KeyAttribute-->
+            <!--                android:alpha="0"-->
+            <!--                app:framePosition="100"-->
+            <!--                app:motionTarget="@+id/player_background_view_tr" />-->
+
+            <!--            <KeyAttribute-->
+            <!--                android:alpha="0"-->
+            <!--                app:framePosition="0"-->
+            <!--                app:motionTarget="@+id/player_background_view" />-->
+            <!--            <KeyAttribute-->
+            <!--                android:alpha="1"-->
+            <!--                app:framePosition="0"-->
+            <!--                app:motionTarget="@+id/player_background_view_tr" />-->
+
+        </KeyFrameSet>
     </Transition>
 
     <Transition
         app:constraintSetEnd="@+id/min"
         app:constraintSetStart="@+id/max"
-        app:motionInterpolator="easeInOut"
-        motion:duration="300">
-        <OnClick
-            app:clickAction="toggle"
-            app:targetId="@id/collapse_image" />
+        app:duration="300"
+        app:motionInterpolator="easeInOut">
+        <OnSwipe
+            app:dragDirection="dragDown"
+            app:maxAcceleration="200"
+            app:touchAnchorId="@+id/player_background_view"
+            app:touchAnchorSide="top" />
+        <KeyFrameSet>
+
+            <!--            <KeyAttribute-->
+            <!--                android:alpha="0"-->
+            <!--                app:framePosition="100"-->
+            <!--                app:motionTarget="@+id/player_background_view" />-->
+            <!--            <KeyAttribute-->
+            <!--                android:alpha="1"-->
+            <!--                app:framePosition="100"-->
+            <!--                app:motionTarget="@+id/player_background_view_tr" />-->
+
+        </KeyFrameSet>
     </Transition>
 
     <ConstraintSet android:id="@+id/max">
@@ -34,11 +76,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <!--        <Constraint-->
+        <!--            android:id="@+id/player_background_view_tr"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
         <Constraint
             android:id="@+id/collapse_image"
             android:layout_width="match_parent"
             android:layout_height="24dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="40dp"
             app:layout_constraintEnd_toEndOf="@id/player_background_view"
             app:layout_constraintStart_toStartOf="@id/player_background_view"
             app:layout_constraintTop_toTopOf="@id/player_background_view" />
@@ -56,12 +106,12 @@
             app:layout_constraintTop_toBottomOf="@id/collapse_image" />
         <Constraint
             android:id="@+id/tv_songName"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="50dp"
             android:elevation="10dp"
             app:layout_constraintBottom_toTopOf="@id/tv_songName"
-            app:layout_constraintEnd_toEndOf="@id/player_background_view"
+            app:layout_constraintEnd_toStartOf="@id/btn_favorite_song"
             app:layout_constraintStart_toStartOf="@id/player_background_view"
             app:layout_constraintTop_toBottomOf="@id/cover_art_image">
             <CustomAttribute
@@ -70,11 +120,11 @@
         </Constraint>
         <Constraint
             android:id="@+id/tv_artist"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="30dp"
             android:elevation="10dp"
             app:layout_constraintBottom_toTopOf="@id/tv_live"
-            app:layout_constraintEnd_toEndOf="@id/player_background_view"
+            app:layout_constraintEnd_toStartOf="@id/btn_favorite_song"
             app:layout_constraintStart_toStartOf="@id/player_background_view"
             app:layout_constraintTop_toBottomOf="@+id/tv_songName">
             <CustomAttribute
@@ -128,28 +178,40 @@
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_favorite"
+            app:layout_constraintEnd_toStartOf="@id/btn_favorite_radio"
             app:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/btn_favorite"
-            android:layout_width="0dp"
+            android:id="@+id/btn_favorite_song"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_cast"
-            app:layout_constraintStart_toEndOf="@id/btn_webPage" />
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_artist"
+            app:layout_constraintEnd_toEndOf="@id/player_background_view"
+            app:layout_constraintStart_toEndOf="@id/tv_songName"
+            app:layout_constraintTop_toTopOf="@+id/tv_songName" />
         <Constraint
-            android:id="@+id/btn_cast"
+            android:id="@+id/btn_favorite_radio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btn_favorite" />
+            app:layout_constraintEnd_toStartOf="@id/btn_song_recognition"
+            app:layout_constraintStart_toEndOf="@+id/btn_webPage" />
+        <Constraint
+            android:id="@+id/btn_song_recognition"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="@id/player_background_view"
+            app:layout_constraintTop_toTopOf="@id/btn_favorite_radio"
+            app:layout_constraintEnd_toEndOf="@id/player_background_view"
+            app:layout_constraintStart_toEndOf="@id/btn_favorite_radio" />
+
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/min">
@@ -166,8 +228,7 @@
             android:id="@+id/tv_songName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="130dp"
-            app:layout_constraintEnd_toEndOf="@id/player_background_view"
+            app:layout_constraintEnd_toStartOf="@id/btn_favorite_song"
             motion:layout_constraintStart_toEndOf="@+id/cover_art_image"
             motion:layout_constraintTop_toTopOf="@id/cover_art_image">
             <CustomAttribute
@@ -179,7 +240,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="40dp"
-            motion:layout_constraintEnd_toStartOf="@+id/btn_cast"
+            app:layout_constraintBottom_toTopOf="@+id/tv_live"
+            motion:layout_constraintEnd_toStartOf="@+id/btn_favorite_song"
             motion:layout_constraintStart_toEndOf="@id/cover_art_image"
             motion:layout_constraintTop_toBottomOf="@+id/tv_songName">
             <CustomAttribute
@@ -215,35 +277,48 @@
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="20dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/player_background_view"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_prev" />
         <Constraint
-            android:id="@+id/btn_cast"
+            android:id="@+id/btn_favorite_radio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/btn_webPage"
+            app:layout_constraintEnd_toStartOf="@id/btn_song_recognition"
+            app:layout_constraintStart_toEndOf="@+id/btn_webPage"
+            app:layout_constraintTop_toBottomOf="@id/btn_webPage" />
+        <Constraint
+            android:id="@+id/btn_song_recognition"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/btn_favorite_radio"
+            app:layout_constraintStart_toEndOf="@id/btn_favorite_radio"
+            app:layout_constraintTop_toTopOf="@+id/btn_favorite_radio" />
+        <Constraint
+            android:id="@+id/btn_favorite_song"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="@id/player_background_view"
-            app:layout_constraintEnd_toStartOf="@+id/btn_favorite"
+            app:layout_constraintEnd_toStartOf="@+id/btn_play"
             app:layout_constraintStart_toEndOf="@id/tv_songName"
             app:layout_constraintTop_toTopOf="@+id/player_background_view" />
         <Constraint
-            android:id="@+id/btn_favorite"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintBottom_toBottomOf="@id/player_background_view"
-            app:layout_constraintEnd_toStartOf="@+id/btn_play"
-            app:layout_constraintStart_toEndOf="@id/btn_cast"
-            app:layout_constraintTop_toTopOf="@+id/player_background_view" />
-        <Constraint
             android:id="@+id/btn_play"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="@id/player_background_view"
             app:layout_constraintEnd_toEndOf="@+id/player_background_view"
-            app:layout_constraintStart_toEndOf="@id/btn_favorite"
+            app:layout_constraintStart_toEndOf="@id/btn_favorite_song"
             app:layout_constraintTop_toTopOf="@+id/player_background_view" />
         <Constraint
             android:id="@+id/collapse_image"
@@ -270,8 +345,16 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/player_background_view"
             app:layout_constraintEnd_toEndOf="@id/player_background_view"
-            app:layout_constraintStart_toStartOf="@id/player_background_view"
-            app:layout_constraintTop_toBottomOf="@id/tv_artist" />
+            app:layout_constraintStart_toStartOf="@id/player_background_view" />
+
+        <!--        <Constraint-->
+        <!--            android:id="@+id/player_background_view_tr"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="75dp"-->
+        <!--            android:layout_marginBottom="26dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
     </ConstraintSet>
 </MotionScene>

@@ -63,6 +63,7 @@ class RadiosFragment : BaseFragment() {
             view.layoutParams = layoutParams
             insets
         }
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.playScreenFrameLayout) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
@@ -73,7 +74,9 @@ class RadiosFragment : BaseFragment() {
 
         window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.transparent)
 
-        val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(requireContext())
+        val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
+            requireContext()
+        )
         playerViewModel.playRadio(lastPlayedRadio, lastPlayedCategory)
         playerViewModel.pause()
 
@@ -119,6 +122,8 @@ class RadiosFragment : BaseFragment() {
 
         lifecycleScope.launch {
             userPreferences.clearUserRole()
+            userPreferences.clearLastPlayedRadio()
+            playerViewModel.pause()
         }
         loadNavGraph(R.navigation.auth_nav_graph)
     }
