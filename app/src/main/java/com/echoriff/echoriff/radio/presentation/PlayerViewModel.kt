@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -17,10 +18,20 @@ import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.extractArtistAndTitle
 import com.echoriff.echoriff.radio.domain.Category
 import com.echoriff.echoriff.radio.domain.Radio
+import com.echoriff.echoriff.radio.domain.RadioState
+import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
+
 
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val likeRadioUseCase: LikeRadioUseCase by inject(LikeRadioUseCase::class.java)
+
+    private val _likedRadio = MutableStateFlow<RadioState>(RadioState.Loading)
+    val likedRadio = _likedRadio.asStateFlow()
 
     private val _nowPlayingCategory = MutableStateFlow<Category?>(null)
     val nowPlayingCategory = _nowPlayingCategory.asStateFlow()
@@ -52,6 +63,15 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     override fun onCleared() {
         super.onCleared()
         exoPlayer.release()
+    }
+
+    fun likeRadio(radio: Radio?){
+        viewModelScope.launch {
+            if (radio != null){
+                val result = likeRadioUseCase.likeRadio(radio)
+                _likedRadio.value = result
+            }
+        }
     }
 
     @OptIn(UnstableApi::class)

@@ -9,13 +9,13 @@ import android.graphics.Shader
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
@@ -25,11 +25,13 @@ import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadioPlayerBinding
+import com.echoriff.echoriff.radio.domain.RadioState
+import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class PlayerFragment : Fragment() {
-
     private val playerModel: PlayerViewModel by navGraphViewModels(R.id.main_nav_graph)
 
     lateinit var binding: FragmentRadioPlayerBinding
@@ -52,6 +54,7 @@ class PlayerFragment : Fragment() {
         observePlayerModel()
     }
 
+
     private fun setupButtons() {
         binding.btnPlay.setOnClickListener {
             if (playerModel.isPlaying()) {
@@ -66,6 +69,10 @@ class PlayerFragment : Fragment() {
         }
         binding.btnNext.setOnClickListener { playerModel.playNext() }
         binding.btnPrev.setOnClickListener { playerModel.playPrev() }
+
+        binding.btnFavoriteRadio.setOnClickListener {
+            playerModel.likeRadio(playerModel.nowPlayingRadio.value)
+        }
     }
 
     private fun observePlayerModel() {
@@ -77,6 +84,32 @@ class PlayerFragment : Fragment() {
                             .load(radio?.coverArtUrl)
                             .placeholder(R.drawable.player_background)
                             .into(binding.coverArtImage)
+                    }
+                }
+                launch {
+                    playerModel.likedRadio.collect { state ->
+                        when (state) {
+                            is RadioState.Loading -> {
+
+                            }
+
+                            is RadioState.Success -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    state.messageSuccess,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            is RadioState.Failure -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    state.messageError,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Log.e("TAGGY", state.messageError)
+                            }
+                        }
                     }
                 }
                 launch {

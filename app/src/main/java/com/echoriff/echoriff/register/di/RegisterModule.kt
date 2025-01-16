@@ -17,7 +17,8 @@ val registerModule = module {
     single { FirebaseFirestore.getInstance() }
     single { UserPreferences(androidContext()) }
 
-    single<RegisterRepository> { RegisterRepositoryImpl(get(), get(), get()) }
-    single<RegisterUseCase> { RegisterUseCaseImpl(get()) }
+    factory<RegisterRepository> { RegisterRepositoryImpl(get(), get(), get()) }
+    factory<RegisterUseCase> { RegisterUseCaseImpl(get()) }
+
     viewModel { RegisterViewModel(get()) }
 }
