@@ -7,6 +7,8 @@ import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCase
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCaseImpl
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCaseImpl
+import com.echoriff.echoriff.radio.domain.usecase.SaveLikeSongUseCase
+import com.echoriff.echoriff.radio.domain.usecase.SaveLikedSongUseCaseImpl
 import com.echoriff.echoriff.radio.presentation.PlayerViewModel
 import com.echoriff.echoriff.radio.presentation.RadiosViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +27,7 @@ val radioModule = module {
 
     factory<FetchCategoriesUseCase> { FetchCategoriesUseCaseImpl(get()) }
     single<LikeRadioUseCase> { LikeRadioUseCaseImpl(get()) }
+    single<SaveLikeSongUseCase> { SaveLikedSongUseCaseImpl(get()) }
 
     viewModel { PlayerViewModel(get()) }
     viewModel { RadiosViewModel(get()) }

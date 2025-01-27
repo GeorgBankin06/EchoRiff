@@ -19,8 +19,13 @@ import com.echoriff.echoriff.common.extractArtistAndTitle
 import com.echoriff.echoriff.radio.domain.Category
 import com.echoriff.echoriff.radio.domain.Radio
 import com.echoriff.echoriff.radio.domain.RadioState
+import com.echoriff.echoriff.radio.domain.Song
+import com.echoriff.echoriff.radio.domain.SongState
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
+import com.echoriff.echoriff.radio.domain.usecase.SaveLikeSongUseCase
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
@@ -29,9 +34,13 @@ import org.koin.java.KoinJavaComponent.inject
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val likeRadioUseCase: LikeRadioUseCase by inject(LikeRadioUseCase::class.java)
+    private val likeSongUseCase: SaveLikeSongUseCase by inject(SaveLikeSongUseCase::class.java)
 
-    private val _likedRadio = MutableStateFlow<RadioState>(RadioState.Loading)
-    val likedRadio = _likedRadio.asStateFlow()
+    private val _likeRadio = MutableSharedFlow<RadioState>()
+    val likeRadio = _likeRadio.asSharedFlow()
+
+    private val _likeSong = MutableSharedFlow<SongState>()
+    val likeSong = _likeSong.asSharedFlow()
 
     private val _nowPlayingCategory = MutableStateFlow<Category?>(null)
     val nowPlayingCategory = _nowPlayingCategory.asStateFlow()
@@ -65,11 +74,22 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         exoPlayer.release()
     }
 
-    fun likeRadio(radio: Radio?){
+    fun likeRadio(radio: Radio?) {
         viewModelScope.launch {
-            if (radio != null){
+            if (radio != null) {
                 val result = likeRadioUseCase.likeRadio(radio)
-                _likedRadio.value = result
+                _likeRadio.emit(result)
+            }
+        }
+    }
+
+    fun likeSong(nowPlaying: Pair<String?, String?>) {
+        viewModelScope.launch {
+            val (title, artist) = nowPlaying
+            if (title != null && artist != null) {
+                val song = Song(songName = title, artist = artist)
+                val result = likeSongUseCase.saveSong(song)
+                _likeSong.emit(result)
             }
         }
     }

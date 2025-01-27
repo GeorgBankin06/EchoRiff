@@ -1,9 +1,12 @@
 package com.echoriff.echoriff.radio.data
 
+import android.util.Log
 import com.echoriff.echoriff.common.Constants
 import com.echoriff.echoriff.common.domain.User
 import com.echoriff.echoriff.radio.domain.Radio
 import com.echoriff.echoriff.radio.domain.RadioState
+import com.echoriff.echoriff.radio.domain.Song
+import com.echoriff.echoriff.radio.domain.SongState
 import com.echoriff.echoriff.radio.domain.model.CategoryDto
 import com.echoriff.echoriff.radio.domain.model.RadioDto
 import com.google.firebase.auth.FirebaseAuth
@@ -91,6 +94,41 @@ class RadioRepositoryImpl(
             }
         } catch (e: Exception) {
             RadioState.Failure(e.message ?: "Unknown error")
+        }
+    }
+
+    override suspend fun saveLikedSong(song: Song): SongState {
+        return try {
+            SongState.Loading
+
+            // Get the currently authenticated user's ID
+            val currentUser = firebaseAuth.currentUser
+            val userId = currentUser?.uid ?: return SongState.Failure("User not found")
+
+            // Reference to the user's document in Firestore
+            val userRef = firestore.collection(Constants.USERS).document(userId)
+            val userSnapshot = userRef.get().await()
+
+            if (userSnapshot.exists()) {
+                // Retrieve the user's likedSongs
+                val user = userSnapshot.toObject(User::class.java)
+                val currentLikedSongs = user?.likedSongs?.toMutableList() ?: mutableListOf()
+
+                // Check if the song is already liked
+                if (currentLikedSongs.any { it.songName == song.songName && it.artist == song.artist }) {
+                    return SongState.Failure("Song is already in liked songs")
+                }
+
+                // Add the song to likedSongs and update Firestore
+                currentLikedSongs.add(song)
+                userRef.update("likedSongs", currentLikedSongs).await()
+
+                SongState.Success("Song added to liked songs")
+            } else {
+                SongState.Failure("User not found.")
+            }
+        } catch (e: Exception) {
+            SongState.Failure(e.message ?: "Unknown error")
         }
     }
 }

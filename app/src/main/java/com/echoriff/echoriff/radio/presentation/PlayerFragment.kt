@@ -26,10 +26,9 @@ import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadioPlayerBinding
 import com.echoriff.echoriff.radio.domain.RadioState
-import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
+import com.echoriff.echoriff.radio.domain.SongState
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 
 class PlayerFragment : Fragment() {
     private val playerModel: PlayerViewModel by navGraphViewModels(R.id.main_nav_graph)
@@ -73,6 +72,10 @@ class PlayerFragment : Fragment() {
         binding.btnFavoriteRadio.setOnClickListener {
             playerModel.likeRadio(playerModel.nowPlayingRadio.value)
         }
+
+        binding.btnFavoriteSong.setOnClickListener {
+            playerModel.likeSong(playerModel.nowPlayingInfo.value)
+        }
     }
 
     private fun observePlayerModel() {
@@ -87,7 +90,7 @@ class PlayerFragment : Fragment() {
                     }
                 }
                 launch {
-                    playerModel.likedRadio.collect { state ->
+                    playerModel.likeRadio.collect { state ->
                         when (state) {
                             is RadioState.Loading -> {
 
@@ -110,6 +113,32 @@ class PlayerFragment : Fragment() {
                                 Log.e("TAGGY", state.messageError)
                             }
                         }
+                    }
+                }
+                launch {
+                    playerModel.likeSong.collect { state ->
+                        when (state) {
+                            is SongState.Loading -> {
+
+                            }
+
+                            is SongState.Success -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    state.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            is SongState.Failure -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    state.error,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
                     }
                 }
                 launch {
