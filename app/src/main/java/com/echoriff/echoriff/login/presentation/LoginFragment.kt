@@ -118,7 +118,7 @@ class LoginFragment : BaseFragment() {
                 .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
         when (role) {
             "admin" -> findNavController().navigate(R.id.admin_nav_graph, null, navOptions)
-            "user" -> findNavController().navigate(R.id.main_nav_graph, null, navOptions)
+            "user" -> navigateToRadiosActivity()
             else -> null
         }
     }

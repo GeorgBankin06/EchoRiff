@@ -130,11 +130,7 @@ class RegisterFragment : BaseFragment() {
                                         navOptions
                                     )
                                 } else {
-                                    findNavController().navigate(
-                                        R.id.action_registerFragment_to_main_nav_graph,
-                                        null,
-                                        navOptions
-                                    )
+                                    navigateToRadiosActivity()
                                 }
                             }
 
@@ -160,6 +156,8 @@ class RegisterFragment : BaseFragment() {
             }
         }
     }
+
+
 
     private fun showProgressBar() {
 //        binding.scroll.visibility = View.VISIBLE

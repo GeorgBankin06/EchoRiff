@@ -2,6 +2,7 @@ package com.echoriff.echoriff.common.presentation
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -15,11 +16,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.echoriff.echoriff.R
+import com.echoriff.echoriff.radio.presentation.RadiosActivity
 import com.google.android.material.textfield.TextInputLayout
 
-open class BaseFragment: Fragment() {
+open class BaseFragment : Fragment() {
 
-    fun windowColors(statusBarColor: Int, navBarColor: Int){
+    fun navigateToRadiosActivity() {
+        val intent = Intent(requireContext(), RadiosActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
+    fun windowColors(statusBarColor: Int, navBarColor: Int) {
         val window = requireActivity().window
 
         window.statusBarColor = ContextCompat.getColor(requireContext(), statusBarColor)

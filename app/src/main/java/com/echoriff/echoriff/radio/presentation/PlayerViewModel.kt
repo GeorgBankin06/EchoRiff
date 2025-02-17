@@ -1,8 +1,6 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.app.Application
-import android.app.PendingIntent
-import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +11,6 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import com.echoriff.echoriff.MainActivity
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.extractArtistAndTitle
 import com.echoriff.echoriff.radio.domain.Category
@@ -28,13 +25,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.koin.java.KoinJavaComponent.inject
 
-
-class PlayerViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val likeRadioUseCase: LikeRadioUseCase by inject(LikeRadioUseCase::class.java)
-    private val likeSongUseCase: SaveLikeSongUseCase by inject(SaveLikeSongUseCase::class.java)
+class PlayerViewModel(
+    application: Application,
+    private val likeRadioUseCase: LikeRadioUseCase,
+    private val likeSongUseCase: SaveLikeSongUseCase
+) : AndroidViewModel(application) {
 
     private val _likeRadio = MutableSharedFlow<RadioState>()
     val likeRadio = _likeRadio.asSharedFlow()
@@ -117,11 +113,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         play()
     }
 
-    private fun handleTitle(metadata: String) {
-        val (artist, title) = metadata.extractArtistAndTitle()
-        _nowPlayingInfo.value = (title ?: nowPlayingRadio.value?.title) to artist
-    }
-
     fun isPlaying(): Boolean = exoPlayer.isPlaying
 
     fun play() {
@@ -141,16 +132,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         playRadio(getPrevRadio(), nowPlayingCategory.value)
     }
 
-    private fun createMainActivityPendingIntent(): PendingIntent {
-        val intent = Intent(getApplication(), MainActivity::class.java)
-        return PendingIntent.getActivity(
-            getApplication(),
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }
-
     private fun getNextRadio(): Radio? {
         val radios = nowPlayingCategory.value?.radios ?: return null
 
@@ -163,6 +144,11 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
 
         val previousIndex = (_currentIndex.value - 1 + radios.size) % radios.size
         return radios[previousIndex]
+    }
+
+    private fun handleTitle(metadata: String) {
+        val (artist, title) = metadata.extractArtistAndTitle()
+        _nowPlayingInfo.value = (title ?: nowPlayingRadio.value?.title) to artist
     }
 
     companion object {

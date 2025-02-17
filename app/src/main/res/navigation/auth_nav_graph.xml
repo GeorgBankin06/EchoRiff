@@ -18,13 +18,6 @@
             app:popEnterAnim="@anim/slide_in_exit"
             app:popExitAnim="@anim/slide_out_exit" />
         <action
-            android:id="@+id/action_splashFragment_to_main_nav_graph"
-            app:destination="@id/main_nav_graph"
-            app:enterAnim="@anim/slide_in_1"
-            app:exitAnim="@anim/slide_out_2"
-            app:popEnterAnim="@anim/slide_in_exit"
-            app:popExitAnim="@anim/slide_out_exit" />
-        <action
             android:id="@+id/action_splashFragment_to_admin_nav_graph"
             app:destination="@id/admin_nav_graph"
             app:enterAnim="@anim/slide_in_1"
@@ -74,13 +67,6 @@
             app:popEnterAnim="@anim/slide_in_exit"
             app:popExitAnim="@anim/slide_out_exit" />
         <action
-            android:id="@+id/action_registerFragment_to_main_nav_graph"
-            app:destination="@+id/main_nav_graph"
-            app:enterAnim="@anim/slide_in_1"
-            app:exitAnim="@anim/slide_out_2"
-            app:popEnterAnim="@anim/slide_in_exit"
-            app:popExitAnim="@anim/slide_out_exit" />
-        <action
             android:id="@+id/action_registerFragment_to_admin_nav_graph"
             app:destination="@id/admin_nav_graph"
             app:enterAnim="@anim/slide_in_1"
@@ -109,13 +95,7 @@
             app:exitAnim="@anim/slide_out_2"
             app:popEnterAnim="@anim/slide_in_exit"
             app:popExitAnim="@anim/slide_out_exit" />
-        <action
-            android:id="@+id/action_loginFragment_to_main_nav_graph"
-            app:destination="@id/main_nav_graph"
-            app:enterAnim="@anim/slide_in_1"
-            app:exitAnim="@anim/slide_out_2"
-            app:popEnterAnim="@anim/slide_in_exit"
-            app:popExitAnim="@anim/slide_out_exit" />
+
         <action
             android:id="@+id/action_loginFragment_to_admin_nav_graph"
             app:destination="@id/admin_nav_graph"
@@ -125,7 +105,7 @@
             app:popExitAnim="@anim/slide_out_exit" />
     </fragment>
 
-    <include app:graph="@navigation/main_nav_graph" />
+<!--    <include app:graph="@navigation/main_nav_graph" />-->
 
     <include app:graph="@navigation/admin_nav_graph" />
 </navigation>

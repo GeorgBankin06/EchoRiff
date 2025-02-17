@@ -73,6 +73,7 @@ dependencies {
 
     //Koin
     implementation libs.koin.android
+    implementation libs.koin.androidx.navigation
 
     // Androidx
     implementation libs.androidx.navigation.fragment.ktx

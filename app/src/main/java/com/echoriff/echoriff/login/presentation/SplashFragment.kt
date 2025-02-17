@@ -108,11 +108,7 @@ class SplashFragment : BaseFragment() {
                     inclusive = true
                 ).setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
                 .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
-            findNavController().navigate(
-                R.id.action_splashFragment_to_main_nav_graph,
-                null,
-                navOptions
-            )
+            navigateToRadiosActivity()
         }
     }
 

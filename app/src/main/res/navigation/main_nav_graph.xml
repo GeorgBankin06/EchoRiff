@@ -9,6 +9,31 @@
         android:id="@+id/radiosFragment"
         android:name="com.echoriff.echoriff.radio.presentation.RadiosFragment"
         android:label="RadiosFragment"
-        tools:layout="@layout/fragment_radios" />
+        tools:layout="@layout/fragment_radios">
+        <action
+            android:id="@+id/action_radiosFragment_to_favoritesFragment"
+            app:popUpTo="@id/favoritesFragment"
+            app:popUpToInclusive="false"
+            app:destination="@id/favoritesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.echoriff.echoriff.radio.presentation.FavoritesFragment"
+        android:label="FavoritesFragment"
+        tools:layout="@layout/fragment_favorites">
+        <action
+            android:id="@+id/action_to_favoritesFragment"
+            app:destination="@id/favoritesFragment"
+            app:popUpTo="@id/favoritesFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_radiosFragment"
+            app:popUpTo="@id/favoritesFragment"
+            app:popUpToInclusive="false"
+            app:destination="@id/radiosFragment" />
+
+    </fragment>
+
 
 </navigation>

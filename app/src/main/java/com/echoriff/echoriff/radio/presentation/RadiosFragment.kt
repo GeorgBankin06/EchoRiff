@@ -11,8 +11,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.navGraphViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.UserPreferences
@@ -27,12 +28,13 @@ import com.echoriff.echoriff.radio.presentation.adapters.RadiosAdapter
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RadiosFragment : BaseFragment() {
 
     private val radioModel: RadiosViewModel by viewModel()
-    private val playerViewModel: PlayerViewModel by navGraphViewModels(R.id.main_nav_graph)
+    private val playerViewModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
 
     lateinit var binding: FragmentRadiosBinding
     private var playScreenFragment = PlayerFragment.newInstance()
@@ -64,13 +66,13 @@ class RadiosFragment : BaseFragment() {
             insets
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.playScreenFrameLayout) { view, insets ->
-            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-            layoutParams.bottomMargin = systemBarsInsets.bottom
-            view.layoutParams = layoutParams
-            insets
-        }
+//        ViewCompat.setOnApplyWindowInsetsListener(binding.playScreenFrameLayout) { view, insets ->
+//            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+//            layoutParams.bottomMargin = systemBarsInsets.bottom + 40
+//            view.layoutParams = layoutParams
+//            insets
+//        }
 
         window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.transparent)
 
@@ -82,7 +84,6 @@ class RadiosFragment : BaseFragment() {
 
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

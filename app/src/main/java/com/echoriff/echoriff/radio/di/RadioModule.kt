@@ -18,7 +18,6 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val radioModule = module {
-
     single { FirebaseFirestore.getInstance() }
     single { FirebaseAuth.getInstance() }
     single { UserPreferences(androidContext()) }
@@ -26,9 +25,9 @@ val radioModule = module {
     single<RadioRepository> { RadioRepositoryImpl(get(), get()) }
 
     factory<FetchCategoriesUseCase> { FetchCategoriesUseCaseImpl(get()) }
-    single<LikeRadioUseCase> { LikeRadioUseCaseImpl(get()) }
-    single<SaveLikeSongUseCase> { SaveLikedSongUseCaseImpl(get()) }
+    factory<LikeRadioUseCase> { LikeRadioUseCaseImpl(get()) }
+    factory<SaveLikeSongUseCase> { SaveLikedSongUseCaseImpl(get()) }
 
-    viewModel { PlayerViewModel(get()) }
+    viewModel { PlayerViewModel(get(), get(), get()) }
     viewModel { RadiosViewModel(get()) }
 }

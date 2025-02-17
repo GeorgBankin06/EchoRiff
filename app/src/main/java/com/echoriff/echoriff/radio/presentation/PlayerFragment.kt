@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
 
 class PlayerFragment : Fragment() {
     private val playerModel: PlayerViewModel by navGraphViewModels(R.id.main_nav_graph)
-
     lateinit var binding: FragmentRadioPlayerBinding
 
     override fun onCreateView(
@@ -40,7 +39,6 @@ class PlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadioPlayerBinding.inflate(layoutInflater)
-
         return binding.root
     }
 
@@ -53,17 +51,16 @@ class PlayerFragment : Fragment() {
         observePlayerModel()
     }
 
-
     private fun setupButtons() {
         binding.btnPlay.setOnClickListener {
             if (playerModel.isPlaying()) {
                 playerModel.pause()
                 binding.btnPlay.setImageResource(R.drawable.ic_play)
-                updateTextColorBasedOnPlayerState(playerModel.isPlaying())
+                updateTextColorBasedOnPlayerState(false)
             } else {
                 playerModel.play()
                 binding.btnPlay.setImageResource(R.drawable.ic_pause)
-                updateTextColorBasedOnPlayerState(playerModel.isPlaying())
+                updateTextColorBasedOnPlayerState(true)
             }
         }
         binding.btnNext.setOnClickListener { playerModel.playNext() }
@@ -87,6 +84,12 @@ class PlayerFragment : Fragment() {
                             .load(radio?.coverArtUrl)
                             .placeholder(R.drawable.player_background)
                             .into(binding.coverArtImage)
+                        val radioImageUrl = radio?.coverArtUrl ?: ""
+                        if (radioImageUrl.isEmpty()) {
+//                            Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show()
+                        } else {
+                            updateRadioImageAndBackground(radioImageUrl)
+                        }
                     }
                 }
                 launch {
@@ -150,7 +153,12 @@ class PlayerFragment : Fragment() {
                 launch {
                     playerModel.isPlayingState.collect { isPlaying ->
                         updatePlayButtonIcon(isPlaying)
-                        updateTextColorBasedOnPlayerState(isPlaying)
+                        var live = false
+                        if (live) {
+                            updateTextColorBasedOnPlayerState(isPlaying)
+                        } else {
+                            live = true
+                        }
                     }
                 }
                 launch {
@@ -206,8 +214,8 @@ class PlayerFragment : Fragment() {
             gradientDrawable.cornerRadii = floatArrayOf(
                 100f, 100f, // top-left corner radius
                 100f, 100f, // top-right corner radius
-                100f, 100f,   // bottom-left corner (no radius)
-                100f, 100f    // bottom-right corner (no radius)
+                0f, 0f,   // bottom-left corner (no radius)
+                0f, 0f    // bottom-right corner (no radius)
             )
 
             val currentBackground = binding.playerBackgroundView.background
