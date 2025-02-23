@@ -11,9 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.UserPreferences
@@ -79,8 +77,11 @@ class RadiosFragment : BaseFragment() {
         val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
             requireContext()
         )
-        playerViewModel.playRadio(lastPlayedRadio, lastPlayedCategory)
-        playerViewModel.pause()
+        if (lastPlayedRadio != null) {
+            if (lastPlayedCategory != null) {
+                playerViewModel.loadRadioOnce(lastPlayedRadio, lastPlayedCategory)
+            }
+        }
 
         return binding.root
     }

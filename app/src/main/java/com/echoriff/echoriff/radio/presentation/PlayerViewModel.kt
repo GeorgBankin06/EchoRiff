@@ -53,6 +53,8 @@ class PlayerViewModel(
     private val _isPlayingState = MutableStateFlow(false)
     val isPlayingState = _isPlayingState.asStateFlow()
 
+    private var hasLoadedOnce = false
+
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(application).build()
 
     init {
@@ -113,10 +115,35 @@ class PlayerViewModel(
         play()
     }
 
+    @OptIn(UnstableApi::class)
+    fun loadRadio(radio: Radio?, category: Category?) {
+        radio?.streamUrl ?: return
+
+        _nowPlayingInfo.value = radio.title to null
+        _nowPlayingCategory.value = category
+        _nowPlayingRadio.value = radio
+        _currentIndex.value =
+            category?.radios?.indexOfFirst { it.title == nowPlayingRadio.value?.title } ?: 0
+
+        val dataSourceFactory = DefaultDataSource.Factory(getApplication())
+        val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(radio.streamUrl))
+        exoPlayer.setMediaSource(mediaSource)
+        exoPlayer.prepare()
+    }
+
+    fun loadRadioOnce(lastPlayedRadio: Radio, lastPlayedCategory: Category) {
+        if (!hasLoadedOnce) {
+            loadRadio(lastPlayedRadio, lastPlayedCategory)
+            hasLoadedOnce = true
+        }
+    }
+
     fun isPlaying(): Boolean = exoPlayer.isPlaying
 
     fun play() {
         exoPlayer.play()
+        _isPlayingState.value = true
     }
 
     fun pause() {

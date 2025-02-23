@@ -153,6 +153,7 @@ class PlayerFragment : Fragment() {
                 launch {
                     playerModel.isPlayingState.collect { isPlaying ->
                         updatePlayButtonIcon(isPlaying)
+                        updateTextColorBasedOnPlayerState(isPlaying)
                         var live = false
                         if (live) {
                             updateTextColorBasedOnPlayerState(isPlaying)
