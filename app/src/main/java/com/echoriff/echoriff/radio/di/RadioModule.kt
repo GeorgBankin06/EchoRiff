@@ -5,6 +5,10 @@ import com.echoriff.echoriff.radio.data.RadioRepository
 import com.echoriff.echoriff.radio.data.RadioRepositoryImpl
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCase
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCaseImpl
+import com.echoriff.echoriff.radio.domain.usecase.FetchLikedRadiosUseCase
+import com.echoriff.echoriff.radio.domain.usecase.FetchLikedRadiosUseCaseImpl
+import com.echoriff.echoriff.radio.domain.usecase.FetchLikedSongsUseCase
+import com.echoriff.echoriff.radio.domain.usecase.FetchLikedSongsUseCaseImpl
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCaseImpl
 import com.echoriff.echoriff.radio.domain.usecase.SaveLikeSongUseCase
@@ -27,6 +31,8 @@ val radioModule = module {
     factory<FetchCategoriesUseCase> { FetchCategoriesUseCaseImpl(get()) }
     factory<LikeRadioUseCase> { LikeRadioUseCaseImpl(get()) }
     factory<SaveLikeSongUseCase> { SaveLikedSongUseCaseImpl(get()) }
+    factory<FetchLikedRadiosUseCase> { FetchLikedRadiosUseCaseImpl(get()) }
+    factory<FetchLikedSongsUseCase> { FetchLikedSongsUseCaseImpl(get()) }
 
     viewModel { PlayerViewModel(get(), get(), get()) }
     viewModel { RadiosViewModel(get()) }

@@ -2,6 +2,8 @@ package com.echoriff.echoriff.radio.data
 
 import com.echoriff.echoriff.common.Constants
 import com.echoriff.echoriff.common.domain.User
+import com.echoriff.echoriff.radio.domain.LikedRadiosState
+import com.echoriff.echoriff.radio.domain.LikedSongsState
 import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.domain.RadioState
 import com.echoriff.echoriff.radio.domain.model.Song
@@ -57,6 +59,44 @@ class RadioRepositoryImpl(
             }
         } catch (e: TimeoutCancellationException) {
             emptyList()
+        }
+    }
+
+    override suspend fun fetchLikedRadios(): LikedRadiosState {
+        return try {
+            LikedRadiosState.Loading
+
+            val userId = firebaseAuth.currentUser?.uid
+                ?: return LikedRadiosState.Failure("User not authenticated")
+            val userSnapshot = firestore.collection(Constants.USERS).document(userId).get().await()
+
+            if (userSnapshot.exists()) {
+                val user = userSnapshot.toObject(User::class.java)
+                LikedRadiosState.Success(user?.favoriteRadios ?: emptyList())
+            } else {
+                LikedRadiosState.Failure("User not found")
+            }
+        } catch (e: Exception) {
+            LikedRadiosState.Failure(e.message ?: "Unknown error")
+        }
+    }
+
+    override suspend fun fetchLikedSongs(): LikedSongsState {
+        return try {
+            LikedSongsState.Loading
+
+            val userId = firebaseAuth.currentUser?.uid
+                ?: return LikedSongsState.Failure("User not authenticated")
+            val userSnapshot = firestore.collection(Constants.USERS).document(userId).get().await()
+
+            if (userSnapshot.exists()) {
+                val user = userSnapshot.toObject(User::class.java)
+                LikedSongsState.Success(user?.likedSongs ?: emptyList())
+            } else {
+                LikedSongsState.Failure("User not found")
+            }
+        } catch (e: Exception) {
+            LikedSongsState.Failure(e.message ?: "Unknown error")
         }
     }
 

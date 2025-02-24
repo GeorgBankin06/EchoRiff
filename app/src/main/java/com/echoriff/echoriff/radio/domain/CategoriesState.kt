@@ -7,5 +7,6 @@ sealed class CategoriesState {
     data class Success(
         val categories: List<Category>
     ) : CategoriesState()
+
     data object Failure : CategoriesState()
 }
