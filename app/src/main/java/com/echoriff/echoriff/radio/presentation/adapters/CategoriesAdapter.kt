@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.CategoryItemBinding
-import com.echoriff.echoriff.radio.domain.Category
+import com.echoriff.echoriff.radio.domain.model.Category
 
 class CategoriesAdapter(
     private val categories: List<Category>,

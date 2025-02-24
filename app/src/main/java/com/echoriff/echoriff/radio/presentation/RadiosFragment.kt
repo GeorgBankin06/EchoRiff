@@ -18,8 +18,8 @@ import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentRadiosBinding
 import com.echoriff.echoriff.radio.domain.CategoriesState
-import com.echoriff.echoriff.radio.domain.Category
-import com.echoriff.echoriff.radio.domain.Radio
+import com.echoriff.echoriff.radio.domain.model.Category
+import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.presentation.adapters.CategoriesAdapter
 import com.echoriff.echoriff.radio.presentation.adapters.EqualSpaceItemDecoration
 import com.echoriff.echoriff.radio.presentation.adapters.RadiosAdapter
@@ -63,6 +63,8 @@ class RadiosFragment : BaseFragment() {
             view.layoutParams = layoutParams
             insets
         }
+
+
 
 //        ViewCompat.setOnApplyWindowInsetsListener(binding.playScreenFrameLayout) { view, insets ->
 //            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())

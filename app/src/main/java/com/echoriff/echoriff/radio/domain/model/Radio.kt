@@ -1,4 +1,4 @@
-package com.echoriff.echoriff.radio.domain
+package com.echoriff.echoriff.radio.domain.model
 
 data class Radio(
     val coverArtUrl: String = "",

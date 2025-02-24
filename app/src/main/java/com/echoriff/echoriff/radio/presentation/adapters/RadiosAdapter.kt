@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.RadioItemBinding
-import com.echoriff.echoriff.radio.domain.Radio
+import com.echoriff.echoriff.radio.domain.model.Radio
 
 class RadiosAdapter(
     private val radios: List<Radio>,

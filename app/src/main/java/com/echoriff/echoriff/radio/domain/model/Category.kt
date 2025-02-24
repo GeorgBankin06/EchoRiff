@@ -1,6 +1,4 @@
-package com.echoriff.echoriff.radio.domain
-
-import com.echoriff.echoriff.radio.domain.model.CategoryDto
+package com.echoriff.echoriff.radio.domain.model
 
 data class Category(
     val bgImgUrl: String,

@@ -13,10 +13,10 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.extractArtistAndTitle
-import com.echoriff.echoriff.radio.domain.Category
-import com.echoriff.echoriff.radio.domain.Radio
+import com.echoriff.echoriff.radio.domain.model.Category
+import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.domain.RadioState
-import com.echoriff.echoriff.radio.domain.Song
+import com.echoriff.echoriff.radio.domain.model.Song
 import com.echoriff.echoriff.radio.domain.SongState
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
 import com.echoriff.echoriff.radio.domain.usecase.SaveLikeSongUseCase
@@ -115,23 +115,6 @@ class PlayerViewModel(
         play()
     }
 
-    @OptIn(UnstableApi::class)
-    fun loadRadio(radio: Radio?, category: Category?) {
-        radio?.streamUrl ?: return
-
-        _nowPlayingInfo.value = radio.title to null
-        _nowPlayingCategory.value = category
-        _nowPlayingRadio.value = radio
-        _currentIndex.value =
-            category?.radios?.indexOfFirst { it.title == nowPlayingRadio.value?.title } ?: 0
-
-        val dataSourceFactory = DefaultDataSource.Factory(getApplication())
-        val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(MediaItem.fromUri(radio.streamUrl))
-        exoPlayer.setMediaSource(mediaSource)
-        exoPlayer.prepare()
-    }
-
     fun loadRadioOnce(lastPlayedRadio: Radio, lastPlayedCategory: Category) {
         if (!hasLoadedOnce) {
             loadRadio(lastPlayedRadio, lastPlayedCategory)
@@ -157,6 +140,23 @@ class PlayerViewModel(
 
     fun playPrev() {
         playRadio(getPrevRadio(), nowPlayingCategory.value)
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun loadRadio(radio: Radio?, category: Category?) {
+        radio?.streamUrl ?: return
+
+        _nowPlayingInfo.value = radio.title to null
+        _nowPlayingCategory.value = category
+        _nowPlayingRadio.value = radio
+        _currentIndex.value =
+            category?.radios?.indexOfFirst { it.title == nowPlayingRadio.value?.title } ?: 0
+
+        val dataSourceFactory = DefaultDataSource.Factory(getApplication())
+        val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(radio.streamUrl))
+        exoPlayer.setMediaSource(mediaSource)
+        exoPlayer.prepare()
     }
 
     private fun getNextRadio(): Radio? {

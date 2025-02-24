@@ -1,11 +1,10 @@
 package com.echoriff.echoriff.radio.data
 
-import android.util.Log
 import com.echoriff.echoriff.common.Constants
 import com.echoriff.echoriff.common.domain.User
-import com.echoriff.echoriff.radio.domain.Radio
+import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.domain.RadioState
-import com.echoriff.echoriff.radio.domain.Song
+import com.echoriff.echoriff.radio.domain.model.Song
 import com.echoriff.echoriff.radio.domain.SongState
 import com.echoriff.echoriff.radio.domain.model.CategoryDto
 import com.echoriff.echoriff.radio.domain.model.RadioDto
@@ -23,7 +22,6 @@ class RadioRepositoryImpl(
 ) : RadioRepository {
     private val database: DatabaseReference =
         FirebaseDatabase.getInstance().getReference("categories")
-
 
     override suspend fun fetchCategories(): List<CategoryDto> {
         return try {

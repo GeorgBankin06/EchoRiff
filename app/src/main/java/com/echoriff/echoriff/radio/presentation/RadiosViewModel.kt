@@ -3,7 +3,7 @@ package com.echoriff.echoriff.radio.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.echoriff.echoriff.radio.domain.CategoriesState
-import com.echoriff.echoriff.radio.domain.Category
+import com.echoriff.echoriff.radio.domain.model.Category
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
