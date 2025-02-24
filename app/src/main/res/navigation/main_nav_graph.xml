@@ -22,18 +22,25 @@
         android:name="com.echoriff.echoriff.radio.presentation.FavoritesFragment"
         android:label="FavoritesFragment"
         tools:layout="@layout/fragment_favorites">
-        <action
-            android:id="@+id/action_to_favoritesFragment"
-            app:destination="@id/favoritesFragment"
-            app:popUpTo="@id/favoritesFragment"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_favoritesFragment_to_radiosFragment"
-            app:popUpTo="@id/favoritesFragment"
-            app:popUpToInclusive="false"
-            app:destination="@id/radiosFragment" />
 
+        <action
+            android:id="@+id/action_favoritesFragment_to_likedRadiosFragment"
+            app:destination="@id/likedRadiosFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_likedSongsFragment"
+            app:destination="@id/likedSongsFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/likedRadiosFragment"
+        android:name="com.echoriff.echoriff.radio.presentation.LikedRadiosFragment"
+        android:label="Liked Radios"
+        tools:layout="@layout/fragment_liked_radios" />
+
+    <fragment
+        android:id="@+id/likedSongsFragment"
+        android:name="com.echoriff.echoriff.radio.presentation.LikedSongsFragment"
+        android:label="Liked Songs"
+        tools:layout="@layout/fragment_liked_songs" />
 
 </navigation>
