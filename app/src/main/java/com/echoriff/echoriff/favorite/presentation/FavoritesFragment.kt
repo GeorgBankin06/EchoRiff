@@ -1,4 +1,4 @@
-package com.echoriff.echoriff.radio.presentation
+package com.echoriff.echoriff.favorite.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentFavoritesBinding
-import com.echoriff.echoriff.radio.domain.model.Favorite
-import com.echoriff.echoriff.radio.presentation.adapters.FavoritesAdapter
+import com.echoriff.echoriff.favorite.domain.model.Favorite
+import com.echoriff.echoriff.favorite.presentation.adapters.FavoritesAdapter
 
 class FavoritesFragment : Fragment() {
 

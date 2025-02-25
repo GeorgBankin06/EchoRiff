@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.echoriff.echoriff.radio.presentation.FavoritesFragment"
+        android:name="com.echoriff.echoriff.favorite.presentation.FavoritesFragment"
         android:label="FavoritesFragment"
         tools:layout="@layout/fragment_favorites">
 
@@ -33,13 +33,13 @@
 
     <fragment
         android:id="@+id/likedRadiosFragment"
-        android:name="com.echoriff.echoriff.radio.presentation.LikedRadiosFragment"
+        android:name="com.echoriff.echoriff.favorite.presentation.LikedRadiosFragment"
         android:label="Liked Radios"
         tools:layout="@layout/fragment_liked_radios" />
 
     <fragment
         android:id="@+id/likedSongsFragment"
-        android:name="com.echoriff.echoriff.radio.presentation.LikedSongsFragment"
+        android:name="com.echoriff.echoriff.favorite.presentation.LikedSongsFragment"
         android:label="Liked Songs"
         tools:layout="@layout/fragment_liked_songs" />
 

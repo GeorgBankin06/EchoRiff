@@ -1,4 +1,4 @@
-package com.echoriff.echoriff.radio.presentation.adapters
+package com.echoriff.echoriff.favorite.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.radio.domain.model.Favorite
+import com.echoriff.echoriff.favorite.domain.model.Favorite
 
 class FavoritesAdapter(
     private val items: List<Favorite>,

@@ -1,4 +1,4 @@
-package com.echoriff.echoriff.radio.domain
+package com.echoriff.echoriff.favorite.domain
 
 import com.echoriff.echoriff.radio.domain.model.Radio
 

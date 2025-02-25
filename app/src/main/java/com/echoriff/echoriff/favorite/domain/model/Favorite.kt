@@ -1,4 +1,4 @@
-package com.echoriff.echoriff.radio.domain.model
+package com.echoriff.echoriff.favorite.domain.model
 
 data class Favorite(
     val title: String,

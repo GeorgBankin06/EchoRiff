@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey"
-    tools:context=".radio.presentation.FavoritesFragment">
+    tools:context=".favorite.presentation.FavoritesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/library_rv"
