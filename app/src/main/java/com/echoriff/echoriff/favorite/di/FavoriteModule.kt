@@ -7,16 +7,7 @@ import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedRadiosUseCase
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedRadiosUseCaseImpl
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCase
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCaseImpl
-import com.echoriff.echoriff.radio.data.RadioRepository
-import com.echoriff.echoriff.radio.data.RadioRepositoryImpl
-import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCase
-import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCaseImpl
-import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
-import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCaseImpl
-import com.echoriff.echoriff.radio.domain.usecase.SaveLikeSongUseCase
-import com.echoriff.echoriff.radio.domain.usecase.SaveLikedSongUseCaseImpl
-import com.echoriff.echoriff.radio.presentation.PlayerViewModel
-import com.echoriff.echoriff.radio.presentation.RadiosViewModel
+import com.echoriff.echoriff.favorite.presentation.LikedRadiosViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidContext
@@ -33,5 +24,5 @@ val favoriteModule = module {
     factory<FetchLikedRadiosUseCase> { FetchLikedRadiosUseCaseImpl(get()) }
     factory<FetchLikedSongsUseCase> { FetchLikedSongsUseCaseImpl(get()) }
 
-
+    viewModel { LikedRadiosViewModel(get()) }
 }

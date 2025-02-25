@@ -141,7 +141,6 @@ class PlayerFragment : Fragment() {
                                 ).show()
                             }
                         }
-
                     }
                 }
                 launch {

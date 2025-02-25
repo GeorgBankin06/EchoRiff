@@ -5,10 +5,6 @@ import com.echoriff.echoriff.radio.data.RadioRepository
 import com.echoriff.echoriff.radio.data.RadioRepositoryImpl
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCase
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCaseImpl
-import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedRadiosUseCase
-import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedRadiosUseCaseImpl
-import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCase
-import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCaseImpl
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCaseImpl
 import com.echoriff.echoriff.radio.domain.usecase.SaveLikeSongUseCase

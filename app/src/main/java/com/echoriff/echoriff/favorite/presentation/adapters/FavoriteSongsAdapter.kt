@@ -11,7 +11,7 @@ class FavoriteSongsAdapter(
     private val onSongClick: (Song) -> Unit
 ) : RecyclerView.Adapter<FavoriteSongsAdapter.FavoriteSongsViewHolder>() {
 
-    inner class FavoriteSongsViewHolder(private val binding: FavoriteSongItemBinding) :
+     class FavoriteSongsViewHolder(private val binding: FavoriteSongItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(song: Song, onSongClick: (Song) -> Unit) {
             binding.songName.text = song.songName

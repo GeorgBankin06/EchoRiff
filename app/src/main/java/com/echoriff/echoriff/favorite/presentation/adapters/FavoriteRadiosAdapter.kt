@@ -13,7 +13,7 @@ class FavoriteRadiosAdapter(
     private val onRadioClick: (Radio) -> Unit
 ) : RecyclerView.Adapter<FavoriteRadiosAdapter.FavoriteRadiosViewHolder>() {
 
-    inner class FavoriteRadiosViewHolder(private val binding: FavoriteRadioItemBinding) :
+    class FavoriteRadiosViewHolder(private val binding: FavoriteRadioItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(radio: Radio, onRadioClick: (Radio) -> Unit) {
             binding.radioName.text = radio.title
