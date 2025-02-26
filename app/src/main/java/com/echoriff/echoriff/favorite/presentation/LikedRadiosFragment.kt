@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,19 +13,25 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentLikedRadiosBinding
 import com.echoriff.echoriff.favorite.domain.LikedRadiosState
 import com.echoriff.echoriff.favorite.presentation.adapters.FavoriteRadiosAdapter
+import com.echoriff.echoriff.radio.domain.model.Category
 import com.echoriff.echoriff.radio.domain.model.Radio
+import com.echoriff.echoriff.radio.presentation.PlayerViewModel
 import com.echoriff.echoriff.radio.presentation.adapters.RadiosAdapter
 import com.echoriff.echoriff.register.presentation.RegisterViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LikedRadiosFragment : Fragment() {
     private lateinit var binding: FragmentLikedRadiosBinding
     private val likedRadiosViewModel: LikedRadiosViewModel by viewModel()
+    private val playerViewModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
     private lateinit var adapter: FavoriteRadiosAdapter
+    private var category: Category? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +69,11 @@ class LikedRadiosFragment : Fragment() {
                             is LikedRadiosState.Success -> {
                                 binding.progressBar.visibility = View.GONE
                                 setupRadiosAdapter(state.likedRadios)
+                                category = Category(
+                                    bgImgUrl = "favoriteRadios",
+                                    title = "favoriteRadios",
+                                    radios = state.likedRadios
+                                )
                             }
 
                             is LikedRadiosState.Failure -> {
@@ -89,7 +101,7 @@ class LikedRadiosFragment : Fragment() {
 
     private fun setupRadiosAdapter(radios: List<Radio>) {
         adapter = FavoriteRadiosAdapter(radios) { selectedRadio ->
-
+            playerViewModel.playRadio(selectedRadio, category)
         }
         binding.likedRadiosRv.adapter = adapter
     }

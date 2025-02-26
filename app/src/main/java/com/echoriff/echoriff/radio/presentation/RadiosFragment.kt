@@ -1,5 +1,6 @@
 package com.echoriff.echoriff.radio.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.echoriff.echoriff.MainActivity
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.presentation.BaseFragment
@@ -129,7 +131,10 @@ class RadiosFragment : BaseFragment() {
             userPreferences.clearLastPlayedRadio()
             playerViewModel.pause()
         }
-        loadNavGraph(R.navigation.auth_nav_graph)
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+//        loadNavGraph(R.navigation.auth_nav_graph)
     }
 
     private fun loadNavGraph(graphId: Int) {

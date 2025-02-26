@@ -29,9 +29,10 @@ import com.echoriff.echoriff.radio.domain.RadioState
 import com.echoriff.echoriff.radio.domain.SongState
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class PlayerFragment : Fragment() {
-    private val playerModel: PlayerViewModel by navGraphViewModels(R.id.main_nav_graph)
+    private val playerModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
     lateinit var binding: FragmentRadioPlayerBinding
 
     override fun onCreateView(
