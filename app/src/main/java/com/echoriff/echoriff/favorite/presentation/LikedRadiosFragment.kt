@@ -63,12 +63,19 @@ class LikedRadiosFragment : Fragment() {
                 launch {
                     likedRadiosViewModel.likedRadiosState.collect { state ->
                         when (state) {
-                            is LikedRadiosState.Loading -> binding.progressBar.visibility =
-                                View.VISIBLE
+                            is LikedRadiosState.Loading -> {
+                                binding.progressBar.visibility =
+                                    View.VISIBLE
+                                binding.likedRadiosRv.visibility = View.GONE
+                            }
 
                             is LikedRadiosState.Success -> {
                                 binding.progressBar.visibility = View.GONE
+                                binding.likedRadiosRv.visibility = View.VISIBLE
                                 setupRadiosAdapter(state.likedRadios)
+                                val animation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_animation)
+                                binding.likedRadiosRv.layoutAnimation = animation
+                                binding.likedRadiosRv.scheduleLayoutAnimation()
                                 category = Category(
                                     bgImgUrl = "favoriteRadios",
                                     title = "favoriteRadios",

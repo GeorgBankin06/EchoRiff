@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -66,8 +67,6 @@ class RadiosFragment : BaseFragment() {
             insets
         }
 
-
-
 //        ViewCompat.setOnApplyWindowInsetsListener(binding.playScreenFrameLayout) { view, insets ->
 //            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 //            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
@@ -113,6 +112,9 @@ class RadiosFragment : BaseFragment() {
                 launch {
                     radioModel.selectedCategory.collect {
                         setupRadiosAdapter(it?.radios ?: emptyList())
+                        val animation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.rv_animation)
+                        binding.radiosRv.layoutAnimation = animation
+                        binding.radiosRv.scheduleLayoutAnimation()
                     }
                 }
             }
