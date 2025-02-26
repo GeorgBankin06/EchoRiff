@@ -1,7 +1,6 @@
 package com.echoriff.echoriff.favorite.presentation
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,11 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentLikedRadiosBinding
@@ -20,8 +21,6 @@ import com.echoriff.echoriff.favorite.presentation.adapters.FavoriteRadiosAdapte
 import com.echoriff.echoriff.radio.domain.model.Category
 import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.presentation.PlayerViewModel
-import com.echoriff.echoriff.radio.presentation.adapters.RadiosAdapter
-import com.echoriff.echoriff.register.presentation.RegisterViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,7 +38,7 @@ class LikedRadiosFragment : Fragment() {
     ): View {
         binding = FragmentLikedRadiosBinding.inflate(layoutInflater)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.likedRadiosRv) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.btnBack) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
             layoutParams.topMargin = systemBarsInsets.top
@@ -53,6 +52,9 @@ class LikedRadiosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.btnBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
         observeLikedRadioModel()
         setupRadiosRV(view)
     }
@@ -73,9 +75,13 @@ class LikedRadiosFragment : Fragment() {
                                 binding.progressBar.visibility = View.GONE
                                 binding.likedRadiosRv.visibility = View.VISIBLE
                                 setupRadiosAdapter(state.likedRadios)
-                                val animation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_animation)
+                                val animation = AnimationUtils.loadLayoutAnimation(
+                                    requireContext(),
+                                    R.anim.layout_animation
+                                )
                                 binding.likedRadiosRv.layoutAnimation = animation
                                 binding.likedRadiosRv.scheduleLayoutAnimation()
+                                binding.tvRadiosNumber.text = "${state.likedRadios.size} radios"
                                 category = Category(
                                     bgImgUrl = "favoriteRadios",
                                     title = "favoriteRadios",
