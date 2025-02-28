@@ -1,6 +1,7 @@
 package com.echoriff.echoriff.favorite.presentation
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,8 +57,9 @@ class LikedRadiosFragment : Fragment() {
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
-        observeLikedRadioModel()
-        setupRadiosRV(view)
+//        observeLikedRadioModel()
+        setupRadiosRV()
+        startTimer()
     }
 
     private fun observeLikedRadioModel() {
@@ -104,12 +107,24 @@ class LikedRadiosFragment : Fragment() {
         }
     }
 
-    private fun setupRadiosRV(view: View) {
+    private fun setupRadiosRV() {
         binding.likedRadiosRv.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
             false
         )
+    }
+
+    fun startTimer() {
+        object : CountDownTimer(600, 100) { // 600ms duration, ticks every 100ms
+            override fun onTick(millisUntilFinished: Long) {
+
+            }
+
+            override fun onFinish() {
+                observeLikedRadioModel()
+            }
+        }.start()
     }
 
     private fun setupRadiosAdapter(radios: List<Radio>) {
