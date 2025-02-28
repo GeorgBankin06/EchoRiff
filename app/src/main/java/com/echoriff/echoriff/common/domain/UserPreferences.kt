@@ -78,4 +78,19 @@ class UserPreferences(private val context: Context) {
             apply()
         }
     }
+
+    fun saveSelectedCategory(categoryId: String) {
+        val sharedPreferences = context.getSharedPreferences("EchoRiffPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("LAST_SELECTED_CATEGORY", categoryId).apply()
+    }
+
+    fun getSelectedCategory(): String? {
+        val sharedPreferences = context.getSharedPreferences("EchoRiffPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("LAST_SELECTED_CATEGORY", null)
+    }
+
+    fun clearSelectedCategory(){
+        val sharedPreferences = context.getSharedPreferences("EchoRiffPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().remove("LAST_SELECTED_CATEGORY").apply()
+    }
 }

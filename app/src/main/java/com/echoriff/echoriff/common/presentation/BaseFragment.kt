@@ -23,8 +23,8 @@ open class BaseFragment : Fragment() {
 
     fun navigateToRadiosActivity() {
         val intent = Intent(requireContext(), RadiosActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+        requireActivity().finish()
     }
 
     fun windowColors(statusBarColor: Int, navBarColor: Int) {

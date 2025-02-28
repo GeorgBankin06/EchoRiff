@@ -50,6 +50,8 @@ class RadiosFragment : BaseFragment() {
         binding = FragmentRadiosBinding.inflate(layoutInflater)
         val window = requireActivity().window
 
+        userPreferences.clearSelectedCategory()
+
         adjustStatusBarIconsBasedOnBackgroundColor(
             this@RadiosFragment, ContextCompat.getColor(
                 requireContext(),
@@ -136,6 +138,7 @@ class RadiosFragment : BaseFragment() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+//        requireActivity().finish()
 //        loadNavGraph(R.navigation.auth_nav_graph)
     }
 
@@ -183,7 +186,11 @@ class RadiosFragment : BaseFragment() {
     }
 
     private fun setupCategoriesAdapter(categories: List<Category>) {
-        categoriesAdapter = CategoriesAdapter(categories) { selectedCategory ->
+        val savedCategoryId = userPreferences.getSelectedCategory() // Retrieve saved category
+        val selectedIndex = categories.indexOfFirst { it.title == savedCategoryId }
+        val initialSelectedIndex = if (selectedIndex != -1) selectedIndex else 0
+
+        categoriesAdapter = CategoriesAdapter(categories, initialSelectedIndex) { selectedCategory ->
             val selectedIndex = categories.indexOf(selectedCategory)
             scrollToCenter(selectedIndex)
             radioModel.setSelectedCategory(selectedIndex)

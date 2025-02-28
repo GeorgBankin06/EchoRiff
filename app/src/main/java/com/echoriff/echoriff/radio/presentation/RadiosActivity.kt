@@ -1,7 +1,7 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -19,6 +19,10 @@ class RadiosActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityRadiosBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onBackPressedDispatcher.addCallback(this){
+            moveTaskToBack(true)
+        }
 
         // Set up the navigation controller
         val navHostFragment =

@@ -10,9 +10,9 @@ import com.echoriff.echoriff.radio.domain.model.Category
 
 class CategoriesAdapter(
     private val categories: List<Category>,
+    private var selectedPosition: Int,
     private val onItemClick: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
-    private var selectedPosition = 0
 
     class CategoryViewHolder(private val binding: CategoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -51,7 +51,6 @@ class CategoriesAdapter(
             selectedPosition = holder.adapterPosition
             notifyItemChanged(selectedPosition)
         }
-
     }
 
     override fun getItemCount(): Int = categories.size

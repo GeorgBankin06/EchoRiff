@@ -7,7 +7,6 @@ import com.echoriff.echoriff.radio.di.radioModule
 import com.echoriff.echoriff.register.di.registerModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
-import org.koin.dsl.module
 
 class EchoRiffApplication : Application() {
 
