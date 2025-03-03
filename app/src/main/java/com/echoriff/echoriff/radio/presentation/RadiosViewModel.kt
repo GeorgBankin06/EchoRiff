@@ -9,7 +9,6 @@ import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.java.KoinJavaComponent.inject
 
 class RadiosViewModel(
@@ -28,13 +27,12 @@ class RadiosViewModel(
         viewModelScope.launch {
             _categories.value = fetchCategoriesUseCase.fetchCategories()
 
-            val savedCategoryId = userPreferences.getSelectedCategory()
+            val savedCategoryTitle = userPreferences.getSelectedCategory()
             categories.collect { state ->
                 when (state) {
                     is CategoriesState.Success -> _selectedCategory.value =
-                        state.categories.find { it.title == savedCategoryId }
+                        state.categories.find { it.title == savedCategoryTitle }
                             ?: state.categories.first()
-
                     else -> {}
                 }
             }

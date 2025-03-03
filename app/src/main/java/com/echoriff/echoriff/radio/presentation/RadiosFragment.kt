@@ -48,9 +48,10 @@ class RadiosFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadiosBinding.inflate(layoutInflater)
-        val window = requireActivity().window
 
-        userPreferences.clearSelectedCategory()
+        val window = requireActivity().window
+        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.transparent)
+        windowColors(R.color.transparent, R.color.navBar)
 
         adjustStatusBarIconsBasedOnBackgroundColor(
             this@RadiosFragment, ContextCompat.getColor(
@@ -58,8 +59,6 @@ class RadiosFragment : BaseFragment() {
                 R.color.black
             )
         )
-
-        windowColors(R.color.transparent, R.color.navBar)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.categoriesRv) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -77,7 +76,7 @@ class RadiosFragment : BaseFragment() {
 //            insets
 //        }
 
-        window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.transparent)
+        userPreferences.clearSelectedCategory()
 
         val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
             requireContext()
@@ -86,6 +85,8 @@ class RadiosFragment : BaseFragment() {
             if (lastPlayedCategory != null) {
                 playerViewModel.loadRadioOnce(lastPlayedRadio, lastPlayedCategory)
             }
+        }else{
+            binding.playScreenFrameLayout.visibility = View.GONE
         }
 
         return binding.root
@@ -114,7 +115,10 @@ class RadiosFragment : BaseFragment() {
                 launch {
                     radioModel.selectedCategory.collect {
                         setupRadiosAdapter(it?.radios ?: emptyList())
-                        val animation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.rv_animation)
+                        val animation = AnimationUtils.loadLayoutAnimation(
+                            requireContext(),
+                            R.anim.rv_animation
+                        )
                         binding.radiosRv.layoutAnimation = animation
                         binding.radiosRv.scheduleLayoutAnimation()
                     }
@@ -138,24 +142,6 @@ class RadiosFragment : BaseFragment() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-//        requireActivity().finish()
-//        loadNavGraph(R.navigation.auth_nav_graph)
-    }
-
-    private fun loadNavGraph(graphId: Int) {
-        val navHostFragment = NavHostFragment.create(graphId)
-
-        parentFragmentManager.beginTransaction().apply {
-            setCustomAnimations(
-                R.anim.slide_in_1,  // Enter animation
-                R.anim.slide_out_2, // Exit animation
-                R.anim.slide_in_exit, // Pop enter
-                R.anim.slide_out_exit // Pop exit
-            )
-            replace(R.id.nav_host_fragment, navHostFragment)
-            setPrimaryNavigationFragment(navHostFragment)
-            commit()
-        }
     }
 
     private fun setupRadioPlayerFragment() {
@@ -186,21 +172,23 @@ class RadiosFragment : BaseFragment() {
     }
 
     private fun setupCategoriesAdapter(categories: List<Category>) {
-        val savedCategoryId = userPreferences.getSelectedCategory() // Retrieve saved category
-        val selectedIndex = categories.indexOfFirst { it.title == savedCategoryId }
+        val savedCategoryTitle = userPreferences.getSelectedCategory() // Retrieve saved category
+        val selectedIndex = categories.indexOfFirst { it.title == savedCategoryTitle }
         val initialSelectedIndex = if (selectedIndex != -1) selectedIndex else 0
 
-        categoriesAdapter = CategoriesAdapter(categories, initialSelectedIndex) { selectedCategory ->
-            val selectedIndex = categories.indexOf(selectedCategory)
-            scrollToCenter(selectedIndex)
-            radioModel.setSelectedCategory(selectedIndex)
-        }
+        categoriesAdapter =
+            CategoriesAdapter(categories, initialSelectedIndex) { selectedCategory ->
+                val selectedIndex = categories.indexOf(selectedCategory)
+                scrollToCenter(selectedIndex)
+                radioModel.setSelectedCategory(selectedIndex)
+            }
         binding.categoriesRv.adapter = categoriesAdapter
     }
 
     private fun setupRadiosAdapter(radios: List<Radio>) {
         radiosAdapter = RadiosAdapter(radios) { selectedRadio ->
             playerViewModel.playRadio(selectedRadio, radioModel.selectedCategory.value)
+            binding.playScreenFrameLayout.visibility = View.VISIBLE
         }
         binding.radiosRv.adapter = radiosAdapter
     }
