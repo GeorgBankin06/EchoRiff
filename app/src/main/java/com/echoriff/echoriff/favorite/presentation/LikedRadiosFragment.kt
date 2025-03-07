@@ -12,10 +12,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentLikedRadiosBinding
 import com.echoriff.echoriff.favorite.domain.LikedRadiosState
@@ -26,6 +27,7 @@ import com.echoriff.echoriff.radio.presentation.PlayerViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Collections
 
 class LikedRadiosFragment : Fragment() {
     private lateinit var binding: FragmentLikedRadiosBinding
@@ -33,6 +35,7 @@ class LikedRadiosFragment : Fragment() {
     private val playerViewModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
     private lateinit var adapter: FavoriteRadiosAdapter
     private var category: Category? = null
+    private var radiosList: List<Radio>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,6 +80,7 @@ class LikedRadiosFragment : Fragment() {
                             is LikedRadiosState.Success -> {
                                 binding.progressBar.visibility = View.GONE
                                 binding.likedRadiosRv.visibility = View.VISIBLE
+                                radiosList = state.likedRadios
                                 setupRadiosAdapter(state.likedRadios)
                                 val animation = AnimationUtils.loadLayoutAnimation(
                                     requireContext(),
@@ -115,7 +119,7 @@ class LikedRadiosFragment : Fragment() {
         )
     }
 
-    fun startTimer() {
+    private fun startTimer() {
         object : CountDownTimer(600, 100) { // 600ms duration, ticks every 100ms
             override fun onTick(millisUntilFinished: Long) {
 
@@ -132,5 +136,37 @@ class LikedRadiosFragment : Fragment() {
             playerViewModel.playRadio(selectedRadio, category)
         }
         binding.likedRadiosRv.adapter = adapter
+
+        if ((radiosList?.size ?: 0) > 1) {
+            val itemTouchHelper = ItemTouchHelper(simpleCallback)
+            itemTouchHelper.attachToRecyclerView(binding.likedRadiosRv)
+        }
     }
+
+    private val simpleCallback: ItemTouchHelper.SimpleCallback =
+        object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPosition = viewHolder.adapterPosition
+                val toPosition = target.adapterPosition
+
+                Collections.swap(
+                    radiosList ?: return false,
+                    fromPosition,
+                    toPosition
+                ) // Swap items in the list
+                adapter.notifyItemMoved(fromPosition, toPosition) // Notify adapter
+
+                likedRadiosViewModel.updateRadioList(radiosList ?: return false) // Persist changes
+
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+        }
 }
