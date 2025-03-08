@@ -10,12 +10,13 @@ import com.echoriff.echoriff.radio.domain.model.Radio
 
 class FavoriteRadiosAdapter(
     private var radios: List<Radio>,
-    private val onRadioClick: (Radio) -> Unit
+    private val onRadioClick: (Radio) -> Unit,
+    private val onButtonClick: (Radio) -> Unit
 ) : RecyclerView.Adapter<FavoriteRadiosAdapter.FavoriteRadiosViewHolder>() {
 
     class FavoriteRadiosViewHolder(private val binding: FavoriteRadioItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(radio: Radio, onRadioClick: (Radio) -> Unit) {
+        fun bind(radio: Radio, onRadioClick: (Radio) -> Unit, onButtonClick: (Radio) -> Unit) {
             binding.radioName.text = radio.title
             binding.radioDescription.text = radio.intro
             Glide.with(binding.radioName.context)
@@ -24,6 +25,7 @@ class FavoriteRadiosAdapter(
                 .into(binding.radioIv)
 
             itemView.setOnClickListener { onRadioClick(radio) }
+            binding.btnDelete.setOnClickListener { onButtonClick(radio) }
         }
     }
 
@@ -34,10 +36,19 @@ class FavoriteRadiosAdapter(
     }
 
     override fun onBindViewHolder(holder: FavoriteRadiosViewHolder, position: Int) {
-        holder.bind(radios[position], onRadioClick)
+        holder.bind(radios[position], onRadioClick, onButtonClick)
     }
 
     override fun getItemCount(): Int = radios.size
+
+    fun removeItem(radio: Radio){
+        val index = radios.indexOfFirst { it.title == radio.title }
+        if(index != -1){
+            radios = radios.toMutableList().apply { removeAt(index) }
+
+            notifyItemRemoved(index)
+        }
+    }
 
     fun updateRadios(newRadios: List<Radio>) {
         radios = newRadios

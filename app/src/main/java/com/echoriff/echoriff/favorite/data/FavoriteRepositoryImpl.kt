@@ -48,6 +48,28 @@ class FavoriteRepositoryImpl(
         }
     }
 
+    override suspend fun deleteRadio(removeRadio: Radio): Boolean {
+        return try {
+            val userId = firebaseAuth.currentUser?.uid ?: return false
+            val userRef = firestore.collection(Constants.USERS).document(userId)
+
+            // Fetch current user data
+            val userSnapshot = userRef.get().await()
+            if (!userSnapshot.exists()) return false
+
+            val user = userSnapshot.toObject(User::class.java) ?: return false
+
+            // Remove the radio with the given ID
+            val updatedRadios = user.favoriteRadios.filter { it.title != removeRadio.title }
+
+            // Update Firestore
+            userRef.update("favoriteRadios", updatedRadios).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     override suspend fun fetchLikedSongs(): LikedSongsState {
         return try {
             LikedSongsState.Loading

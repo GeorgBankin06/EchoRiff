@@ -3,6 +3,8 @@ package com.echoriff.echoriff.favorite.di
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.favorite.data.FavoriteRepository
 import com.echoriff.echoriff.favorite.data.FavoriteRepositoryImpl
+import com.echoriff.echoriff.favorite.domain.usecase.DeleteRadioUseCase
+import com.echoriff.echoriff.favorite.domain.usecase.DeleteRadioUseCaseImpl
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedRadiosUseCase
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedRadiosUseCaseImpl
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCase
@@ -26,8 +28,9 @@ val favoriteModule = module {
 
     factory<FetchLikedRadiosUseCase> { FetchLikedRadiosUseCaseImpl(get()) }
     factory<FetchLikedSongsUseCase> { FetchLikedSongsUseCaseImpl(get()) }
-    factory<UpdateLikedRadiosListUseCase> {UpdateLikedRadiosListUseCaseImpl(get())}
+    factory<UpdateLikedRadiosListUseCase> { UpdateLikedRadiosListUseCaseImpl(get()) }
+    factory<DeleteRadioUseCase> { DeleteRadioUseCaseImpl(get()) }
 
-    viewModel { LikedRadiosViewModel(get(), get()) }
+    viewModel { LikedRadiosViewModel(get(), get(), get()) }
     viewModel { LikedSongsViewModel(get()) }
 }

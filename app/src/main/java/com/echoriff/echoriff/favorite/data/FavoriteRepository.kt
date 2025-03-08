@@ -8,4 +8,5 @@ interface FavoriteRepository {
     suspend fun fetchLikedRadios(): LikedRadiosState
     suspend fun fetchLikedSongs(): LikedSongsState
     suspend fun updateLikedRadios(updatedRadios: List<Radio>): Boolean
+    suspend fun deleteRadio(removeRadio: Radio): Boolean
 }

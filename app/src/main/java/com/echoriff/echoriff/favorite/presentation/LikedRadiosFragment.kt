@@ -88,7 +88,6 @@ class LikedRadiosFragment : Fragment() {
                                 )
                                 binding.likedRadiosRv.layoutAnimation = animation
                                 binding.likedRadiosRv.scheduleLayoutAnimation()
-                                binding.tvRadiosNumber.text = "${state.likedRadios.size} radios"
                                 category = Category(
                                     bgImgUrl = "favoriteRadios",
                                     title = "favoriteRadios",
@@ -121,10 +120,7 @@ class LikedRadiosFragment : Fragment() {
 
     private fun startTimer() {
         object : CountDownTimer(600, 100) { // 600ms duration, ticks every 100ms
-            override fun onTick(millisUntilFinished: Long) {
-
-            }
-
+            override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
                 observeLikedRadioModel()
             }
@@ -132,10 +128,18 @@ class LikedRadiosFragment : Fragment() {
     }
 
     private fun setupRadiosAdapter(radios: List<Radio>) {
-        adapter = FavoriteRadiosAdapter(radios) { selectedRadio ->
-            playerViewModel.playRadio(selectedRadio, category)
-        }
+        adapter = FavoriteRadiosAdapter(radios = radios,
+            onRadioClick = { selectedRadio ->
+                playerViewModel.playRadio(selectedRadio, category)
+            },
+            onButtonClick = { deleteRadio ->
+                likedRadiosViewModel.deleteRadio(deleteRadio)
+                binding.tvRadiosNumber.text = "${adapter.itemCount - 1} radios"
+                adapter.removeItem(deleteRadio)
+            }
+        )
         binding.likedRadiosRv.adapter = adapter
+        binding.tvRadiosNumber.text = "${adapter.itemCount} radios"
 
         if ((radiosList?.size ?: 0) > 1) {
             val itemTouchHelper = ItemTouchHelper(simpleCallback)
