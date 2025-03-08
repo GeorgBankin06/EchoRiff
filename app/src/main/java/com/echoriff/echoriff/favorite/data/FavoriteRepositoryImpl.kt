@@ -5,6 +5,7 @@ import com.echoriff.echoriff.common.domain.User
 import com.echoriff.echoriff.favorite.domain.LikedRadiosState
 import com.echoriff.echoriff.favorite.domain.LikedSongsState
 import com.echoriff.echoriff.radio.domain.model.Radio
+import com.echoriff.echoriff.radio.domain.model.Song
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -86,6 +87,22 @@ class FavoriteRepositoryImpl(
             }
         } catch (e: Exception) {
             LikedSongsState.Failure(e.message ?: "Unknown error")
+        }
+    }
+
+    override suspend fun updateLikedSongs(updatedSongs: List<Song>): Boolean {
+        return try {
+            val userId = firebaseAuth.currentUser?.uid
+                ?: return false
+
+            firestore.collection(Constants.USERS)
+                .document(userId)
+                .update("likedSongs", updatedSongs)
+                .await()
+
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 }

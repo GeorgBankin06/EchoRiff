@@ -11,6 +11,8 @@ import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCase
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCaseImpl
 import com.echoriff.echoriff.favorite.domain.usecase.UpdateLikedRadiosListUseCase
 import com.echoriff.echoriff.favorite.domain.usecase.UpdateLikedRadiosListUseCaseImpl
+import com.echoriff.echoriff.favorite.domain.usecase.UpdateLikedSongsUseCase
+import com.echoriff.echoriff.favorite.domain.usecase.UpdateLikedSongsUseCaseImpl
 import com.echoriff.echoriff.favorite.presentation.LikedRadiosViewModel
 import com.echoriff.echoriff.favorite.presentation.LikedSongsViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -27,10 +29,12 @@ val favoriteModule = module {
     single<FavoriteRepository> { FavoriteRepositoryImpl(get(), get()) }
 
     factory<FetchLikedRadiosUseCase> { FetchLikedRadiosUseCaseImpl(get()) }
-    factory<FetchLikedSongsUseCase> { FetchLikedSongsUseCaseImpl(get()) }
     factory<UpdateLikedRadiosListUseCase> { UpdateLikedRadiosListUseCaseImpl(get()) }
     factory<DeleteRadioUseCase> { DeleteRadioUseCaseImpl(get()) }
 
+    factory<FetchLikedSongsUseCase> { FetchLikedSongsUseCaseImpl(get()) }
+    factory<UpdateLikedSongsUseCase> { UpdateLikedSongsUseCaseImpl(get()) }
+
     viewModel { LikedRadiosViewModel(get(), get(), get()) }
-    viewModel { LikedSongsViewModel(get()) }
+    viewModel { LikedSongsViewModel(get(), get()) }
 }
