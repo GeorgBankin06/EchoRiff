@@ -12,4 +12,5 @@ interface FavoriteRepository {
 
     suspend fun fetchLikedSongs(): LikedSongsState
     suspend fun updateLikedSongs(updatedSongs: List<Song>) : Boolean
+    suspend fun deleteSong(removeSong: Song): Boolean
 }

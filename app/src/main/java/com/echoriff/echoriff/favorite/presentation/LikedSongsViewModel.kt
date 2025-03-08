@@ -3,6 +3,7 @@ package com.echoriff.echoriff.favorite.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.echoriff.echoriff.favorite.domain.LikedSongsState
+import com.echoriff.echoriff.favorite.domain.usecase.DeleteSongUseCase
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCase
 import com.echoriff.echoriff.favorite.domain.usecase.UpdateLikedSongsUseCase
 import com.echoriff.echoriff.radio.domain.model.Song
@@ -12,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class LikedSongsViewModel(
     private val fetchLikedSongsUseCase: FetchLikedSongsUseCase,
-    private val updatedRadioList: UpdateLikedSongsUseCase
+    private val updatedRadioList: UpdateLikedSongsUseCase,
+    private val removeSong: DeleteSongUseCase
 ) : ViewModel() {
 
     private val _likedSongsState = MutableStateFlow<LikedSongsState>(LikedSongsState.Loading)
@@ -34,6 +36,12 @@ class LikedSongsViewModel(
     fun updateSongList(updateSongList: List<Song>){
         viewModelScope.launch {
             updatedRadioList.saveUpdatedSongList(updateSongList)
+        }
+    }
+
+    fun deleteSong(song: Song){
+        viewModelScope.launch {
+            removeSong.deleteSong(song)
         }
     }
 }

@@ -105,4 +105,26 @@ class FavoriteRepositoryImpl(
             false
         }
     }
+
+    override suspend fun deleteSong(removeSong: Song): Boolean {
+        return try {
+            val userId = firebaseAuth.currentUser?.uid ?: return false
+            val userRef = firestore.collection(Constants.USERS).document(userId)
+
+            // Fetch current user data
+            val userSnapshot = userRef.get().await()
+            if (!userSnapshot.exists()) return false
+
+            val user = userSnapshot.toObject(User::class.java) ?: return false
+
+            // Remove the song with the given ID
+            val updatedSongs = user.likedSongs.filter { it.songName != removeSong.songName }
+
+            // Update Firestore
+            userRef.update("likedSongs", updatedSongs).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

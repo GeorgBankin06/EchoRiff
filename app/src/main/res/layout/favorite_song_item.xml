@@ -37,4 +37,14 @@
             android:textSize="14sp"
             tools:text="adasdddadaa" />
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_delete"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_delete" />
+
 </LinearLayout>

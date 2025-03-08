@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_radio"
+        android:id="@+id/tv_song"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -42,10 +42,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_radiosNumber" />
+        app:layout_constraintTop_toBottomOf="@id/tv_songsNumber" />
 
     <TextView
-        android:id="@+id/tv_radiosNumber"
+        android:id="@+id/tv_songsNumber"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toTopOf="@+id/likedSongs_rv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_radio"
+        app:layout_constraintTop_toBottomOf="@+id/tv_song"
         toools:text="Likes" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -66,5 +66,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         toools:listitem="@layout/favorite_song_item"
-        app:layout_constraintTop_toBottomOf="@id/tv_radiosNumber" />
+        app:layout_constraintTop_toBottomOf="@id/tv_songsNumber" />
 </androidx.constraintlayout.widget.ConstraintLayout>

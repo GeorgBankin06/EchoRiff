@@ -1,8 +1,6 @@
 package com.echoriff.echoriff.favorite.presentation
 
-import android.app.SearchManager
-import android.content.Intent
-import android.net.Uri
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -58,7 +56,7 @@ class LikedSongsFragment : Fragment() {
             findNavController().navigateUp()
         }
         observeLikedSongModel()
-        setupSongsRV(view)
+        setupSongsRV()
     }
 
     private fun observeLikedSongModel() {
@@ -86,7 +84,6 @@ class LikedSongsFragment : Fragment() {
                                 )
                                 binding.likedSongsRv.layoutAnimation = animation
                                 binding.likedSongsRv.scheduleLayoutAnimation()
-                                binding.tvRadiosNumber.text = "${state.likedSongs.size} songs"
                             }
 
                             is LikedSongsState.Failure -> {
@@ -104,7 +101,7 @@ class LikedSongsFragment : Fragment() {
         }
     }
 
-    private fun setupSongsRV(view: View) {
+    private fun setupSongsRV() {
         binding.likedSongsRv.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
@@ -112,12 +109,19 @@ class LikedSongsFragment : Fragment() {
         )
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupSongsAdapter(songs: List<Song>) {
-        adapter = FavoriteSongsAdapter(songs) { selectedSong ->
+        adapter = FavoriteSongsAdapter(songs = songs, onSongClick = { selectedSong ->
             val bottomSheet = SongOptionsBottomSheet(selectedSong)
             bottomSheet.show(parentFragmentManager, "SongOptionsBottomSheet")
+        }, onButtonClick = { deleteSong ->
+            likedSongsViewModel.deleteSong(deleteSong)
+            binding.tvSongsNumber.text = "${adapter.itemCount - 1} songs"
+            adapter.removeItem(deleteSong)
         }
+        )
         binding.likedSongsRv.adapter = adapter
+        binding.tvSongsNumber.text = "${adapter.itemCount} songs"
 
         if ((songList?.size ?: 0) > 1) {
             val itemTouchHelper = ItemTouchHelper(simpleCallback)
