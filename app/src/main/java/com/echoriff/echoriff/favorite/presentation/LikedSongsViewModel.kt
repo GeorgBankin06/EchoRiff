@@ -24,15 +24,6 @@ class LikedSongsViewModel(
         fetchSongsRadios()
     }
 
-    private fun fetchSongsRadios() {
-        viewModelScope.launch {
-            _likedSongsState.value = LikedSongsState.Loading
-
-            val result = fetchLikedSongsUseCase.fetchLikedSongs()
-            _likedSongsState.value = result
-        }
-    }
-
     fun updateSongList(updateSongList: List<Song>){
         viewModelScope.launch {
             updatedRadioList.saveUpdatedSongList(updateSongList)
@@ -42,6 +33,15 @@ class LikedSongsViewModel(
     fun deleteSong(song: Song){
         viewModelScope.launch {
             removeSong.deleteSong(song)
+        }
+    }
+
+    private fun fetchSongsRadios() {
+        viewModelScope.launch {
+            _likedSongsState.value = LikedSongsState.Loading
+
+            val result = fetchLikedSongsUseCase.fetchLikedSongs()
+            _likedSongsState.value = result
         }
     }
 }

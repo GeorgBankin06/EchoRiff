@@ -42,27 +42,14 @@ class LikedRadiosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLikedRadiosBinding.inflate(layoutInflater)
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.btnBack) { view, insets ->
-            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-            layoutParams.topMargin = systemBarsInsets.top
-            view.layoutParams = layoutParams
-            insets
-        }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnBack.setOnClickListener {
-            findNavController().navigateUp()
-        }
-//        observeLikedRadioModel()
+        observeLikedRadioModel()
         setupRadiosRV()
-        startTimer()
     }
 
     private fun observeLikedRadioModel() {
@@ -116,15 +103,6 @@ class LikedRadiosFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
-    }
-
-    private fun startTimer() {
-        object : CountDownTimer(600, 100) { // 600ms duration, ticks every 100ms
-            override fun onTick(millisUntilFinished: Long) {}
-            override fun onFinish() {
-                observeLikedRadioModel()
-            }
-        }.start()
     }
 
     private fun setupRadiosAdapter(radios: List<Radio>) {

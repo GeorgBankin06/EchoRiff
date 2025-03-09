@@ -37,24 +37,12 @@ class LikedSongsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLikedSongsBinding.inflate(layoutInflater)
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.btnBack) { view, insets ->
-            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-            layoutParams.topMargin = systemBarsInsets.top
-            view.layoutParams = layoutParams
-            insets
-        }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnBack.setOnClickListener {
-            findNavController().navigateUp()
-        }
         observeLikedSongModel()
         setupSongsRV()
     }
