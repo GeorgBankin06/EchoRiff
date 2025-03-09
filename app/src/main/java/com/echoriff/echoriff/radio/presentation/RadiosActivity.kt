@@ -49,7 +49,7 @@ class RadiosActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_profile -> {
-//                    navController.navigate(R.id.profileFragment)
+                    navController.navigate(R.id.profileFragment)
                     true
                 }
 

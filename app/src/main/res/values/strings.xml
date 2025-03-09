@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">EchoRiff</string>
     <string name="category_name_ph">Category</string>
-    <string name="radio_name_ph">Radio</string>
+    <string name="radio_name_ph">View Profile</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu">menu</string>

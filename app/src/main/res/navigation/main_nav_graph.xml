@@ -18,6 +18,12 @@
     </fragment>
 
     <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.echoriff.echoriff.profile.presentation.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile"/>
+
+    <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.echoriff.echoriff.favorite.presentation.FavoritesFragment"
         android:label="FavoritesFragment"

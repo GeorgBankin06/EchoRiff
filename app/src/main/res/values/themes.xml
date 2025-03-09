@@ -19,6 +19,12 @@
         <item name="elevation">100dp</item>
     </style>
 
+    <style name="RoundImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">100dp</item>
+        <item name="elevation">100dp</item>
+    </style>
+
     <style name="MaterialButtonWel" parent="">
         <item name="shapeAppearance">@style/CustomShapeWel</item>
     </style>
