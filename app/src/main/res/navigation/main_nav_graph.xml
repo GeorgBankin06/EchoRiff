@@ -12,16 +12,35 @@
         tools:layout="@layout/fragment_radios">
         <action
             android:id="@+id/action_radiosFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment"
             app:popUpTo="@id/favoritesFragment"
-            app:popUpToInclusive="false"
-            app:destination="@id/favoritesFragment" />
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.echoriff.echoriff.profile.presentation.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile"/>
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.echoriff.echoriff.profile.presentation.ViewProfileFragment"
+        android:label="ViewProfileFragment"
+        tools:layout="@layout/fragment_view_profile" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.echoriff.echoriff.profile.presentation.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
 
     <fragment
         android:id="@+id/favoritesFragment"

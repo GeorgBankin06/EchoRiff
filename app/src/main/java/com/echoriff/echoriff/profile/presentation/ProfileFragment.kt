@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.fragment.findNavController
+import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -33,16 +35,16 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.cardViewProfile.setOnClickListener {
-
+            findNavController().navigate(R.id.action_profileFragment_to_viewProfileFragment)
         }
 
         binding.cardSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_settingsFragment)
 
         }
 
         binding.cardLogout.setOnClickListener {
 
         }
-
     }
 }
