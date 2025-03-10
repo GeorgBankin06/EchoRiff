@@ -19,7 +19,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 class FavoritesFragment : Fragment() {
 
     lateinit var binding: FragmentFavoritesBinding
-    private lateinit var favoritesAdapter: FavoritesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,31 +37,13 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val favoritesList = listOf(
-//            Favorite("Liked Radios", R.drawable.ic_radio),
-//            Favorite("Liked Songs", R.drawable.ic_note)
-//        )
-//
-//        favoritesAdapter = FavoritesAdapter(favoritesList) { selectedItem ->
-//            when (selectedItem.title) {
-//                "Liked Radios" -> findNavController().navigate(R.id.action_favoritesFragment_to_likedRadiosFragment)
-//                "Liked Songs" -> findNavController().navigate(R.id.action_favoritesFragment_to_likedSongsFragment)
-//            }
-//        }
 
-        val adapter = ViewPagerAdapter(this)
+        val adapter = ViewPagerAdapter(requireActivity().supportFragmentManager)
         adapter.addFragment(LikedRadiosFragment(), "Radios")
         adapter.addFragment(LikedSongsFragment(), "Songs")
         adapter.addFragment(Fragment(), "Records")
         binding.viewPager.adapter = adapter
-        TabLayoutMediator(binding.tabs, binding.viewPager){
-            tab, position ->
-            tab.text = adapter.getPageTitle(position)
-        }.attach()
+        binding.tabs.setupWithViewPager(binding.viewPager)
 
-//        binding.libraryRv.apply {
-//            layoutManager = LinearLayoutManager(requireContext())
-//            adapter = favoritesAdapter
-//        }
     }
 }
