@@ -89,7 +89,7 @@ class LoginFragment : BaseFragment() {
                                 binding.progressIndicator.visibility = View.GONE
                                 binding.dimmerOverlay.visibility = View.GONE
 
-                                navigateBasedOnRole(state.role)
+                                navigateToRadiosActivity()
                                 userPreferences.saveUserRole(state.role)
                             }
 
@@ -108,18 +108,6 @@ class LoginFragment : BaseFragment() {
                     }
                 }
             }
-        }
-    }
-
-    private fun navigateBasedOnRole(role: String) {
-        val navOptions =
-            NavOptions.Builder().setPopUpTo(R.id.auth_nav_graph, inclusive = true)
-                .setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
-                .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
-        when (role) {
-            "admin" -> findNavController().navigate(R.id.admin_nav_graph, null, navOptions)
-            "user" -> navigateToRadiosActivity()
-            else -> null
         }
     }
 

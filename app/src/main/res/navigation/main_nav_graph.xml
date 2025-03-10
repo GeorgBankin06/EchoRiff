@@ -76,4 +76,11 @@
         android:label="Liked Songs"
         tools:layout="@layout/fragment_liked_songs" />
 
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.echoriff.echoriff.admin.presentation.AdminFragment"
+        android:label="AdminFragment"
+        tools:layout="@layout/fragment_admin">
+    </fragment>
+
 </navigation>

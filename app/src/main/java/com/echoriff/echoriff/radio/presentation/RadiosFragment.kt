@@ -125,23 +125,6 @@ class RadiosFragment : BaseFragment() {
                 }
             }
         }
-
-        binding.btnLogout.setOnClickListener {
-            logout()
-        }
-    }
-
-    private fun logout() {
-        FirebaseAuth.getInstance().signOut()
-
-        lifecycleScope.launch {
-            userPreferences.clearUserRole()
-            userPreferences.clearLastPlayedRadio()
-            playerViewModel.pause()
-        }
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
     }
 
     private fun setupRadioPlayerFragment() {
@@ -172,6 +155,8 @@ class RadiosFragment : BaseFragment() {
     }
 
     private fun setupCategoriesAdapter(categories: List<Category>) {
+        // Used for fix issue where after minimizing the app and reopen it the first category is always selected
+        // although the recycleView shows different radios
         val savedCategoryTitle = userPreferences.getSelectedCategory() // Retrieve saved category
         val selectedIndex = categories.indexOfFirst { it.title == savedCategoryTitle }
         val initialSelectedIndex = if (selectedIndex != -1) selectedIndex else 0

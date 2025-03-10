@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.echoriff.echoriff.R
-import com.echoriff.echoriff.radio.presentation.RadiosActivity
+import com.echoriff.echoriff.RadiosActivity
 import com.google.android.material.textfield.TextInputLayout
 
 open class BaseFragment : Fragment() {

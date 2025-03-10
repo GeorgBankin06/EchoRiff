@@ -123,15 +123,16 @@ class RegisterFragment : BaseFragment() {
                                     .setEnterAnim(R.anim.slide_in_1)
                                     .setPopEnterAnim(R.anim.slide_in_exit)
                                     .setPopExitAnim(R.anim.slide_out_exit).build()
-                                if (state.user.role == "admin") {
-                                    findNavController().navigate(
-                                        R.id.action_registerFragment_to_admin_nav_graph,
-                                        null,
-                                        navOptions
-                                    )
-                                } else {
-                                    navigateToRadiosActivity()
-                                }
+//                                if (state.user.role == "admin") {
+//                                    findNavController().navigate(
+//                                        R.id.action_registerFragment_to_admin_nav_graph,
+//                                        null,
+//                                        navOptions
+//                                    )
+//                                } else {
+//                                    navigateToRadiosActivity()
+//                                }
+                                navigateToRadiosActivity()
                             }
 
                             is RegisterState.Failure -> {

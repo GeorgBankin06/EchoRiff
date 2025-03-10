@@ -37,7 +37,6 @@ class SplashFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
-
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
@@ -53,7 +52,11 @@ class SplashFragment : BaseFragment() {
                     inclusive = true
                 ).setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
                 .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
-            findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment, null, navOptions)
+            findNavController().navigate(
+                R.id.action_splashFragment_to_welcomeFragment,
+                null,
+                navOptions
+            )
         }
     }
 
@@ -69,7 +72,7 @@ class SplashFragment : BaseFragment() {
                 if (role != null) {
                     lifecycleScope.launch {
                         userPreferences.saveUserRole(role)  // Save role locally
-                        navigateToRoleBasedScreen(role)
+                        navigateToRadiosActivity()
                     }
                 } else {
                     navigateToLogin()
@@ -83,32 +86,10 @@ class SplashFragment : BaseFragment() {
         lifecycleScope.launch {
             val cachedRole = userPreferences.userRole.first()
             if (cachedRole != null) {
-                navigateToRoleBasedScreen(cachedRole)
+                navigateToRadiosActivity()
             } else {
                 navigateToLogin()
             }
-        }
-    }
-
-    private fun navigateToRoleBasedScreen(role: String) {
-        if (role == "admin") {
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.auth_nav_graph, inclusive = true)
-                .setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
-                .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
-            findNavController().navigate(
-                R.id.action_splashFragment_to_admin_nav_graph,
-                null,
-                navOptions
-            )
-        } else {
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(
-                    R.id.auth_nav_graph,
-                    inclusive = true
-                ).setExitAnim(R.anim.slide_out_2).setEnterAnim(R.anim.slide_in_1)
-                .setPopEnterAnim(R.anim.slide_in_exit).setPopExitAnim(R.anim.slide_out_exit).build()
-            navigateToRadiosActivity()
         }
     }
 
@@ -119,6 +100,10 @@ class SplashFragment : BaseFragment() {
                 inclusive = true
             )
             .build()
-        findNavController().navigate(R.id.action_splashFragment_to_welcomeFragment, null, navOptions)
+        findNavController().navigate(
+            R.id.action_splashFragment_to_welcomeFragment,
+            null,
+            navOptions
+        )
     }
 }

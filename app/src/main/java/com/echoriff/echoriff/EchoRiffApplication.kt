@@ -3,10 +3,12 @@ package com.echoriff.echoriff
 import android.app.Application
 import com.echoriff.echoriff.favorite.di.favoriteModule
 import com.echoriff.echoriff.login.di.loginModule
+import com.echoriff.echoriff.profile.di.profileModule
 import com.echoriff.echoriff.radio.di.radioModule
 import com.echoriff.echoriff.register.di.registerModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 class EchoRiffApplication : Application() {
 
@@ -21,6 +23,7 @@ class EchoRiffApplication : Application() {
             modules(registerModule)
             modules(loginModule)
             modules(favoriteModule)
+            modules(profileModule)
         }
     }
 }
