@@ -2,6 +2,7 @@ package com.echoriff.echoriff.favorite.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.echoriff.echoriff.favorite.domain.LikedRadiosState
 import com.echoriff.echoriff.favorite.domain.LikedSongsState
 import com.echoriff.echoriff.favorite.domain.usecase.DeleteSongUseCase
 import com.echoriff.echoriff.favorite.domain.usecase.FetchLikedSongsUseCase
@@ -21,7 +22,18 @@ class LikedSongsViewModel(
     val likedSongsState = _likedSongsState.asStateFlow()
 
     init {
-        fetchSongsRadios()
+        fetchLikedSongs()
+    }
+
+    fun likedSongsCount(): Int {
+        var count = 0
+        viewModelScope.launch {
+            val result = fetchLikedSongsUseCase.fetchLikedSongs()
+            if (result is LikedSongsState.Success) {
+                count = result.likedSongs.size
+            }
+        }
+        return count
     }
 
     fun updateSongList(updateSongList: List<Song>){
@@ -36,7 +48,7 @@ class LikedSongsViewModel(
         }
     }
 
-    private fun fetchSongsRadios() {
+    private fun fetchLikedSongs() {
         viewModelScope.launch {
             _likedSongsState.value = LikedSongsState.Loading
 

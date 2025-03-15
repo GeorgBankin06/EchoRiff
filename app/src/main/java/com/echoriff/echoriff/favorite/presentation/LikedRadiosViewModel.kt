@@ -24,24 +24,24 @@ class LikedRadiosViewModel(
         fetchLikedRadios()
     }
 
+    fun updateRadioList(updateRadiosList: List<Radio>) {
+        viewModelScope.launch {
+            val result = updatedRadioList.saveUpdatedRadioList(updateRadiosList)
+        }
+    }
+
+    fun deleteRadio(deleteRadio: Radio) {
+        viewModelScope.launch {
+            removeRadio.deleteRadio(deleteRadio)
+        }
+    }
+
     private fun fetchLikedRadios() {
         viewModelScope.launch {
             _likedRadiosState.value = LikedRadiosState.Loading
 
             val result = fetchLikedRadiosUseCase.fetchLikedRadios()
             _likedRadiosState.value = result
-        }
-    }
-
-    fun updateRadioList(updateRadiosList: List<Radio>){
-        viewModelScope.launch {
-            val result = updatedRadioList.saveUpdatedRadioList(updateRadiosList)
-        }
-    }
-
-    fun deleteRadio(deleteRadio: Radio){
-        viewModelScope.launch {
-            removeRadio.deleteRadio(deleteRadio)
         }
     }
 }

@@ -24,17 +24,17 @@
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_viewProfileFragment"
-            app:destination="@id/viewProfileFragment" />
+            app:destination="@id/editProfileFragment" />
         <action
             android:id="@+id/action_profileFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/viewProfileFragment"
-        android:name="com.echoriff.echoriff.profile.presentation.ViewProfileFragment"
-        android:label="ViewProfileFragment"
-        tools:layout="@layout/fragment_view_profile" />
+        android:id="@+id/editProfileFragment"
+        android:name="com.echoriff.echoriff.profile.presentation.EditProfileFragment"
+        android:label="EditProfileFragment"
+        tools:layout="@layout/fragment_edit_profile" />
 
     <fragment
         android:id="@+id/settingsFragment"

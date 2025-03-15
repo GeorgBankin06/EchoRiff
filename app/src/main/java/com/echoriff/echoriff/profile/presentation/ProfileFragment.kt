@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,7 +21,12 @@ import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.User
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.databinding.FragmentProfileBinding
+import com.echoriff.echoriff.favorite.domain.LikedRadiosState
+import com.echoriff.echoriff.favorite.domain.LikedSongsState
+import com.echoriff.echoriff.favorite.presentation.LikedRadiosViewModel
+import com.echoriff.echoriff.favorite.presentation.LikedSongsViewModel
 import com.echoriff.echoriff.profile.domain.ProfileState
+import com.echoriff.echoriff.radio.domain.model.Category
 import com.echoriff.echoriff.radio.presentation.PlayerViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collect
@@ -31,6 +37,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment() {
     private val profileModel: ProfileViewModel by viewModel()
+    private val likedRadiosViewModel: LikedRadiosViewModel by viewModel()
+    private val likedSongsViewModel: LikedSongsViewModel by viewModel()
 
     lateinit var binding: FragmentProfileBinding
     private val userPreferences: UserPreferences by inject()
@@ -50,6 +58,14 @@ class ProfileFragment : Fragment() {
             insets
         }
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.btnEdit) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.topMargin = systemBarsInsets.top + 20
+            view.layoutParams = layoutParams
+            insets
+        }
+
         return binding.root
     }
 
@@ -58,7 +74,7 @@ class ProfileFragment : Fragment() {
 
         observeViewModel()
 
-        binding.cardViewProfile.setOnClickListener {
+        binding.btnEdit.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_viewProfileFragment)
         }
 
@@ -105,6 +121,49 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 }
+                launch {
+                    likedRadiosViewModel.likedRadiosState.collect { state ->
+                        if (state is LikedRadiosState.Success) {
+                            val count = state.likedRadios.size
+                            binding.tvRadiosCount.apply {
+                                alpha = 0f
+                                text = "$count radios"
+
+                                animate()
+                                    .alpha(1f)
+                                    .setDuration(500)
+                                    .start()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    likedSongsViewModel.likedSongsState.collect { state ->
+                        if (state is LikedSongsState.Success) {
+                            val count = state.likedSongs.size
+                            binding.tvSongCount.apply {
+                                alpha = 0f
+                                text = "$count songs"
+
+                                animate()
+                                    .alpha(1f)
+                                    .setDuration(500)
+                                    .start()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    binding.tvRecordsCount.apply {
+                        alpha = 0f
+                        text = "${0} records"
+
+                        animate()
+                            .alpha(1f)
+                            .setDuration(500)
+                            .start()
+                    }
+                }
             }
         }
     }
@@ -115,7 +174,31 @@ class ProfileFragment : Fragment() {
             .placeholder(R.drawable.player_background)
             .into(binding.ivProfile)
 
-        binding.tvEmail.setText(user.email)
-        binding.tvFullName.text = "${user.firstName} ${user.lastName}"
+        binding.ivProfile.apply {
+            animate()
+                .alpha(1f)
+                .setDuration(500)
+                .start()
+        }
+
+        binding.tvEmail.apply {
+            alpha = 0f
+            text = user.email
+
+            animate()
+                .alpha(1f)
+                .setDuration(500)
+                .start()
+        }
+
+        binding.tvFullName.apply {
+            alpha = 0f
+            text = "${user.firstName} ${user.lastName}"
+
+            animate()
+                .alpha(1f)
+                .setDuration(500)
+                .start()
+        }
     }
 }
