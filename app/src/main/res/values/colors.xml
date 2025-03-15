@@ -20,5 +20,6 @@
     <color name="secondary">#BFA89E</color>
 
     <color name="grey_prof">#c2c2c2</color>
+    <color name="textview">#858585</color>
 
 </resources>

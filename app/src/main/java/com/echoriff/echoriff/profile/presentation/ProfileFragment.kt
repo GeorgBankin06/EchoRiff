@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -26,10 +25,8 @@ import com.echoriff.echoriff.favorite.domain.LikedSongsState
 import com.echoriff.echoriff.favorite.presentation.LikedRadiosViewModel
 import com.echoriff.echoriff.favorite.presentation.LikedSongsViewModel
 import com.echoriff.echoriff.profile.domain.ProfileState
-import com.echoriff.echoriff.radio.domain.model.Category
 import com.echoriff.echoriff.radio.presentation.PlayerViewModel
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.navigation.koinNavGraphViewModel
