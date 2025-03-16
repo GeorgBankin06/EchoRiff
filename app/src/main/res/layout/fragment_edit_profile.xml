@@ -13,6 +13,19 @@
         android:layout_height="match_parent"
         android:background="@color/black_back">
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/indicator"
+            app:indicatorColor="@color/white"
+            android:indeterminate="true"
+            app:trackColor="@color/black_back"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="20dp"
@@ -95,8 +108,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
                 android:hint="First Name"
+                android:alpha="0"
                 android:inputType="textPersonName"
-                android:textColor="@color/textview"
+                android:textColor="@color/grey_prof"
                 android:textColorHint="@color/white"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -125,8 +139,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
                 android:hint="Last Name"
+                android:alpha="0"
                 android:inputType="textPersonName"
-                android:textColor="@color/textview"
+                android:textColor="@color/grey_prof"
                 android:textColorHint="@color/white"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -144,6 +159,7 @@
             app:boxCornerRadiusTopStart="12dp"
             app:endIconTint="#2FFF00"
             app:hintEnabled="false"
+            android:alpha="0"
             app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -157,9 +173,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
                 android:hint="user@mail.com"
+                android:alpha="0"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/textview"
+                android:textColor="@color/grey_prof"
                 android:textColorHint="@color/white"
                 android:textSize="16sp" />
 

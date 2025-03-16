@@ -21,10 +21,14 @@
         android:id="@+id/profileFragment"
         android:name="com.echoriff.echoriff.profile.presentation.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_viewProfileFragment"
-            app:destination="@id/editProfileFragment" />
+            app:destination="@id/editProfileFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_profileFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
@@ -80,7 +84,6 @@
         android:id="@+id/adminFragment"
         android:name="com.echoriff.echoriff.admin.presentation.AdminFragment"
         android:label="AdminFragment"
-        tools:layout="@layout/fragment_admin">
-    </fragment>
+        tools:layout="@layout/fragment_admin"></fragment>
 
 </navigation>

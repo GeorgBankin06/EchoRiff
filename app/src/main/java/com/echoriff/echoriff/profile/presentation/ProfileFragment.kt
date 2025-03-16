@@ -1,14 +1,15 @@
 package com.echoriff.echoriff.profile.presentation
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.net.URL
 
 class ProfileFragment : Fragment() {
     private val profileModel: ProfileViewModel by viewModel()
@@ -55,6 +57,7 @@ class ProfileFragment : Fragment() {
             insets
         }
 
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.btnEdit) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
@@ -69,6 +72,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        profileModel.fetchUserInfo()
         observeViewModel()
 
         binding.btnEdit.setOnClickListener {
@@ -166,7 +170,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupUserInfo(user: User) {
-        Glide.with(binding.ivProfile.context)
+        Glide.with(this)
             .load(user.profileImage)
             .placeholder(R.drawable.player_background)
             .into(binding.ivProfile)

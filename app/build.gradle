@@ -70,6 +70,7 @@ dependencies {
     // Google Services
     implementation libs.play.services.auth
     implementation libs.play.services.base
+    implementation libs.firebase.storage.ktx
 
     //noinspection KaptUsageInsteadOfKsp
     kapt libs.compiler

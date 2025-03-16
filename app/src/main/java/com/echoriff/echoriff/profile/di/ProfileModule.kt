@@ -5,6 +5,8 @@ import com.echoriff.echoriff.profile.data.ProfileRepository
 import com.echoriff.echoriff.profile.data.ProfileRepositoryImpl
 import com.echoriff.echoriff.profile.domain.usecase.FetchUserInfoUseCase
 import com.echoriff.echoriff.profile.domain.usecase.FetchUserInfoUseCaseImpl
+import com.echoriff.echoriff.profile.domain.usecase.UpdateUserInfoUseCase
+import com.echoriff.echoriff.profile.domain.usecase.UpdateUserInfoUseCaseImpl
 import com.echoriff.echoriff.profile.presentation.ProfileViewModel
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCaseImpl
 import com.echoriff.echoriff.radio.presentation.PlayerViewModel
@@ -22,6 +24,7 @@ val profileModule = module {
     single<ProfileRepository> { ProfileRepositoryImpl(get(), get()) }
 
     factory<FetchUserInfoUseCase> { FetchUserInfoUseCaseImpl(get()) }
+    factory<UpdateUserInfoUseCase> { UpdateUserInfoUseCaseImpl(get()) }
 
-    viewModel { ProfileViewModel(get()) }
+    viewModel { ProfileViewModel(get(), get()) }
 }
