@@ -16,12 +16,43 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_role")
 
 class UserPreferences(private val context: Context) {
+    private val prefs = context.getSharedPreferences("recordings", Context.MODE_PRIVATE)
 
     private val ROLE_KEY = stringPreferencesKey("user_role")
+    private val recordKey = "record_list"
+
+    fun saveRecord(record: Recording) {
+        val recordJson = JSONObject().apply {
+            put("name", record.fileName)
+            put("path", record.filePath)
+            put("date", record.date)
+        }
+
+        val current = prefs.getStringSet(recordKey, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+        current.add(recordJson.toString())
+        prefs.edit().putStringSet(recordKey, current).apply()
+    }
+
+    fun deleteRecordByPath(filePath: String) {
+        val current = prefs.getStringSet(recordKey, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+        val updated = current.filterNot {
+            val json = JSONObject(it)
+            json.optString("path") == filePath
+        }.toMutableSet()
+
+        prefs.edit().putStringSet(recordKey, updated).apply()
+        // Also delete the file from disk
+        val file = File(filePath)
+        if (file.exists()) file.delete()
+    }
 
     fun loadRecordings(context: Context): List<Recording> {
         val prefs = context.getSharedPreferences("recordings", Context.MODE_PRIVATE)
@@ -111,7 +142,7 @@ class UserPreferences(private val context: Context) {
         return sharedPreferences.getString("LAST_SELECTED_CATEGORY", null)
     }
 
-    fun clearSelectedCategory(){
+    fun clearSelectedCategory() {
         val sharedPreferences = context.getSharedPreferences("EchoRiffPrefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().remove("LAST_SELECTED_CATEGORY").apply()
     }

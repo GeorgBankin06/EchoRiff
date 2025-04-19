@@ -157,7 +157,7 @@ class ProfileFragment : Fragment() {
                 launch {
                     binding.tvRecordsCount.apply {
                         alpha = 0f
-                        text = "${0} records"
+                        text = "${playerViewModel.recordsList.value.size} records"
 
                         animate()
                             .alpha(1f)

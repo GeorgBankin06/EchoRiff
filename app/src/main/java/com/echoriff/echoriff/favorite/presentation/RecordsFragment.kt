@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
@@ -11,11 +12,14 @@ import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.databinding.FragmentRecordsBinding
 import com.echoriff.echoriff.favorite.presentation.adapters.RecordsAdapter
 import com.echoriff.echoriff.radio.presentation.PlayerViewModel
+import org.koin.android.ext.android.inject
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class RecordsFragment : Fragment() {
-    lateinit var binding:FragmentRecordsBinding
+    lateinit var binding: FragmentRecordsBinding
+    private lateinit var adapter: RecordsAdapter
     private val playerViewModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
+    private val userPreferences: UserPreferences by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,11 +38,13 @@ class RecordsFragment : Fragment() {
             false
         )
 
-        val recordings = UserPreferences(requireContext()).loadRecordings(requireContext())
-        val adapter = RecordsAdapter(recordings) { selected ->
-            playerViewModel.setRecordingsList(recordings)
+        val recordings = userPreferences.loadRecordings(requireContext())
+        adapter = RecordsAdapter(records = recordings, onRecordClick = { selected ->
             playerViewModel.playRecording(selected)
-        }
+        }, onButtonClick = { deleteRecord ->
+            userPreferences.deleteRecordByPath(deleteRecord.filePath)
+            adapter.removeItem(deleteRecord)
+        })
         binding.rvRecords.adapter = adapter
     }
 }

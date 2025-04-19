@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.Material3.BottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black_back"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <TextView
         android:layout_width="match_parent"
@@ -54,24 +55,24 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="16dp"
-            android:layout_weight="1"
             android:layout_marginTop="24dp"
+            android:layout_weight="1"
             android:backgroundTint="@color/grey_prof"
-            android:textColor="#313131"
             android:text="Cancel"
-            android:textSize="16sp"/>
+            android:textColor="#313131"
+            android:textSize="16sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
             style="@style/MaterialButtonLogReg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="16dp"
             android:layout_marginTop="24dp"
+            android:layout_weight="1"
             android:backgroundTint="@color/grey_prof"
-            android:textColor="#313131"
             android:text="Save"
+            android:textColor="#313131"
             android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

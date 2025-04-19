@@ -209,7 +209,7 @@
         android:background="@android:color/transparent"
         android:padding="12dp"
         app:layout_constraintDimensionRatio="1:1"
-        android:src="@drawable/ic_search"
+        android:src="@drawable/ic_record"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_favorite_radio" />

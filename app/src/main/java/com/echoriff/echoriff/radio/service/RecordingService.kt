@@ -1,16 +1,16 @@
 package com.echoriff.echoriff.radio.service
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import com.echoriff.echoriff.common.domain.UserPreferences
+import com.echoriff.echoriff.radio.domain.Recording
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -79,27 +79,11 @@ class RecordingService : Service() {
         recordingCall?.cancel()
 
         // Save record to SharedPreferences
-        val prefs = applicationContext.getSharedPreferences("recordings", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
         val path = outputFile.absolutePath
         val date = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
+        val record = Recording(fileName = nameRecord, filePath = path, date = date)
 
-        val recordingJson = JSONObject().apply {
-            put("name", nameRecord)
-            put("path", path)
-            put("date", date)
-        }
-
-        val allRecords =
-            prefs.getStringSet("record_list", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
-        allRecords.add(recordingJson.toString())
-        editor.putStringSet("record_list", allRecords)
-        editor.apply()
-    }
-
-    override fun onDestroy() {
-//        stopRecording("pedal2")
-        super.onDestroy()
+      UserPreferences(applicationContext).saveRecord(record)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

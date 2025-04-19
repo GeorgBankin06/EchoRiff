@@ -3,6 +3,10 @@ package com.echoriff.echoriff.radio.presentation
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -17,6 +21,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -24,6 +30,7 @@ import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
+import com.echoriff.echoriff.MainActivity
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadioPlayerBinding
 import com.echoriff.echoriff.favorite.presentation.RecordBottomSheet
@@ -32,21 +39,8 @@ import com.echoriff.echoriff.radio.domain.RadioState
 import com.echoriff.echoriff.radio.domain.SongState
 import com.echoriff.echoriff.radio.service.RecordingService
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import org.json.JSONObject
 import org.koin.androidx.navigation.koinNavGraphViewModel
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class PlayerFragment : Fragment() {
     private val playerModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
@@ -57,6 +51,7 @@ class PlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadioPlayerBinding.inflate(layoutInflater)
+        createRecordingNotificationChannel(requireContext())
         return binding.root
     }
 
@@ -81,6 +76,7 @@ class PlayerFragment : Fragment() {
                 updateTextColorBasedOnPlayerState(true)
             }
         }
+
         binding.btnNext.setOnClickListener { playerModel.playNext() }
         binding.btnPrev.setOnClickListener { playerModel.playPrev() }
 
@@ -93,22 +89,35 @@ class PlayerFragment : Fragment() {
         }
 
         binding.btnRecord.setOnClickListener {
-            if (!playerModel.isRecording) {
-                val intent = Intent(requireContext(), RecordingService::class.java).apply {
-                    action = RecordingService.ACTION_START
-                    putExtra(
-                        RecordingService.EXTRA_STREAM_URL,
-                        playerModel.nowPlayingRadio.value?.streamUrl
-                    )
-                }
-                requireContext().startService(intent)
-                playerModel.isRecording = true
-                Toast.makeText(requireContext(), "Start", Toast.LENGTH_SHORT).show()
-            } else {
-                val bottomSheet = RecordBottomSheet()
-                bottomSheet.show(parentFragmentManager, "Record")
-                Toast.makeText(requireContext(), "Stop", Toast.LENGTH_SHORT).show()
+            if (playerModel.isPlayingState.value && playerModel.playbackType.value == PlaybackType.RADIO) {
+                if (!playerModel.isRecording) {
+                    val intent = Intent(requireContext(), RecordingService::class.java).apply {
+                        action = RecordingService.ACTION_START
+                        putExtra(
+                            RecordingService.EXTRA_STREAM_URL,
+                            playerModel.nowPlayingRadio.value?.streamUrl
+                        )
+                    }
+                    binding.btnRecord.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.stop_record))
 
+                    requireContext().startService(intent)
+                    playerModel.isRecording = true
+                    val notification = createRecordingNotification(requireContext())
+                    val notificationManager = NotificationManagerCompat.from(requireContext())
+                    notificationManager.notify(1, notification)
+                    Toast.makeText(requireContext(), "Recording started", Toast.LENGTH_SHORT).show()
+                } else {
+                    binding.btnRecord.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_record))
+
+                    val bottomSheet = RecordBottomSheet()
+                    bottomSheet.show(parentFragmentManager, "Record")
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Play Radio to record",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -248,6 +257,39 @@ class PlayerFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun createRecordingNotification(context: Context): Notification {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent, PendingIntent.FLAG_IMMUTABLE
+        )
+        return NotificationCompat.Builder(context, "recording_channel")
+            .setSmallIcon(R.drawable.ic_note)
+            .setContentTitle("Recording in progress")
+            .setContentText("Your radio stream is being recorded.")
+            .setContentIntent(pendingIntent)
+            .setOngoing(true) // can't be swiped away
+            .setOnlyAlertOnce(true)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .build()
+    }
+
+    private fun createRecordingNotificationChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "recording_channel",
+                "Recording Notifications",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "Shows when recording radio stream"
+            }
+            val manager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
         }
     }
 

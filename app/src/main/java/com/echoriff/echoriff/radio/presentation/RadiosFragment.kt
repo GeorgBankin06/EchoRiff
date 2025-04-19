@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -73,6 +72,7 @@ class RadiosFragment : BaseFragment() {
 
         userPreferences.clearSelectedCategory()
 
+        playerViewModel.setRecordingsList(userPreferences.loadRecordings(requireContext()))
         val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
             requireContext()
         )

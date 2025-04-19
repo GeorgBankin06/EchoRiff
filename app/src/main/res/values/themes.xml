@@ -30,6 +30,10 @@
         <item name="backgroundTint">@color/grey_prof</item>
     </style>
 
+    <style name="BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/red</item>
+    </style>
+
     <style name="MaterialButtonLogReg" parent="">
         <item name="shapeAppearance">@style/CustomShape</item>
     </style>

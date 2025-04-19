@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.BottomSheetSongOptionsBinding
 import com.echoriff.echoriff.radio.domain.model.Song
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -17,10 +19,18 @@ class SongOptionsBottomSheet(private val song: Song) : BottomSheetDialogFragment
     lateinit var binding: BottomSheetSongOptionsBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater1, container: ViewGroup?,
+        inflater: LayoutInflater1,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = BottomSheetSongOptionsBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.background = ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_background)
+
         binding.btnPlayYouTube.setOnClickListener {
             val query = "${song.songName} ${song.artist}"
             val youtubeIntent = Intent(Intent.ACTION_SEARCH).apply {
@@ -53,6 +63,5 @@ class SongOptionsBottomSheet(private val song: Song) : BottomSheetDialogFragment
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
-        return binding.root
     }
 }

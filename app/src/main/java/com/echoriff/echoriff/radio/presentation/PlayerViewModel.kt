@@ -1,9 +1,6 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.app.Application
-import android.content.Context
-import android.media.MediaPlayer
-import android.util.Log
 import androidx.annotation.OptIn
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,12 +14,12 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.extractArtistAndTitle
 import com.echoriff.echoriff.radio.domain.PlaybackType
-import com.echoriff.echoriff.radio.domain.model.Category
-import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.domain.RadioState
 import com.echoriff.echoriff.radio.domain.Recording
-import com.echoriff.echoriff.radio.domain.model.Song
 import com.echoriff.echoriff.radio.domain.SongState
+import com.echoriff.echoriff.radio.domain.model.Category
+import com.echoriff.echoriff.radio.domain.model.Radio
+import com.echoriff.echoriff.radio.domain.model.Song
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
 import com.echoriff.echoriff.radio.domain.usecase.SaveLikeSongUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -95,7 +92,7 @@ class PlayerViewModel(
     @OptIn(UnstableApi::class)
     private fun handlePlaybackEnded() {
         _isPlayingState.value = false
-        pause()
+        playNext()
     }
 
     override fun onCleared() {
