@@ -22,6 +22,7 @@ class RecordingService : Service() {
     private var recordingCall: Call? = null
     private var isRecording = false
     private lateinit var outputFile: File
+    private var startTime: Long = 0
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
@@ -59,6 +60,7 @@ class RecordingService : Service() {
                 val buffer = ByteArray(1024)
                 val input = response.body?.byteStream()
                 input?.let {
+                    startTime = System.currentTimeMillis()
                     while (isRecording && it.read(buffer).also { bytesRead ->
                             if (bytesRead != -1) {
                                 outputStream.write(buffer, 0, bytesRead)
@@ -78,12 +80,22 @@ class RecordingService : Service() {
         isRecording = false
         recordingCall?.cancel()
 
+        val elapsedTime = System.currentTimeMillis() - startTime
+        val duration = formatTime(elapsedTime)
+
         // Save record to SharedPreferences
         val path = outputFile.absolutePath
         val date = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
-        val record = Recording(fileName = nameRecord, filePath = path, date = date)
+        val record = Recording(fileName = nameRecord, filePath = path, date = date, duration = duration)
 
       UserPreferences(applicationContext).saveRecord(record)
+    }
+
+    private fun formatTime(ms: Long): String {
+        val seconds = (ms / 1000).toInt()
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, remainingSeconds)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

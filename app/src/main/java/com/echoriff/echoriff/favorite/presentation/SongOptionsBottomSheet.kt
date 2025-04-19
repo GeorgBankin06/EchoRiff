@@ -29,7 +29,7 @@ class SongOptionsBottomSheet(private val song: Song) : BottomSheetDialogFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.background = ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_background)
+        view.background = ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_background_song)
 
         binding.btnPlayYouTube.setOnClickListener {
             val query = "${song.songName} ${song.artist}"

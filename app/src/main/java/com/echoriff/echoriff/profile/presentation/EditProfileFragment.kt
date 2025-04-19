@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.User
+import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentEditProfileBinding
 import com.echoriff.echoriff.profile.domain.EditState
 import com.echoriff.echoriff.profile.domain.ProfileState
@@ -27,7 +28,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class EditProfileFragment : Fragment() {
+class EditProfileFragment : BaseFragment() {
     lateinit var binding: FragmentEditProfileBinding
     private val profileViewModel: ProfileViewModel by viewModel()
     var image: Uri? = null
@@ -78,6 +79,7 @@ class EditProfileFragment : Fragment() {
 
         profileViewModel.fetchUserInfo()
         observeViewModel()
+        setupCornerAnim()
 
         binding.btnSave.setOnClickListener {
             val user = User(
@@ -183,5 +185,11 @@ class EditProfileFragment : Fragment() {
                 .setDuration(500)
                 .start()
         }
+    }
+
+    private fun setupCornerAnim() {
+        setupHintAndCornerAnimation(this@EditProfileFragment, binding.etName, "First Name")
+        setupHintAndCornerAnimation(this@EditProfileFragment, binding.etLastname, "Last Name")
+        setupHintAndCornerAnimation(this@EditProfileFragment, binding.etEmail, "user@mail.com")
     }
 }

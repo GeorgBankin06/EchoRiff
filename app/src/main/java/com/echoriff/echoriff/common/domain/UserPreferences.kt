@@ -34,15 +34,18 @@ class UserPreferences(private val context: Context) {
             put("name", record.fileName)
             put("path", record.filePath)
             put("date", record.date)
+            put("duration", record.duration)
         }
 
-        val current = prefs.getStringSet(recordKey, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+        val current =
+            prefs.getStringSet(recordKey, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
         current.add(recordJson.toString())
         prefs.edit().putStringSet(recordKey, current).apply()
     }
 
     fun deleteRecordByPath(filePath: String) {
-        val current = prefs.getStringSet(recordKey, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+        val current =
+            prefs.getStringSet(recordKey, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
         val updated = current.filterNot {
             val json = JSONObject(it)
             json.optString("path") == filePath
@@ -64,7 +67,8 @@ class UserPreferences(private val context: Context) {
                 Recording(
                     fileName = json.getString("name"),
                     filePath = json.getString("path"),
-                    date = json.getString("date")
+                    date = json.getString("date"),
+                    duration = json.getString("duration")
                 )
             } catch (e: Exception) {
                 null

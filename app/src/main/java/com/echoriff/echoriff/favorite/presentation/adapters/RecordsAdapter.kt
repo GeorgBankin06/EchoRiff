@@ -3,9 +3,8 @@ package com.echoriff.echoriff.favorite.presentation.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.echoriff.echoriff.databinding.FavoriteSongItemBinding
+import com.echoriff.echoriff.databinding.RecordsItemBinding
 import com.echoriff.echoriff.radio.domain.Recording
-import com.echoriff.echoriff.radio.domain.model.Song
 
 class RecordsAdapter(
     private var records: List<Recording>,
@@ -14,15 +13,16 @@ class RecordsAdapter(
 ) :
     RecyclerView.Adapter<RecordsAdapter.RecordsViewHolder>() {
 
-    class RecordsViewHolder(private val binding: FavoriteSongItemBinding) :
+    class RecordsViewHolder(private val binding: RecordsItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
             record: Recording,
             onRecordClick: (Recording) -> Unit,
             onButtonClick: (Recording) -> Unit
         ) {
-            binding.songName.text = record.fileName
-            binding.songArtist.text = record.date
+            binding.recordName.text = record.fileName
+            binding.recordDuration.text = record.duration
+            binding.recordTime.text = record.date
             binding.root.setOnClickListener { onRecordClick(record) }
 
             itemView.setOnClickListener { onRecordClick(record) }
@@ -32,7 +32,7 @@ class RecordsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordsViewHolder {
         val binding =
-            FavoriteSongItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RecordsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecordsViewHolder(binding)
     }
 
@@ -42,9 +42,9 @@ class RecordsAdapter(
         holder.bind(records[position], onRecordClick, onButtonClick)
     }
 
-    fun removeItem(record: Recording){
+    fun removeItem(record: Recording) {
         val index = records.indexOfFirst { it.filePath == record.filePath }
-        if(index != -1){
+        if (index != -1) {
             records = records.toMutableList().apply { removeAt(index) }
             notifyItemRemoved(index)
         }
