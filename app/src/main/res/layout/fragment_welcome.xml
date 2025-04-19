@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
     android:layout_height="match_parent"
+    android:background="@color/black_back"
     tools:context=".login.presentation.WelcomeFragment">
 
     <TextView
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
+        android:textColor="@color/grey_prof"
         android:text="The best \napp for \nradio lovers"
         android:textSize="50sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,10 +28,11 @@
         android:text="Sign in"
         style="@style/MaterialButtonWel"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        android:textColor="#313131"
+        app:layout_constraintBottom_toTopOf="@id/btn_createAccount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.70"
         app:layout_constraintWidth_percent="0.85" />
 
@@ -38,13 +41,13 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:gravity="center"
-        android:background="@android:color/transparent"
         style="@style/MaterialButtonWel"
         android:text="Create an account"
         android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        android:textSize="22sp"
+        app:layout_constraintTop_toBottomOf="@id/tv"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.85" />
 

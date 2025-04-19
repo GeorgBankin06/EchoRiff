@@ -41,7 +41,7 @@ class FavoritesFragment : Fragment() {
         val adapter = ViewPagerAdapter(requireActivity().supportFragmentManager)
         adapter.addFragment(LikedRadiosFragment(), "Radios")
         adapter.addFragment(LikedSongsFragment(), "Songs")
-        adapter.addFragment(Fragment(), "Records")
+        adapter.addFragment(RecordsFragment(), "Records")
         binding.viewPager.adapter = adapter
         binding.tabs.setupWithViewPager(binding.viewPager)
 

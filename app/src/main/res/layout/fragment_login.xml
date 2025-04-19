@@ -184,6 +184,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Login"
+        android:backgroundTint="@color/grey_prof"
+        android:textColor="#313131"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -220,5 +222,4 @@
             android:textColor="@color/background"
             android:textSize="18sp" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

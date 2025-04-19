@@ -1,6 +1,9 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.app.Application
+import android.content.Context
+import android.media.MediaPlayer
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,9 +16,11 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.extractArtistAndTitle
+import com.echoriff.echoriff.radio.domain.PlaybackType
 import com.echoriff.echoriff.radio.domain.model.Category
 import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.domain.RadioState
+import com.echoriff.echoriff.radio.domain.Recording
 import com.echoriff.echoriff.radio.domain.model.Song
 import com.echoriff.echoriff.radio.domain.SongState
 import com.echoriff.echoriff.radio.domain.usecase.LikeRadioUseCase
@@ -53,7 +58,19 @@ class PlayerViewModel(
     private val _isPlayingState = MutableStateFlow(false)
     val isPlayingState = _isPlayingState.asStateFlow()
 
+    private val _currentRecordingIndex = MutableStateFlow(0)
+    val currentRecordingIndex = _currentRecordingIndex.asStateFlow()
+
+    private val _recordsList = MutableStateFlow<List<Recording>>(emptyList())
+    val recordsList = _recordsList.asStateFlow()
+
+    private val _playbackType = MutableStateFlow(PlaybackType.RADIO)
+    val playbackType = _playbackType.asStateFlow()
+
     private var hasLoadedOnce = false
+
+     var isRecording = false
+
 
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(application).build()
 
@@ -65,6 +82,20 @@ class PlayerViewModel(
                 }
             }
         })
+
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_ENDED) {
+                    handlePlaybackEnded()
+                }
+            }
+        })
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun handlePlaybackEnded() {
+        _isPlayingState.value = false
+        pause()
     }
 
     override fun onCleared() {
@@ -81,6 +112,10 @@ class PlayerViewModel(
         }
     }
 
+    fun setRecordingsList(newList: List<Recording>) {
+        _recordsList.value = newList
+    }
+
     fun likeSong(nowPlaying: Pair<String?, String?>) {
         viewModelScope.launch {
             val (title, artist) = nowPlaying
@@ -93,6 +128,27 @@ class PlayerViewModel(
     }
 
     @OptIn(UnstableApi::class)
+    fun playRecording(record: Recording) {
+        val index = _recordsList.value.indexOfFirst { it.filePath == record.filePath }
+        if (index != -1) {
+            _currentRecordingIndex.value = index
+        }
+
+        pause()
+        val dataSourceFactory = DefaultDataSource.Factory(getApplication())
+        val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(record.filePath))
+        exoPlayer.setMediaSource(mediaSource)
+        exoPlayer.prepare()
+
+        _playbackType.value = PlaybackType.RECORDING
+        _isPlayingState.value = true
+        _nowPlayingInfo.value = record.fileName to record.date
+
+        play()
+    }
+
+    @OptIn(UnstableApi::class)
     fun playRadio(radio: Radio?, category: Category?) {
         radio?.streamUrl ?: return
 
@@ -102,6 +158,7 @@ class PlayerViewModel(
         _currentIndex.value =
             category?.radios?.indexOfFirst { it.title == nowPlayingRadio.value?.title } ?: 0
         _isPlayingState.value = true
+        _playbackType.value = PlaybackType.RADIO
 
         val dataSourceFactory = DefaultDataSource.Factory(getApplication())
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -132,14 +189,34 @@ class PlayerViewModel(
     fun pause() {
         exoPlayer.pause()
         _isPlayingState.value = false
+        _playbackType.value = PlaybackType.NONE
     }
 
     fun playNext() {
-        playRadio(getNextRadio(), nowPlayingCategory.value)
+        when (_playbackType.value) {
+            PlaybackType.RADIO -> playRadio(getNextRadio(), nowPlayingCategory.value)
+            PlaybackType.RECORDING -> {
+                val nextIndex = (_currentRecordingIndex.value + 1) % _recordsList.value.size
+                _currentRecordingIndex.value = nextIndex
+                val nextRecording = _recordsList.value[nextIndex]
+                playRecording(nextRecording)
+            }
+            PlaybackType.NONE -> return
+        }
     }
 
     fun playPrev() {
-        playRadio(getPrevRadio(), nowPlayingCategory.value)
+        when (_playbackType.value) {
+            PlaybackType.RADIO -> playRadio(getPrevRadio(), nowPlayingCategory.value)
+            PlaybackType.RECORDING -> {
+                val size = _recordsList.value.size
+                val prevIndex = (_currentRecordingIndex.value - 1 + size) % size
+                _currentRecordingIndex.value = prevIndex
+                val prevRecording = _recordsList.value[prevIndex]
+                playRecording(prevRecording)
+            }
+            PlaybackType.NONE -> return
+        }
     }
 
     @OptIn(UnstableApi::class)

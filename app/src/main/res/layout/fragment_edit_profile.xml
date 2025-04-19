@@ -160,6 +160,7 @@
             app:endIconTint="#2FFF00"
             app:hintEnabled="false"
             android:alpha="0"
+            android:visibility="gone"
             app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

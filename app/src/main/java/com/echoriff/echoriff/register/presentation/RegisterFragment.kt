@@ -81,6 +81,10 @@ class RegisterFragment : BaseFragment() {
             }
         }
 
+        binding.tvClickableSignin.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
+
         binding.btnGoogle.setOnClickListener {
             Toast.makeText(context, "Google", Toast.LENGTH_SHORT).show()
         }

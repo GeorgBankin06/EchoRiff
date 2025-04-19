@@ -7,17 +7,39 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.echoriff.echoriff.radio.domain.Recording
 import com.echoriff.echoriff.radio.domain.model.Category
 import com.echoriff.echoriff.radio.domain.model.Radio
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.json.JSONException
+import org.json.JSONObject
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_role")
 
 class UserPreferences(private val context: Context) {
 
     private val ROLE_KEY = stringPreferencesKey("user_role")
+
+    fun loadRecordings(context: Context): List<Recording> {
+        val prefs = context.getSharedPreferences("recordings", Context.MODE_PRIVATE)
+        val set = prefs.getStringSet("record_list", emptySet()) ?: emptySet()
+
+        return set.mapNotNull {
+            try {
+                val json = JSONObject(it)
+                Recording(
+                    fileName = json.getString("name"),
+                    filePath = json.getString("path"),
+                    date = json.getString("date")
+                )
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
 
     val userRole: Flow<String?> = context.dataStore.data
         .map { preferences ->

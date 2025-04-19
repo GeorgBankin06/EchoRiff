@@ -1,21 +1,18 @@
 package com.echoriff.echoriff.radio.presentation
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.echoriff.echoriff.MainActivity
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.presentation.BaseFragment
@@ -26,14 +23,12 @@ import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.presentation.adapters.CategoriesAdapter
 import com.echoriff.echoriff.radio.presentation.adapters.EqualSpaceItemDecoration
 import com.echoriff.echoriff.radio.presentation.adapters.RadiosAdapter
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RadiosFragment : BaseFragment() {
-
     private val radioModel: RadiosViewModel by viewModel()
     private val playerViewModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
 
@@ -85,8 +80,6 @@ class RadiosFragment : BaseFragment() {
             if (lastPlayedCategory != null) {
                 playerViewModel.loadRadioOnce(lastPlayedRadio, lastPlayedCategory)
             }
-        }else{
-            binding.playScreenFrameLayout.visibility = View.GONE
         }
 
         return binding.root

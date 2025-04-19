@@ -26,6 +26,13 @@ class WelcomeFragment : BaseFragment() {
 
         windowColors(R.color.statusBar, R.color.navBar)
 
+        adjustStatusBarIconsBasedOnBackgroundColor(
+            this@WelcomeFragment, ContextCompat.getColor(
+                requireContext(),
+                R.color.black
+            )
+        )
+
         return binding.root
     }
 

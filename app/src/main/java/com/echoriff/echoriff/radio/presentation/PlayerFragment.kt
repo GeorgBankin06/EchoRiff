@@ -3,6 +3,8 @@ package com.echoriff.echoriff.radio.presentation
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.RenderEffect
 import android.graphics.Shader
@@ -20,16 +22,31 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.navGraphViewModels
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentRadioPlayerBinding
+import com.echoriff.echoriff.favorite.presentation.RecordBottomSheet
+import com.echoriff.echoriff.radio.domain.PlaybackType
 import com.echoriff.echoriff.radio.domain.RadioState
 import com.echoriff.echoriff.radio.domain.SongState
+import com.echoriff.echoriff.radio.service.RecordingService
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONObject
 import org.koin.androidx.navigation.koinNavGraphViewModel
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class PlayerFragment : Fragment() {
     private val playerModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
@@ -74,101 +91,159 @@ class PlayerFragment : Fragment() {
         binding.btnFavoriteSong.setOnClickListener {
             playerModel.likeSong(playerModel.nowPlayingInfo.value)
         }
+
+        binding.btnRecord.setOnClickListener {
+            if (!playerModel.isRecording) {
+                val intent = Intent(requireContext(), RecordingService::class.java).apply {
+                    action = RecordingService.ACTION_START
+                    putExtra(
+                        RecordingService.EXTRA_STREAM_URL,
+                        playerModel.nowPlayingRadio.value?.streamUrl
+                    )
+                }
+                requireContext().startService(intent)
+                playerModel.isRecording = true
+                Toast.makeText(requireContext(), "Start", Toast.LENGTH_SHORT).show()
+            } else {
+                val bottomSheet = RecordBottomSheet()
+                bottomSheet.show(parentFragmentManager, "Record")
+                Toast.makeText(requireContext(), "Stop", Toast.LENGTH_SHORT).show()
+
+            }
+        }
     }
 
     private fun observePlayerModel() {
         viewLifecycleOwner.lifecycle.coroutineScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    playerModel.nowPlayingRadio.collect { radio ->
-                        Glide.with(binding.coverArtImage.context)
-                            .load(radio?.coverArtUrl)
-                            .placeholder(R.drawable.player_background)
-                            .into(binding.coverArtImage)
-                        val radioImageUrl = radio?.coverArtUrl ?: ""
-                        if (radioImageUrl.isEmpty()) {
+                    playerModel.playbackType.collect { type ->
+                        when (type) {
+                            PlaybackType.RADIO -> {
+                                launch {
+                                    playerModel.nowPlayingRadio.collect { radio ->
+                                        Glide.with(binding.coverArtImage.context)
+                                            .load(radio?.coverArtUrl)
+                                            .placeholder(R.drawable.player_background)
+                                            .into(binding.coverArtImage)
+                                        val radioImageUrl = radio?.coverArtUrl ?: ""
+                                        if (radioImageUrl.isEmpty()) {
 //                            Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show()
-                        } else {
-                            updateRadioImageAndBackground(radioImageUrl)
-                        }
-                    }
-                }
-                launch {
-                    playerModel.likeRadio.collect { state ->
-                        when (state) {
-                            is RadioState.Loading -> {
+                                        } else {
+                                            updateRadioImageAndBackground(radioImageUrl)
+                                        }
+                                    }
+                                }
+                                launch {
+                                    playerModel.likeRadio.collect { state ->
+                                        when (state) {
+                                            is RadioState.Loading -> {
 
+                                            }
+
+                                            is RadioState.Success -> {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    state.messageSuccess,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+
+                                            is RadioState.Failure -> {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    state.messageError,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                Log.e("TAGGY", state.messageError)
+                                            }
+                                        }
+                                    }
+                                }
+                                launch {
+                                    playerModel.likeSong.collect { state ->
+                                        when (state) {
+                                            is SongState.Loading -> {
+
+                                            }
+
+                                            is SongState.Success -> {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    state.message,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+
+                                            is SongState.Failure -> {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    state.error,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
+                                    }
+                                }
+                                launch {
+                                    playerModel.nowPlayingInfo.collect { (title, artist) ->
+                                        binding.tvSongName.text = title
+                                        binding.tvArtist.text = artist
+                                    }
+                                }
+                                launch {
+                                    playerModel.isPlayingState.collect { isPlaying ->
+                                        updatePlayButtonIcon(isPlaying)
+                                        updateTextColorBasedOnPlayerState(isPlaying)
+                                        var live = false
+                                        if (live) {
+                                            updateTextColorBasedOnPlayerState(isPlaying)
+                                        } else {
+                                            live = true
+                                        }
+                                    }
+                                }
                             }
 
-                            is RadioState.Success -> {
-                                Toast.makeText(
-                                    requireContext(),
-                                    state.messageSuccess,
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            PlaybackType.RECORDING -> {
+//                                val gradientDrawable = GradientDrawable(
+//                                    GradientDrawable.Orientation.TOP_BOTTOM,
+//                                    intArrayOf(R.color.black, R.color.white)
+//                                )
+//
+//                                gradientDrawable.cornerRadii = floatArrayOf(
+//                                    100f, 100f, // top-left corner radius
+//                                    100f, 100f, // top-right corner radius
+//                                    0f, 0f,   // bottom-left corner (no radius)
+//                                    0f, 0f    // bottom-right corner (no radius)
+//                                )
+//                                gradientDrawable.colors = intArrayOf(R.color.black, R.color.white)
+//
+//                                binding.playerBackgroundView.background = gradientDrawable
+
+//                                binding.coverArtImage.setImageResource(R.drawable.bg_deep_house)
+
+                                launch {
+                                    playerModel.isPlayingState.collect { isPlaying ->
+                                        updatePlayButtonIcon(isPlaying)
+                                        updateTextColorBasedOnPlayerState(isPlaying)
+                                        var live = false
+                                        if (live) {
+                                            updateTextColorBasedOnPlayerState(isPlaying)
+                                        } else {
+                                            live = true
+                                        }
+                                    }
+                                }
+                                launch {
+                                    playerModel.nowPlayingInfo.collect { (title, artist) ->
+                                        binding.tvSongName.text = title ?: "Unknown"
+                                        binding.tvArtist.text = artist ?: "Unknown"
+                                    }
+                                }
                             }
 
-                            is RadioState.Failure -> {
-                                Toast.makeText(
-                                    requireContext(),
-                                    state.messageError,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                Log.e("TAGGY", state.messageError)
-                            }
-                        }
-                    }
-                }
-                launch {
-                    playerModel.likeSong.collect { state ->
-                        when (state) {
-                            is SongState.Loading -> {
-
-                            }
-
-                            is SongState.Success -> {
-                                Toast.makeText(
-                                    requireContext(),
-                                    state.message,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                            is SongState.Failure -> {
-                                Toast.makeText(
-                                    requireContext(),
-                                    state.error,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
-                }
-                launch {
-                    playerModel.nowPlayingInfo.collect { (title, artist) ->
-                        binding.tvSongName.text = title
-                        binding.tvArtist.text = artist
-                    }
-                }
-                launch {
-                    playerModel.isPlayingState.collect { isPlaying ->
-                        updatePlayButtonIcon(isPlaying)
-                        updateTextColorBasedOnPlayerState(isPlaying)
-                        var live = false
-                        if (live) {
-                            updateTextColorBasedOnPlayerState(isPlaying)
-                        } else {
-                            live = true
-                        }
-                    }
-                }
-                launch {
-                    playerModel.nowPlayingRadio.collect { radio ->
-                        val radioImageUrl = radio?.coverArtUrl ?: ""
-                        if (radioImageUrl.isEmpty()) {
-//                            Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show()
-                        } else {
-                            updateRadioImageAndBackground(radioImageUrl)
+                            PlaybackType.NONE -> {}
                         }
                     }
                 }

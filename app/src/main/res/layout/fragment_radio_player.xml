@@ -196,11 +196,11 @@
         android:background="@color/transparent"
         android:src="@drawable/ic_radio"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_song_recognition"
+        app:layout_constraintEnd_toStartOf="@id/btn_record"
         app:layout_constraintStart_toEndOf="@+id/btn_webPage" />
 
     <ImageButton
-        android:id="@+id/btn_song_recognition"
+        android:id="@+id/btn_record"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"

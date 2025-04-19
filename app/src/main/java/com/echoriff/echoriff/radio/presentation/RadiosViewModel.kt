@@ -14,7 +14,6 @@ import org.koin.java.KoinJavaComponent.inject
 class RadiosViewModel(
     private val fetchCategoriesUseCase: FetchCategoriesUseCase
 ) : ViewModel() {
-
     private val userPreferences: UserPreferences by inject(UserPreferences::class.java)
 
     private val _categories = MutableStateFlow<CategoriesState>(CategoriesState.Loading)
@@ -33,6 +32,7 @@ class RadiosViewModel(
                     is CategoriesState.Success -> _selectedCategory.value =
                         state.categories.find { it.title == savedCategoryTitle }
                             ?: state.categories.first()
+
                     else -> {}
                 }
             }
