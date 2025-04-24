@@ -1,6 +1,7 @@
 package com.echoriff.echoriff
 
 import android.app.Application
+import com.echoriff.echoriff.admin.di.adminModule
 import com.echoriff.echoriff.favorite.di.favoriteModule
 import com.echoriff.echoriff.login.di.loginModule
 import com.echoriff.echoriff.profile.di.profileModule
@@ -24,6 +25,7 @@ class EchoRiffApplication : Application() {
             modules(loginModule)
             modules(favoriteModule)
             modules(profileModule)
+            modules(adminModule)
         }
     }
 }

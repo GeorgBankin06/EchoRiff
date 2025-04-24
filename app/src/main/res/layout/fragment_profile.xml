@@ -149,7 +149,6 @@
             android:id="@+id/card2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-
             android:backgroundTint="@color/black"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"

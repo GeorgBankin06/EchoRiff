@@ -1,9 +1,9 @@
 package com.echoriff.echoriff.radio.domain.model
 
 data class Category(
-    val bgImgUrl: String,
-    val title: String,
-    val radios: List<Radio>?
+    val bgImgUrl: String = "",
+    val title: String = "",
+    val radios: List<Radio>? = emptyList()
 )
 
 fun List<CategoryDto>.toCategories(): List<Category> {
