@@ -67,7 +67,7 @@ class LikedRadiosFragment : Fragment() {
                                 setupRadiosAdapter(state.likedRadios)
                                 val animation = AnimationUtils.loadLayoutAnimation(
                                     requireContext(),
-                                    R.anim.layout_animation
+                                    R.anim.rv_animation
                                 )
                                 binding.likedRadiosRv.layoutAnimation = animation
                                 binding.likedRadiosRv.scheduleLayoutAnimation()

@@ -86,9 +86,10 @@ class RecordingService : Service() {
         // Save record to SharedPreferences
         val path = outputFile.absolutePath
         val date = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
-        val record = Recording(fileName = nameRecord, filePath = path, date = date, duration = duration)
+        val record =
+            Recording(fileName = nameRecord, filePath = path, date = date, duration = duration)
 
-      UserPreferences(applicationContext).saveRecord(record)
+        UserPreferences(applicationContext).saveRecord(record)
     }
 
     private fun formatTime(ms: Long): String {

@@ -7,17 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.echoriff.echoriff.R
 import com.echoriff.echoriff.databinding.FragmentFavoritesBinding
-import com.echoriff.echoriff.favorite.domain.model.Favorite
-import com.echoriff.echoriff.favorite.presentation.adapters.FavoritesAdapter
 import com.echoriff.echoriff.favorite.presentation.adapters.ViewPagerAdapter
-import com.google.android.material.tabs.TabLayoutMediator
 
 class FavoritesFragment : Fragment() {
-
     lateinit var binding: FragmentFavoritesBinding
 
     override fun onCreateView(
@@ -44,6 +37,5 @@ class FavoritesFragment : Fragment() {
         adapter.addFragment(RecordsFragment(), "Records")
         binding.viewPager.adapter = adapter
         binding.tabs.setupWithViewPager(binding.viewPager)
-
     }
 }

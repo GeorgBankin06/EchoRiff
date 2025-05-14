@@ -60,8 +60,5 @@ class SongOptionsBottomSheet(private val song: Song) : BottomSheetDialogFragment
                     .show()
             }
         }
-        binding.btnCancel.setOnClickListener {
-            dismiss()
-        }
     }
 }

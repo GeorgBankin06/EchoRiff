@@ -15,7 +15,7 @@
         android:layout_marginBottom="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="12dp"
-        android:text="Your Library"
+        android:text="My Library"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/tabs"
@@ -33,11 +33,9 @@
         app:layout_constraintTop_toBottomOf="@id/textView"
         app:tabBackground="@color/black"
         app:tabSelectedTextColor="@color/red"
-
         app:tabRippleColor="@color/white"
         app:tabIndicatorAnimationMode="elastic"
         app:tabIndicatorColor="@color/white"
-
         app:tabGravity="fill"
         app:tabMode="fixed"
         app:tabTextColor="@android:color/white" />

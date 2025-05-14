@@ -34,6 +34,12 @@ class LikedSongsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLikedSongsBinding.inflate(layoutInflater)
+        val animation = AnimationUtils.loadLayoutAnimation(
+            requireContext(),
+            R.anim.rv_animation
+        )
+        binding.likedSongsRv.layoutAnimation = animation
+        binding.likedSongsRv.scheduleLayoutAnimation()
         return binding.root
     }
 
@@ -65,7 +71,7 @@ class LikedSongsFragment : Fragment() {
 
                                 val animation = AnimationUtils.loadLayoutAnimation(
                                     requireContext(),
-                                    R.anim.layout_animation
+                                    R.anim.rv_animation
                                 )
                                 binding.likedSongsRv.layoutAnimation = animation
                                 binding.likedSongsRv.scheduleLayoutAnimation()

@@ -154,17 +154,6 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 }
-                launch {
-                    binding.tvRecordsCount.apply {
-                        alpha = 0f
-                        text = "${playerViewModel.recordsList.value.size} records"
-
-                        animate()
-                            .alpha(1f)
-                            .setDuration(500)
-                            .start()
-                    }
-                }
             }
         }
     }
@@ -195,6 +184,16 @@ class ProfileFragment : Fragment() {
         binding.tvFullName.apply {
             alpha = 0f
             text = "${user.firstName} ${user.lastName}"
+
+            animate()
+                .alpha(1f)
+                .setDuration(500)
+                .start()
+        }
+
+        binding.tvRecordsCount.apply {
+            alpha = 0f
+            text = "${playerViewModel.recordsList.value.size} records"
 
             animate()
                 .alpha(1f)

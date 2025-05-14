@@ -26,6 +26,12 @@ class RecordsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRecordsBinding.inflate(layoutInflater)
+        val animation = AnimationUtils.loadLayoutAnimation(
+            requireContext(),
+            R.anim.rv_animation
+        )
+        binding.rvRecords.layoutAnimation = animation
+        binding.rvRecords.scheduleLayoutAnimation()
         return binding.root
     }
 
@@ -46,5 +52,11 @@ class RecordsFragment : Fragment() {
             adapter.removeItem(deleteRecord)
         })
         binding.rvRecords.adapter = adapter
+        val animation = AnimationUtils.loadLayoutAnimation(
+            requireContext(),
+            R.anim.rv_animation
+        )
+        binding.rvRecords.layoutAnimation = animation
+        binding.rvRecords.scheduleLayoutAnimation()
     }
 }

@@ -55,7 +55,7 @@ class RecordBottomSheet : BottomSheetDialogFragment() {
                     context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(1)
                 playerModel.isRecording = false
-                Toast.makeText(requireContext(), "Recording Stopped", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Recording Saved", Toast.LENGTH_SHORT).show()
                 dismiss()
             } else {
                 Toast.makeText(

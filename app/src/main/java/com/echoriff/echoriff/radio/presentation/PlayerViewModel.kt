@@ -93,6 +93,7 @@ class PlayerViewModel(
     private fun handlePlaybackEnded() {
         _isPlayingState.value = false
         playNext()
+        pause()
     }
 
     override fun onCleared() {
@@ -186,7 +187,7 @@ class PlayerViewModel(
     fun pause() {
         exoPlayer.pause()
         _isPlayingState.value = false
-        _playbackType.value = PlaybackType.NONE
+//        _playbackType.value = PlaybackType.NONE
     }
 
     fun playNext() {

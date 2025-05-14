@@ -72,6 +72,7 @@ dependencies {
     implementation libs.play.services.auth
     implementation libs.play.services.base
     implementation libs.firebase.storage.ktx
+    implementation libs.androidx.espresso.core
 
     //noinspection KaptUsageInsteadOfKsp
     kapt libs.compiler

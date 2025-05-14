@@ -13,6 +13,7 @@ import android.graphics.Bitmap
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -88,6 +89,12 @@ class PlayerFragment : Fragment() {
             playerModel.likeSong(playerModel.nowPlayingInfo.value)
         }
 
+        binding.btnWebPage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(playerModel.nowPlayingRadio.value?.webUrl)
+            startActivity(intent)
+        }
+
         binding.btnRecord.setOnClickListener {
             if (playerModel.isPlayingState.value && playerModel.playbackType.value == PlaybackType.RADIO) {
                 if (!playerModel.isRecording) {
@@ -98,7 +105,12 @@ class PlayerFragment : Fragment() {
                             playerModel.nowPlayingRadio.value?.streamUrl
                         )
                     }
-                    binding.btnRecord.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.stop_record))
+                    binding.btnRecord.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.stop_record
+                        )
+                    )
 
                     requireContext().startService(intent)
                     playerModel.isRecording = true
@@ -107,7 +119,12 @@ class PlayerFragment : Fragment() {
                     notificationManager.notify(1, notification)
                     Toast.makeText(requireContext(), "Recording started", Toast.LENGTH_SHORT).show()
                 } else {
-                    binding.btnRecord.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_record))
+                    binding.btnRecord.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_record
+                        )
+                    )
 
                     val bottomSheet = RecordBottomSheet()
                     bottomSheet.show(parentFragmentManager, "Record")
@@ -146,9 +163,7 @@ class PlayerFragment : Fragment() {
                                 launch {
                                     playerModel.likeRadio.collect { state ->
                                         when (state) {
-                                            is RadioState.Loading -> {
-
-                                            }
+                                            is RadioState.Loading -> {}
 
                                             is RadioState.Success -> {
                                                 Toast.makeText(
@@ -229,7 +244,7 @@ class PlayerFragment : Fragment() {
 //                                gradientDrawable.colors = intArrayOf(R.color.black, R.color.white)
 //
 //                                binding.playerBackgroundView.background = gradientDrawable
-
+//
 //                                binding.coverArtImage.setImageResource(R.drawable.bg_deep_house)
 
                                 launch {
