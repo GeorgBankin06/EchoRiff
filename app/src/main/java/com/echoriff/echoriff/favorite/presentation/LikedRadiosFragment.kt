@@ -108,12 +108,12 @@ class LikedRadiosFragment : Fragment() {
             },
             onButtonClick = { deleteRadio ->
                 likedRadiosViewModel.deleteRadio(deleteRadio)
-                binding.tvRadiosNumber.text = "${adapter.itemCount - 1} radios"
+                binding.tvRadiosNumber.text = "${adapter.itemCount - 1} Radios"
                 adapter.removeItem(deleteRadio)
             }
         )
         binding.likedRadiosRv.adapter = adapter
-        binding.tvRadiosNumber.text = "${adapter.itemCount} radios"
+        binding.tvRadiosNumber.text = "${adapter.itemCount} Radios"
 
         if ((radiosList?.size ?: 0) > 1) {
             val itemTouchHelper = ItemTouchHelper(simpleCallback)

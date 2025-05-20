@@ -22,6 +22,7 @@
 
     <style name="MaterialButtonWel" parent="">
         <item name="shapeAppearance">@style/CustomShapeWel</item>
+        <item name="backgroundTint">@color/grey_prof</item>
     </style>
 
     <style name="MaterialButtonLogReg" parent="">

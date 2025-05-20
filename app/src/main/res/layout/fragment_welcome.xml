@@ -3,52 +3,86 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     android:background="@color/black_back"
+    android:fitsSystemWindows="true"
     tools:context=".login.presentation.WelcomeFragment">
 
-    <TextView
-        android:id="@+id/tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:textColor="@color/grey_prof"
-        android:text="The best \napp for \nradio lovers"
-        android:textSize="50sp"
+    <com.echoriff.echoriff.Wave
+        android:id="@+id/wave"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:gravity="center"
-        android:text="Sign in"
-        style="@style/MaterialButtonWel"
-        android:textSize="24sp"
-        android:layout_marginBottom="20dp"
-        android:textColor="#313131"
-        app:layout_constraintBottom_toTopOf="@id/btn_createAccount"
+        android:text="Welcome to EchoRiff"
+        android:textColor="@color/grey_prof"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.70"
-        app:layout_constraintWidth_percent="0.85" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="Your gateway to endless radio"
+        android:textColor="@color/grey_prof"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv2"/>
+
+    <Button
+        android:id="@+id/btn_login"
+        style="@style/MaterialButtonWel"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:text="Sign In"
+        android:layout_marginStart="8dp"
+        android:textColor="#313131"
+        android:layout_marginTop="22dp"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@id/view"
+        app:layout_constraintBottom_toTopOf="@id/btn_createAccount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.65" />
 
     <Button
         android:id="@+id/btn_createAccount"
+        style="@style/MaterialButtonWel"
         android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginStart="8dp"
         android:gravity="center"
-        style="@style/MaterialButtonWel"
-        android:text="Create an account"
+        android:text="Sign Up"
         android:textColor="@color/black"
         android:textSize="22sp"
-        app:layout_constraintTop_toBottomOf="@id/tv"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent="0.85" />
+        app:layout_constraintTop_toBottomOf="@id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.65" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

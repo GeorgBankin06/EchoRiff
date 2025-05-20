@@ -107,11 +107,11 @@ class LikedSongsFragment : Fragment() {
             bottomSheet.show(parentFragmentManager, "SongOptionsBottomSheet")
         }, onButtonClick = { deleteSong ->
             likedSongsViewModel.deleteSong(deleteSong)
-            binding.tvSongsNumber.text = "${adapter.itemCount - 1} songs"
+            binding.tvSongsNumber.text = "${adapter.itemCount - 1} Songs"
             adapter.removeItem(deleteSong)
         })
         binding.likedSongsRv.adapter = adapter
-        binding.tvSongsNumber.text = "${adapter.itemCount} songs"
+        binding.tvSongsNumber.text = "${adapter.itemCount} Songs"
 
         if ((songList?.size ?: 0) > 1) {
             val itemTouchHelper = ItemTouchHelper(simpleCallback)

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,6 +16,7 @@ import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.echoriff.echoriff.MainActivity
 import com.echoriff.echoriff.R
@@ -26,6 +28,7 @@ import com.echoriff.echoriff.favorite.domain.LikedSongsState
 import com.echoriff.echoriff.favorite.presentation.LikedRadiosViewModel
 import com.echoriff.echoriff.favorite.presentation.LikedSongsViewModel
 import com.echoriff.echoriff.profile.domain.ProfileState
+import com.echoriff.echoriff.profile.presentation.adapters.LastRadiosAdapter
 import com.echoriff.echoriff.radio.presentation.PlayerViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -57,7 +60,6 @@ class ProfileFragment : Fragment() {
             insets
         }
 
-
         ViewCompat.setOnApplyWindowInsetsListener(binding.btnEdit) { view, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
@@ -83,6 +85,12 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profileFragment_to_settingsFragment)
 
         }
+
+        binding.rvLastPlayedRadios.layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
 
         binding.cardLogout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
@@ -184,6 +192,19 @@ class ProfileFragment : Fragment() {
         binding.tvFullName.apply {
             alpha = 0f
             text = "${user.firstName} ${user.lastName}"
+
+            animate()
+                .alpha(1f)
+                .setDuration(500)
+                .start()
+        }
+
+        binding.rvLastPlayedRadios.apply {
+            alpha = 0f
+
+            val playedRadios = userPreferences.getRadios()
+            val adapter = LastRadiosAdapter(playedRadios, requireContext())
+            binding.rvLastPlayedRadios.adapter = adapter
 
             animate()
                 .alpha(1f)

@@ -35,6 +35,7 @@ datastoreCoreJvm = "1.1.1"
 playServicesAuth = "21.2.0"
 playServicesBase = "18.5.0"
 firebaseStorageKtx = "21.0.1"
+volley = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +78,7 @@ androidx-datastore-core-jvm = { group = "androidx.datastore", name = "datastore-
 play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBase" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

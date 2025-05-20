@@ -66,8 +66,9 @@ class PlayerViewModel(
 
     private var hasLoadedOnce = false
 
-     var isRecording = false
+    var isRecording = false
 
+    val prefs = UserPreferences(getApplication())
 
     private val exoPlayer: ExoPlayer = ExoPlayer.Builder(application).build()
 
@@ -164,8 +165,7 @@ class PlayerViewModel(
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.prepare()
 
-        val userPrefs = UserPreferences(getApplication())
-        userPrefs.saveLastPlayedRadioWithCategory(getApplication(), radio, category ?: return)
+        prefs.saveRadio(radio)
 
         play()
     }

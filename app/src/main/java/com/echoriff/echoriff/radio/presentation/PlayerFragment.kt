@@ -10,8 +10,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
@@ -52,7 +55,6 @@ class PlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadioPlayerBinding.inflate(layoutInflater)
-        createRecordingNotificationChannel(requireContext())
         return binding.root
     }
 
@@ -114,9 +116,6 @@ class PlayerFragment : Fragment() {
 
                     requireContext().startService(intent)
                     playerModel.isRecording = true
-                    val notification = createRecordingNotification(requireContext())
-                    val notificationManager = NotificationManagerCompat.from(requireContext())
-                    notificationManager.notify(1, notification)
                     Toast.makeText(requireContext(), "Recording started", Toast.LENGTH_SHORT).show()
                 } else {
                     binding.btnRecord.setImageDrawable(
@@ -272,39 +271,6 @@ class PlayerFragment : Fragment() {
                     }
                 }
             }
-        }
-    }
-
-    private fun createRecordingNotification(context: Context): Notification {
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent = PendingIntent.getActivity(
-            context, 0, intent, PendingIntent.FLAG_IMMUTABLE
-        )
-        return NotificationCompat.Builder(context, "recording_channel")
-            .setSmallIcon(R.drawable.ic_note)
-            .setContentTitle("Recording in progress")
-            .setContentText("Your radio stream is being recorded.")
-            .setContentIntent(pendingIntent)
-            .setOngoing(true) // can't be swiped away
-            .setOnlyAlertOnce(true)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .build()
-    }
-
-    private fun createRecordingNotificationChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "recording_channel",
-                "Recording Notifications",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = "Shows when recording radio stream"
-            }
-            val manager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(channel)
         }
     }
 

@@ -44,6 +44,8 @@ class RecordsFragment : Fragment() {
             false
         )
 
+        binding.tvRecordsNumber.text = "${playerViewModel.recordsList.value.size} Records"
+
         val recordings = userPreferences.loadRecordings(requireContext())
         adapter = RecordsAdapter(records = recordings, onRecordClick = { selected ->
             playerViewModel.playRecording(selected)

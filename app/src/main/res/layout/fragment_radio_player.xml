@@ -94,7 +94,7 @@
         android:paddingStart="16dp"
         android:text="Artist"
         android:textAlignment="textStart"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="#D0D0D0"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@id/btn_favorite_song"
         app:layout_constraintStart_toStartOf="@id/player_background_view"

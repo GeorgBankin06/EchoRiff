@@ -10,16 +10,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.echoriff.echoriff.radio.domain.Recording
 import com.echoriff.echoriff.radio.domain.model.Category
 import com.echoriff.echoriff.radio.domain.model.Radio
-import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_role")
 
@@ -28,6 +24,41 @@ class UserPreferences(private val context: Context) {
 
     private val ROLE_KEY = stringPreferencesKey("user_role")
     private val recordKey = "record_list"
+
+    private val PREF_NAME = "played_radios_prefs"
+    private val KEY_PLAYED_RADIOS = "last_played_radios"
+    private val MAX_SIZE = 10
+    private val gson = Gson()
+
+    fun saveRadio(radio: Radio) {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val radios = getRadios().toMutableList()
+
+        // Remove if it already exists
+        radios.removeAll { it.title == radio.title }
+
+        // Add to start
+        radios.add(0, radio)
+
+        // Limit size to 10
+        val trimmed = radios.take(MAX_SIZE)
+
+        // Save back
+        val json = gson.toJson(trimmed)
+        prefs.edit().putString(KEY_PLAYED_RADIOS, json).apply()
+    }
+
+    fun getRadios(): List<Radio> {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val json = prefs.getString(KEY_PLAYED_RADIOS, null) ?: return emptyList()
+        val type = object : TypeToken<List<Radio>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
+    fun clearHistory(context: Context) {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        prefs.edit().remove(KEY_PLAYED_RADIOS).apply()
+    }
 
     fun saveRecord(record: Recording) {
         val recordJson = JSONObject().apply {
