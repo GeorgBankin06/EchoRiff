@@ -25,7 +25,6 @@ class RadioRepositoryImpl(
 
     override suspend fun fetchCategories(): List<CategoryDto> {
         return try {
-            withTimeout(5000L) {
                 val snapshot = database.get().await()
                 val categories = mutableListOf<CategoryDto>()
 
@@ -54,7 +53,6 @@ class RadioRepositoryImpl(
                     categories.add(CategoryDto(bgImageUrl, radios, title))
                 }
                 categories
-            }
         } catch (e: TimeoutCancellationException) {
             emptyList()
         }

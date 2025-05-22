@@ -27,8 +27,8 @@
         android:id="@+id/radios_rv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:layout_marginBottom="75dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,13 +36,26 @@
         tools:itemCount="5"
         tools:listitem="@layout/radio_item" />
 
+        <TextView
+            android:id="@+id/tv_internet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:text="Check your connection"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="24sp" />
+
     <FrameLayout
         android:id="@+id/play_screen_frame_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingBottom="0dp"
-        android:backgroundTint="@android:color/transparent"
         android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"
+        android:paddingBottom="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

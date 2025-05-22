@@ -1,6 +1,8 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +12,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
+import com.echoriff.echoriff.common.domain.NetworkUtils
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.presentation.BaseFragment
 import com.echoriff.echoriff.databinding.FragmentRadiosBinding
@@ -30,13 +34,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class RadiosFragment : BaseFragment() {
     private val radioModel: RadiosViewModel by viewModel()
     private val playerViewModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
+    private val userPreferences: UserPreferences by inject()
 
     lateinit var binding: FragmentRadiosBinding
     private var playScreenFragment = PlayerFragment.newInstance()
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var radiosAdapter: RadiosAdapter
-    private val userPreferences: UserPreferences by inject()
+    private lateinit var networkObserver: NetworkUtils
 
+    private var hasConnected = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,14 +68,6 @@ class RadiosFragment : BaseFragment() {
             insets
         }
 
-//        ViewCompat.setOnApplyWindowInsetsListener(binding.playScreenFrameLayout) { view, insets ->
-//            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-//            layoutParams.bottomMargin = systemBarsInsets.bottom + 40
-//            view.layoutParams = layoutParams
-//            insets
-//        }
-
         userPreferences.clearSelectedCategory()
         playerViewModel.setRecordingsList(userPreferences.loadRecordings(requireContext()))
         val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
@@ -87,10 +85,45 @@ class RadiosFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRadioPlayerFragment()
+        networkObserver = NetworkUtils(requireContext())
+        networkObserver.start()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            networkObserver.isConnected.collect { isConnected ->
+                if (isConnected) {
+                    binding.tvInternet.visibility = View.GONE
+                    binding.playScreenFrameLayout.visibility = View.VISIBLE
+                    binding.categoriesRv.visibility = View.VISIBLE
+                    binding.radiosRv.visibility = View.VISIBLE
+                    if (!hasConnected) {
+                        val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
+                            requireContext()
+                        )
+                        if (lastPlayedRadio != null) {
+                            if (lastPlayedCategory != null) {
+                                playerViewModel.loadRadio(lastPlayedRadio, lastPlayedCategory)
+                            }
+                        }
+                    }
+
+                    observeViewModel()
+                } else {
+                    binding.tvInternet.visibility = View.VISIBLE
+                    binding.radiosRv.visibility = View.GONE
+                    binding.categoriesRv.visibility = View.GONE
+                    binding.playScreenFrameLayout.visibility = View.GONE
+                    hasConnected = false
+                }
+            }
+        }
+
         setupCategoriesRV(view)
         setupRadiosRV(view)
+        observeViewModel()
+        setupRadioPlayerFragment()
+    }
 
+    private fun observeViewModel() {
         viewLifecycleOwner.lifecycle.coroutineScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {

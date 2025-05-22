@@ -34,7 +34,7 @@ class RadiosActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
-            if (NetworkUtils.isNetworkAvailable(this)) {
+            if (NetworkUtils(this).isNetworkAvailable(this)) {
                 checkUserRoleAndShowTabs(currentUser.uid)
             } else {
                 navigateBasedOnCachedRole()

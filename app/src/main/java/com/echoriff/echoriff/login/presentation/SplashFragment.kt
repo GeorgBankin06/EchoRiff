@@ -40,7 +40,7 @@ class SplashFragment : BaseFragment() {
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
-            if (NetworkUtils.isNetworkAvailable(requireContext())) {
+            if (NetworkUtils(requireContext()).isNetworkAvailable(requireContext())) {
                 checkUserRoleAndNavigate(currentUser.uid)
             } else {
                 navigateBasedOnCachedRole()

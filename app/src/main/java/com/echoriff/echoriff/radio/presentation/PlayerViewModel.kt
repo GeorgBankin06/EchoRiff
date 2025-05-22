@@ -165,7 +165,7 @@ class PlayerViewModel(
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.prepare()
 
-        prefs.saveRadio(radio)
+        prefs.saveLastPlayedRadioWithCategory(getApplication(), radio, category ?: return)
 
         play()
     }
@@ -218,7 +218,7 @@ class PlayerViewModel(
     }
 
     @OptIn(UnstableApi::class)
-    private fun loadRadio(radio: Radio?, category: Category?) {
+     fun loadRadio(radio: Radio?, category: Category?) {
         radio?.streamUrl ?: return
 
         _nowPlayingInfo.value = radio.title to null
