@@ -1,6 +1,8 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.app.Application
+import android.net.Uri
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +13,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.security.crypto.EncryptedFile
+import androidx.security.crypto.MasterKey
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.common.extractArtistAndTitle
 import com.echoriff.echoriff.radio.domain.PlaybackType
@@ -27,6 +31,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 class PlayerViewModel(
     application: Application,
@@ -92,9 +98,13 @@ class PlayerViewModel(
 
     @OptIn(UnstableApi::class)
     private fun handlePlaybackEnded() {
-        _isPlayingState.value = false
-        playNext()
-        pause()
+        if(recordsList.value.size != 0){
+            _isPlayingState.value = false
+            playNext()
+            pause()
+        }else{
+            playRadio(nowPlayingRadio.value, nowPlayingCategory.value)
+        }
     }
 
     override fun onCleared() {
@@ -133,18 +143,45 @@ class PlayerViewModel(
             _currentRecordingIndex.value = index
         }
 
-        pause()
-        val dataSourceFactory = DefaultDataSource.Factory(getApplication())
-        val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(MediaItem.fromUri(record.filePath))
-        exoPlayer.setMediaSource(mediaSource)
-        exoPlayer.prepare()
+        val encryptedFile = File(record.filePath)
 
-        _playbackType.value = PlaybackType.RECORDING
-        _isPlayingState.value = true
-        _nowPlayingInfo.value = record.fileName to record.date
+        val masterKey = MasterKey.Builder(getApplication())
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
 
-        play()
+        val encrypted = EncryptedFile.Builder(
+            getApplication(),
+            encryptedFile,
+            masterKey,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+
+        val tempDecryptedFile = File.createTempFile("decrypted_", ".mp3", getApplication<Application>().cacheDir)
+
+        try {
+            encrypted.openFileInput().use { input ->
+                FileOutputStream(tempDecryptedFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            val uri = Uri.fromFile(tempDecryptedFile)
+
+            pause()
+            val dataSourceFactory = DefaultDataSource.Factory(getApplication())
+            val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(MediaItem.fromUri(uri))
+            exoPlayer.setMediaSource(mediaSource)
+            exoPlayer.prepare()
+
+            _playbackType.value = PlaybackType.RECORDING
+            _isPlayingState.value = true
+            _nowPlayingInfo.value = record.fileName to record.date
+
+            play()
+        } catch (e: Exception) {
+            Log.e("PlayerViewModel", "Failed to decrypt or play: ${e.message}")
+        }
     }
 
     @OptIn(UnstableApi::class)

@@ -74,6 +74,8 @@ dependencies {
     implementation libs.firebase.storage.ktx
     implementation libs.androidx.espresso.core
 
+    implementation "androidx.security:security-crypto:1.1.0-alpha07"
+
     //noinspection KaptUsageInsteadOfKsp
     kapt libs.compiler
 

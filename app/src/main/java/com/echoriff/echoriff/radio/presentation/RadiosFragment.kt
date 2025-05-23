@@ -1,10 +1,12 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -35,6 +37,7 @@ class RadiosFragment : BaseFragment() {
     private val userPreferences: UserPreferences by inject()
 
     private var hasConnected = true
+    private var hasRadioLoaded = false
     lateinit var binding: FragmentRadiosBinding
     private var playScreenFragment = PlayerFragment.newInstance()
     private lateinit var categoriesAdapter: CategoriesAdapter
@@ -74,6 +77,7 @@ class RadiosFragment : BaseFragment() {
         if (lastPlayedRadio != null) {
             if (lastPlayedCategory != null) {
                 playerViewModel.loadRadioOnce(lastPlayedRadio, lastPlayedCategory)
+                hasRadioLoaded = true
             }
         }
 
@@ -144,6 +148,13 @@ class RadiosFragment : BaseFragment() {
                         )
                         binding.radiosRv.layoutAnimation = animation
                         binding.radiosRv.scheduleLayoutAnimation()
+                    }
+                }
+                launch {
+                    radioModel.selectedRadioCategoryPair.collect { (radio, category) ->
+                        if (!hasRadioLoaded && radio != null && category != null) {
+                            playerViewModel.loadRadio(radio, category)
+                        }
                     }
                 }
             }

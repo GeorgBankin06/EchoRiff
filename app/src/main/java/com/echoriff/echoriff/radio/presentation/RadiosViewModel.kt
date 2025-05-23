@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.radio.domain.CategoriesState
 import com.echoriff.echoriff.radio.domain.model.Category
+import com.echoriff.echoriff.radio.domain.model.Radio
 import com.echoriff.echoriff.radio.domain.usecase.FetchCategoriesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +23,9 @@ class RadiosViewModel(
     private val _selectedCategory = MutableStateFlow<Category?>(null)
     val selectedCategory = _selectedCategory.asStateFlow()
 
+    private val _selectedRadioCategoryPair = MutableStateFlow<Pair<Radio?, Category?>>(null to null)
+    val selectedRadioCategoryPair = _selectedRadioCategoryPair.asStateFlow()
+
     init {
         viewModelScope.launch {
             _categories.value = fetchCategoriesUseCase.fetchCategories()
@@ -29,9 +33,17 @@ class RadiosViewModel(
             val savedCategoryTitle = userPreferences.getSelectedCategory()
             categories.collect { state ->
                 when (state) {
-                    is CategoriesState.Success -> _selectedCategory.value =
-                        state.categories.find { it.title == savedCategoryTitle }
-                            ?: state.categories.first()
+                    is CategoriesState.Success -> {
+                        _selectedCategory.value =
+                            state.categories.find { it.title == savedCategoryTitle }
+                                ?: state.categories.first()
+                        val category = state.categories.getOrNull(1)
+                        val radio = category?.radios?.firstOrNull()
+
+                        if (category != null && radio != null) {
+                            _selectedRadioCategoryPair.value = Pair(radio, category)
+                        }
+                    }
 
                     else -> {}
                 }

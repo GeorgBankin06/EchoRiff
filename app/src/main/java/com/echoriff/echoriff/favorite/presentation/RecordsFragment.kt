@@ -20,6 +20,7 @@ class RecordsFragment : Fragment() {
     private lateinit var adapter: RecordsAdapter
     private val playerViewModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
     private val userPreferences: UserPreferences by inject()
+    private var records = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,8 +44,8 @@ class RecordsFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
-
-        binding.tvRecordsNumber.text = "${playerViewModel.recordsList.value.size} Records"
+        records = playerViewModel.recordsList.value.size
+        binding.tvRecordsNumber.text = "$records Records"
 
         val recordings = userPreferences.loadRecordings(requireContext())
         adapter = RecordsAdapter(records = recordings, onRecordClick = { selected ->
@@ -52,6 +53,8 @@ class RecordsFragment : Fragment() {
         }, onButtonClick = { deleteRecord ->
             userPreferences.deleteRecordByPath(deleteRecord.filePath)
             adapter.removeItem(deleteRecord)
+
+            binding.tvRecordsNumber.text = "${--records} Records"
         })
         binding.rvRecords.adapter = adapter
         val animation = AnimationUtils.loadLayoutAnimation(

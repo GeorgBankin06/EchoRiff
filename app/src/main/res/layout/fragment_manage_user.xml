@@ -49,7 +49,12 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Choose a genre">
+            android:backgroundTint="@color/black"
+            android:background="@color/black"
+            app:boxStrokeColor="@color/white"
+            app:boxStrokeErrorColor="@color/white"
+            android:textColorHint="@color/white"
+            android:hint="Choose a role">
 
             <AutoCompleteTextView
                 android:textColor="@color/grey_prof"
@@ -79,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corners"
-                android:hint="Radio Title"
+                android:hint="User Email"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/white"

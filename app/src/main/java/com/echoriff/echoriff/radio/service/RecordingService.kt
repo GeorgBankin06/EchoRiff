@@ -4,6 +4,8 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import androidx.security.crypto.EncryptedFile
+import androidx.security.crypto.MasterKey
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.radio.domain.Recording
 import okhttp3.Call
@@ -12,7 +14,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -42,13 +43,26 @@ class RecordingService : Service() {
     private fun startRecording(streamUrl: String) {
         val client = OkHttpClient()
         val request = Request.Builder().url(streamUrl).build()
-        outputFile =
-            File(
-                applicationContext.getExternalFilesDir(null),
-                "record_${System.currentTimeMillis()}.mp3"
-            )
 
-        val outputStream = FileOutputStream(outputFile)
+        val privateDir = File(applicationContext.filesDir, "recordings")
+        if (!privateDir.exists()) privateDir.mkdirs()
+
+        outputFile = File(privateDir, "record_${System.currentTimeMillis()}.enc") // .enc за скриване
+
+        val masterKey = MasterKey.Builder(applicationContext)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val encryptedFile = EncryptedFile.Builder(
+            applicationContext,
+            outputFile,
+            masterKey,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+
+        isRecording = true
+
+        val outputStream = encryptedFile.openFileOutput()
 
         recordingCall = client.newCall(request)
         recordingCall?.enqueue(object : Callback {
@@ -57,23 +71,30 @@ class RecordingService : Service() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val buffer = ByteArray(1024)
-                val input = response.body?.byteStream()
-                input?.let {
-                    startTime = System.currentTimeMillis()
-                    while (isRecording && it.read(buffer).also { bytesRead ->
-                            if (bytesRead != -1) {
-                                outputStream.write(buffer, 0, bytesRead)
-                            }
-                        } != -1
-                    ) {
+                try {
+                    val buffer = ByteArray(4096)
+                    val input = response.body?.byteStream()
+                    input?.let {
+                        startTime = System.currentTimeMillis()
+                        while (isRecording && it.read(buffer).also { bytesRead ->
+                                if (bytesRead != -1) {
+                                    outputStream.write(buffer, 0, bytesRead)
+                                }
+                            } != -1
+                        ) { }
                     }
-                    outputStream.flush()
-                    outputStream.close()
+                } catch (e: Exception) {
+                    Log.e("Recording", "Write error: ${e.message}")
+                } finally {
+                    try {
+                        outputStream.flush()
+                        outputStream.close()
+                    } catch (e: Exception) {
+                        Log.e("Recording", "Failed to close stream: ${e.message}")
+                    }
                 }
             }
         })
-        isRecording = true
     }
 
     private fun stopRecording(nameRecord: String) {
