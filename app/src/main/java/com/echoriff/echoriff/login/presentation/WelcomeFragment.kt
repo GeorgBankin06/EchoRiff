@@ -24,7 +24,7 @@ class WelcomeFragment : BaseFragment() {
     ): View {
         binding = FragmentWelcomeBinding.inflate(layoutInflater)
 
-        windowColors(R.color.black, R.color.black)
+        windowColors(R.color.transparent, R.color.black)
 
         adjustStatusBarIconsBasedOnBackgroundColor(
             this@WelcomeFragment, ContextCompat.getColor(

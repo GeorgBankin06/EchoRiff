@@ -166,6 +166,7 @@ class PlayerViewModel(
         exoPlayer.prepare()
 
         prefs.saveLastPlayedRadioWithCategory(getApplication(), radio, category ?: return)
+        prefs.saveRadio(radio)
 
         play()
     }

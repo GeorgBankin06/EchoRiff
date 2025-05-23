@@ -1,8 +1,6 @@
 package com.echoriff.echoriff.radio.presentation
 
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,13 +34,13 @@ class RadiosFragment : BaseFragment() {
     private val playerViewModel: PlayerViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
     private val userPreferences: UserPreferences by inject()
 
+    private var hasConnected = true
     lateinit var binding: FragmentRadiosBinding
     private var playScreenFragment = PlayerFragment.newInstance()
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var radiosAdapter: RadiosAdapter
-    private lateinit var networkObserver: NetworkUtils
 
-    private var hasConnected = true
+    private lateinit var networkObserver: NetworkUtils
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -196,10 +194,16 @@ class RadiosFragment : BaseFragment() {
     }
 
     private fun setupRadiosAdapter(radios: List<Radio>) {
-        radiosAdapter = RadiosAdapter(radios) { selectedRadio ->
+        radiosAdapter = RadiosAdapter(radios, { selectedRadio ->
             playerViewModel.playRadio(selectedRadio, radioModel.selectedCategory.value)
             binding.playScreenFrameLayout.visibility = View.VISIBLE
-        }
+        }, { selectedRadio, actionId ->
+            when (actionId) {
+                R.id.like_radio -> {
+                    playerViewModel.likeRadio(selectedRadio)
+                }
+            }
+        })
         binding.radiosRv.adapter = radiosAdapter
     }
 

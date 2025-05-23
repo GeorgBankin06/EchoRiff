@@ -30,11 +30,11 @@
     </style>
 
     <style name="CustomShapeWel" parent="">
-        <item name="cornerSize">12dp</item> <!-- Adjust the corner radius -->
+        <item name="cornerSize">30dp</item> <!-- Adjust the corner radius -->
     </style>
 
     <style name="CustomShape" parent="">
-        <item name="cornerSize">22dp</item> <!-- Adjust the corner radius -->
+        <item name="cornerSize">30dp</item> <!-- Adjust the corner radius -->
     </style>
 
 </resources>

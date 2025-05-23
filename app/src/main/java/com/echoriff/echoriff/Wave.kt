@@ -23,10 +23,10 @@ class Wave @JvmOverloads constructor(
         alpha = 100  // Make fill semi-transparent if you like
     }
 
-    private val backgroundPaint = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.BLACK // Background color
-    }
+//    private val backgroundPaint = Paint().apply {
+//        style = Paint.Style.FILL
+//        color = Color.BLACK // Background color
+//    }
 
     // Paint for first signal line (thicker)
     private val signalLinePaint1 = Paint().apply {
@@ -50,7 +50,7 @@ class Wave @JvmOverloads constructor(
     private val signalPath2 = Path()
 
     private var waveShift = 0f
-    private val waveAmplitude = 250f
+    private val waveAmplitude = 200f
     private val waveLength = 600f
 
     private val animator = ValueAnimator.ofFloat(0f, waveLength).apply {
@@ -76,7 +76,7 @@ class Wave @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawPaint(backgroundPaint)
+//        canvas.drawPaint(backgroundPaint)
 
         // Make baseline move up and down over time
         val verticalShift = 50f * sin(waveShift * 2 * Math.PI / waveLength) // adjust amplitude & speed
