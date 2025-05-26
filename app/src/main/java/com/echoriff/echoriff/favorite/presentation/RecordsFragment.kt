@@ -37,6 +37,7 @@ class RecordsFragment : Fragment() {
         )
         binding.rvRecords.layoutAnimation = animation
         binding.rvRecords.scheduleLayoutAnimation()
+        playerViewModel.setRecordingsList(userPreferences.loadRecordings(requireContext()))
         return binding.root
     }
 
@@ -44,6 +45,8 @@ class RecordsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observePlayerModel()
+
+        binding.tvRecordsNumber.text = "$records Records"
 
         binding.rvRecords.layoutManager = LinearLayoutManager(
             requireContext(),

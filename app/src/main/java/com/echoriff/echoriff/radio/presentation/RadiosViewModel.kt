@@ -37,7 +37,7 @@ class RadiosViewModel(
                         _selectedCategory.value =
                             state.categories.find { it.title == savedCategoryTitle }
                                 ?: state.categories.first()
-                        val category = state.categories.getOrNull(1)
+                        val category = state.categories.getOrNull(0)
                         val radio = category?.radios?.firstOrNull()
 
                         if (category != null && radio != null) {

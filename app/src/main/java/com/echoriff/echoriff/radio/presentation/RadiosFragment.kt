@@ -72,9 +72,6 @@ class RadiosFragment : BaseFragment() {
 
         userPreferences.clearSelectedCategory()
 
-        val records = userPreferences.loadRecordings(requireContext())
-        playerViewModel.setRecordingsList(records)
-        playerViewModel.setRecordingsList(userPreferences.loadRecordings(requireContext()))
 
         val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
             requireContext()
