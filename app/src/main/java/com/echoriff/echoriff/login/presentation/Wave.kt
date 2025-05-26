@@ -1,4 +1,4 @@
-package com.echoriff.echoriff
+package com.echoriff.echoriff.login.presentation
 
 import android.animation.ValueAnimator
 import android.content.Context

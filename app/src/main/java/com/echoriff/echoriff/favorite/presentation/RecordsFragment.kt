@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.echoriff.echoriff.R
 import com.echoriff.echoriff.common.domain.UserPreferences
 import com.echoriff.echoriff.databinding.FragmentRecordsBinding
 import com.echoriff.echoriff.favorite.presentation.adapters.RecordsAdapter
 import com.echoriff.echoriff.radio.presentation.PlayerViewModel
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
@@ -39,13 +43,13 @@ class RecordsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observePlayerModel()
+
         binding.rvRecords.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
             false
         )
-        records = playerViewModel.recordsList.value.size
-        binding.tvRecordsNumber.text = "$records Records"
 
         val recordings = userPreferences.loadRecordings(requireContext())
         adapter = RecordsAdapter(records = recordings, onRecordClick = { selected ->
@@ -57,11 +61,25 @@ class RecordsFragment : Fragment() {
             binding.tvRecordsNumber.text = "${--records} Records"
         })
         binding.rvRecords.adapter = adapter
+
         val animation = AnimationUtils.loadLayoutAnimation(
             requireContext(),
             R.anim.rv_animation
         )
         binding.rvRecords.layoutAnimation = animation
         binding.rvRecords.scheduleLayoutAnimation()
+    }
+
+    private fun observePlayerModel() {
+        viewLifecycleOwner.lifecycle.coroutineScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    playerViewModel.recordsList.collect { size ->
+                        records = size.size
+                        binding.tvRecordsNumber.text = "$records Records"
+                    }
+                }
+            }
+        }
     }
 }

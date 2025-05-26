@@ -98,12 +98,9 @@ class PlayerViewModel(
 
     @OptIn(UnstableApi::class)
     private fun handlePlaybackEnded() {
-        if(recordsList.value.size != 0){
+        if(recordsList.value.isNotEmpty()){
             _isPlayingState.value = false
-            playNext()
             pause()
-        }else{
-            playRadio(nowPlayingRadio.value, nowPlayingCategory.value)
         }
     }
 
@@ -179,6 +176,52 @@ class PlayerViewModel(
             _nowPlayingInfo.value = record.fileName to record.date
 
             play()
+        } catch (e: Exception) {
+            Log.e("PlayerViewModel", "Failed to decrypt or play: ${e.message}")
+        }
+    }
+
+    @OptIn(UnstableApi::class)
+    fun loadRecording(record: Recording) {
+        val index = _recordsList.value.indexOfFirst { it.filePath == record.filePath }
+        if (index != -1) {
+            _currentRecordingIndex.value = index
+        }
+
+        val encryptedFile = File(record.filePath)
+
+        val masterKey = MasterKey.Builder(getApplication())
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val encrypted = EncryptedFile.Builder(
+            getApplication(),
+            encryptedFile,
+            masterKey,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+
+        val tempDecryptedFile = File.createTempFile("decrypted_", ".mp3", getApplication<Application>().cacheDir)
+
+        try {
+            encrypted.openFileInput().use { input ->
+                FileOutputStream(tempDecryptedFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            val uri = Uri.fromFile(tempDecryptedFile)
+
+            pause()
+            val dataSourceFactory = DefaultDataSource.Factory(getApplication())
+            val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(MediaItem.fromUri(uri))
+            exoPlayer.setMediaSource(mediaSource)
+            exoPlayer.prepare()
+
+            _playbackType.value = PlaybackType.RECORDING
+            _nowPlayingInfo.value = record.fileName to record.date
+
         } catch (e: Exception) {
             Log.e("PlayerViewModel", "Failed to decrypt or play: ${e.message}")
         }

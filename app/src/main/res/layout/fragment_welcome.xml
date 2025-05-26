@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".login.presentation.WelcomeFragment">
 
-    <com.echoriff.echoriff.Wave
+    <com.echoriff.echoriff.login.presentation.Wave
         android:id="@+id/wave"
         android:layout_width="0dp"
         android:layout_height="0dp"

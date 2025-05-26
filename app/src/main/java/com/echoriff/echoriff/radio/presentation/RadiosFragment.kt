@@ -38,6 +38,7 @@ class RadiosFragment : BaseFragment() {
 
     private var hasConnected = true
     private var hasRadioLoaded = false
+    private var hasConnection = true
     lateinit var binding: FragmentRadiosBinding
     private var playScreenFragment = PlayerFragment.newInstance()
     private lateinit var categoriesAdapter: CategoriesAdapter
@@ -70,11 +71,15 @@ class RadiosFragment : BaseFragment() {
         }
 
         userPreferences.clearSelectedCategory()
+
+        val records = userPreferences.loadRecordings(requireContext())
+        playerViewModel.setRecordingsList(records)
         playerViewModel.setRecordingsList(userPreferences.loadRecordings(requireContext()))
+
         val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
             requireContext()
         )
-        if (lastPlayedRadio != null) {
+        if (lastPlayedRadio != null && hasConnection) {
             if (lastPlayedCategory != null) {
                 playerViewModel.loadRadioOnce(lastPlayedRadio, lastPlayedCategory)
                 hasRadioLoaded = true
@@ -93,27 +98,23 @@ class RadiosFragment : BaseFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             networkObserver.isConnected.collect { isConnected ->
                 if (isConnected) {
+                    hasConnection = true
                     binding.tvInternet.visibility = View.GONE
                     binding.playScreenFrameLayout.visibility = View.VISIBLE
                     binding.categoriesRv.visibility = View.VISIBLE
                     binding.radiosRv.visibility = View.VISIBLE
-                    if (!hasConnected) {
-                        val (lastPlayedRadio, lastPlayedCategory) = userPreferences.getLastPlayedRadioWithCategory(
-                            requireContext()
-                        )
-                        if (lastPlayedRadio != null) {
-                            if (lastPlayedCategory != null) {
-                                playerViewModel.loadRadio(lastPlayedRadio, lastPlayedCategory)
-                            }
-                        }
-                    }
 
                     observeViewModel()
                 } else {
+                    hasConnection = false
                     binding.tvInternet.visibility = View.VISIBLE
                     binding.radiosRv.visibility = View.GONE
                     binding.categoriesRv.visibility = View.GONE
-                    binding.playScreenFrameLayout.visibility = View.GONE
+
+                    val record = playerViewModel.recordsList.value
+                    if (!playerViewModel.isPlayingState.value){
+                        playerViewModel.loadRecording(record[0])
+                    }
                     hasConnected = false
                 }
             }
@@ -153,7 +154,7 @@ class RadiosFragment : BaseFragment() {
                 launch {
                     radioModel.selectedRadioCategoryPair.collect { (radio, category) ->
                         if (!hasRadioLoaded && radio != null && category != null) {
-                            playerViewModel.loadRadio(radio, category)
+                            playerViewModel.loadRadioOnce(radio, category)
                         }
                     }
                 }
