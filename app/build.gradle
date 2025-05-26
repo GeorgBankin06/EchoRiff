@@ -55,17 +55,16 @@ dependencies {
     implementation libs.glide
     implementation libs.firebase.auth.ktx
 
-    implementation "androidx.palette:palette-ktx:1.0.0"
-    implementation 'com.squareup.picasso:picasso:2.8'
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation libs.androidx.palette.ktx
+    implementation libs.picasso.v28
+    implementation(libs.okhttp)
+    implementation libs.gson
 
     // Circle Image View
     implementation libs.circleimageview
 
     // DataStore
-    implementation(libs.androidx.datastore.preferences.core)
+    implementation libs.androidx.datastore.preferences.core
     implementation libs.androidx.datastore.preferences
 
     // Google Services
@@ -74,14 +73,19 @@ dependencies {
     implementation libs.firebase.storage.ktx
     implementation libs.androidx.espresso.core
 
-    implementation "androidx.security:security-crypto:1.1.0-alpha07"
+    implementation libs.androidx.security.crypto
 
     //noinspection KaptUsageInsteadOfKsp
     kapt libs.compiler
 
-    //Koin
+    // Koin
     implementation libs.koin.android
     implementation libs.koin.androidx.navigation
+
+    // Unit tests
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.mockk
+    testImplementation libs.junit
 
     // Androidx
     implementation libs.androidx.navigation.fragment.ktx
