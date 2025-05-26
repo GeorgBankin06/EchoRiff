@@ -23,6 +23,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -51,7 +54,8 @@ class PlayerFragment : Fragment() {
     lateinit var binding: FragmentRadioPlayerBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRadioPlayerBinding.inflate(layoutInflater)
@@ -229,22 +233,11 @@ class PlayerFragment : Fragment() {
                             }
 
                             PlaybackType.RECORDING -> {
-//                                val gradientDrawable = GradientDrawable(
-//                                    GradientDrawable.Orientation.TOP_BOTTOM,
-//                                    intArrayOf(R.color.black, R.color.white)
-//                                )
-//
-//                                gradientDrawable.cornerRadii = floatArrayOf(
-//                                    100f, 100f, // top-left corner radius
-//                                    100f, 100f, // top-right corner radius
-//                                    0f, 0f,   // bottom-left corner (no radius)
-//                                    0f, 0f    // bottom-right corner (no radius)
-//                                )
-//                                gradientDrawable.colors = intArrayOf(R.color.black, R.color.white)
-//
-//                                binding.playerBackgroundView.background = gradientDrawable
-//
-//                                binding.coverArtImage.setImageResource(R.drawable.bg_deep_house)
+                                binding.playerBackgroundView.setBackgroundResource(R.drawable.bg_black_white_gradient_rounded)
+                                Glide.with(binding.coverArtImage.context)
+                                    .load(R.drawable.recording)
+                                    .placeholder(R.drawable.player_background)
+                                    .into(binding.coverArtImage)
 
                                 launch {
                                     playerModel.isPlayingState.collect { isPlaying ->
@@ -405,7 +398,6 @@ class PlayerFragment : Fragment() {
             val playScreenFragment = PlayerFragment()
             return playScreenFragment
         }
-
     }
 
     private fun captureMotion() {
